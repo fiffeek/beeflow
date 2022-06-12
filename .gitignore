@@ -131,3 +131,7 @@ dmypy.json
 
 # Intellij
 .idea
+.ijwb
+
+# Bazel
+bazel-*
