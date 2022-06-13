@@ -29,3 +29,6 @@ lockfile_generator = "pex"
 
 [python-bootstrap]
 search_path = ["<PATH>", "<PYENV>"]
+
+[pytest]
+version = "pytest>=7.1.0"
