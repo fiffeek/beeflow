@@ -1,0 +1,31 @@
+[GLOBAL]
+pants_version = "2.11.0"
+build_ignore = [
+  "3rdparty/python/*"
+]
+backend_packages.add = [
+  "pants.backend.python",
+  "pants.backend.python.lint.docformatter",
+  "pants.backend.python.lint.black",
+  "pants.backend.python.lint.flake8",
+  "pants.backend.python.lint.isort",
+  "pants.backend.python.typecheck.mypy",
+]
+
+[anonymous-telemetry]
+enabled = false
+
+[source]
+root_patterns = [
+  '/src/python',
+  '/test/python',
+]
+
+[python]
+interpreter_constraints = [">=3.8"]
+enable_resolves = true
+resolves = { python-default = "./3rdparty/python/requirements_lock.txt"}
+lockfile_generator = "pex"
+
+[python-bootstrap]
+search_path = ["<PATH>", "<PYENV>"]
