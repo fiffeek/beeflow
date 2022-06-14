@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  mkdocs:
+    container_name: mkdocs_material_boilerplate
+    build: .
+    ports:
+      - "8000:8000"
+    working_dir: /mkdocs
+    volumes:
+      - .:/mkdocs
+    stdin_open: true
+    tty: true
+    command:
+      - "mkdocs"
+      - "serve"
+      - "--dev-addr=0.0.0.0:8000"
+      - "--config-file"
+      - "./mkdocs.yml"

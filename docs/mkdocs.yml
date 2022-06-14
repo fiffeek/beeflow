@@ -1,0 +1,28 @@
+site_name: Beeflow - Serverless Airflow
+
+theme:
+  name: "material"
+  language: "en"
+  shortcuts:
+    help: 191 # ?
+    next: 78 # n
+    previous: 80 # p
+    search: 83 # s
+  palette:
+    primary: "blue"
+    accent: "blue"
+  features:
+    - tabs
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - footnotes
+  - toc:
+      permalink: true
+      separator: "_"
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
