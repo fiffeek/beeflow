@@ -1,5 +1,5 @@
-setup_venv:
-	./build-support/setup_venv.sh
+setup-venv:
+	./pants export ::
 
-update_venv:
-	pip install -r ./3rdparty/python/requirements.txt
+update-lock-files:
+	./pants generate-lockfiles

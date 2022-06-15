@@ -25,7 +25,7 @@ root_patterns = [
 [python]
 interpreter_constraints = [">=3.8"]
 enable_resolves = true
-resolves = { python-default = "./3rdparty/python/requirements_lock.txt"}
+resolves = { python-default = "3rdparty/python/requirements_lock.txt"}
 lockfile_generator = "pex"
 
 [python-bootstrap]
