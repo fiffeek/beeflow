@@ -5,6 +5,7 @@ build_ignore = [
   "docs/*"
 ]
 backend_packages.add = [
+  "pants.backend.experimental.terraform",
   "pants.backend.python",
   "pants.backend.python.lint.docformatter",
   "pants.backend.python.lint.black",
@@ -31,5 +32,3 @@ lockfile_generator = "pex"
 [python-bootstrap]
 search_path = ["<PATH>", "<PYENV>"]
 
-[pytest]
-version = "pytest>=7.1.0"
