@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  terragrunt_base:
+    container_name: "terragrunt_main"
+    build: .
+    network_mode: host
+    # NOTE: This is not concurrency safe (https://github.com/gruntwork-io/terragrunt/issues/561)
+    command: "bash -c"
+    volumes:
+      - ../..:/data
+      - /data/dist
+
+  terragrunt_localstack:
+    extends:
+      service: terragrunt_base
+    working_dir: /data/infrastructure/terragrunt/localstack
+    environment:
+      - TERRAGRUNT_DOWNLOAD=/data/.terragrunt-cache
+      - TF_PLUGIN_CACHE_DIR=/data/.plugins
+
+  terragrunt_aws:
+    extends:
+      service: terragrunt_base
+    working_dir: /data/infrastructure/terragrunt/aws
+    volumes:
+      - $HOME/.aws/config:/root/.aws/config:ro
+      - $HOME/.aws/credentials:/root/.aws/credentials:ro
+    environment:
+      - TERRAGRUNT_DOWNLOAD=/data/.terragrunt-cache-aws
+      - TF_PLUGIN_CACHE_DIR=/data/.plugins-aws

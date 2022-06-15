@@ -152,3 +152,7 @@ vendor
 .bundle
 .ruby-version
 .terraform.lock.hcl
+
+.plugins
+.plugins-aws
+.terragrunt-cache-aws

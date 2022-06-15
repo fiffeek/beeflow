@@ -12,6 +12,7 @@ services:
       - LOCALSTACK_HOSTNAME=localhost
       - TEST_AWS_ACCOUNT_ID=000000000000
       - AWS_DEFAULT_REGION=us-east-2
+      - DEFAULT_REGION=us-east-2
       - DATA_DIR=/tmp/localstack/data
       - KINESIS_STREAM_SHARDS=1
       - KINESIS_ERROR_PROBABILITY=0.0
