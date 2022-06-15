@@ -32,3 +32,5 @@ lockfile_generator = "pex"
 [python-bootstrap]
 search_path = ["<PATH>", "<PYENV>"]
 
+[terraform-validate]
+skip = true
