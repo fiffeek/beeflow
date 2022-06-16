@@ -1,6 +1,33 @@
 version: "3.8"
 
 services:
+  postgres:
+    container_name: "postgresql_container"
+    image: postgres:13.4-buster
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - postgres
+    restart: unless-stopped
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "8080:80"
+    networks:
+      - postgres
+    restart: unless-stopped
   localstack:
     container_name: "localstack_main"
     image: localstack/localstack
@@ -23,3 +50,12 @@ services:
     volumes:
       - "${TMPDIR:-/tmp}/localstack:/tmp/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  pgadmin:
+  db:
+    driver: local
