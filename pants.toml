@@ -5,6 +5,7 @@ build_ignore = [
   "docs/*"
 ]
 backend_packages.add = [
+  "pants.backend.awslambda.python",
   "pants.backend.experimental.terraform",
   "pants.backend.python",
   "pants.backend.python.lint.docformatter",
@@ -24,7 +25,7 @@ root_patterns = [
 ]
 
 [python]
-interpreter_constraints = [">=3.8"]
+interpreter_constraints = [">=3.9"]
 enable_resolves = true
 resolves = { python-default = "3rdparty/python/requirements_lock.txt"}
 lockfile_generator = "pex"

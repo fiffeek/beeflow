@@ -1,1 +1,2 @@
 apache-airflow==2.3.2
+aws-lambda-powertools==1.26.2

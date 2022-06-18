@@ -1,4 +1,4 @@
 locals {
   environment = "dev"
-  namespace = "beeflow"
+  namespace   = "beeflow"
 }
