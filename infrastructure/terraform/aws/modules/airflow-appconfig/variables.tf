@@ -1,13 +1,3 @@
-variable "vpc_id" {
-  type        = string
-  description = "The Id of the VPC to run RDS in."
-}
-
-variable "vpc_sg" {
-  type        = string
-  description = "The Id of the VPC security group to allow connections to RDS from."
-}
-
 variable "database_name" {
   type        = string
   description = "The name of the database to create when the DB instance is created"
@@ -18,12 +8,18 @@ variable "database_user" {
   description = "Username for the master DB user"
 }
 
+variable "database_password" {
+  type        = string
+  description = "Password to the RDS database."
+}
+
 variable "database_port" {
   type        = number
   description = "Database port (_e.g._ `3306` for `MySQL`). Used in the DB Security Group to allow access to the DB instance from the provided `security_group_ids`"
 }
 
-variable "subnet_ids" {
-  type        = list(string)
-  description = "IDs of the created private subnets"
+variable "database_endpoint" {
+  type        = string
+  description = "DNS Endpoint of the Metadata database instance"
 }
+

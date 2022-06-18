@@ -1,4 +1,4 @@
-from beeflow.dag_parsing.parsing import parse
+from beeflow.lambdas.dag_parsing.parsing import parse
 
 
 def test_simple_parse():

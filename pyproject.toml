@@ -2,3 +2,18 @@
 line-length = 110
 target-version = ['py38', 'py39', 'py310']
 skip-string-normalization = true
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | src/python/beeflow/packages/database/migrations/versions
+)/
+'''

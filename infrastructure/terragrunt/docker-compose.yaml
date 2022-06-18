@@ -8,7 +8,7 @@ services:
     command: "bash -c"
     volumes:
       - ../..:/data
-      - /data/dist
+      - /data/dist/export
 
   terragrunt_localstack:
     extends:

@@ -19,7 +19,7 @@ module "metadata_database" {
   publicly_accessible = false
   vpc_id              = var.vpc_id
   apply_immediately   = true
-  availability_zone   = var.availability_zone
+  subnet_ids          = var.subnet_ids
   security_group_ids = [
   var.vpc_sg]
 

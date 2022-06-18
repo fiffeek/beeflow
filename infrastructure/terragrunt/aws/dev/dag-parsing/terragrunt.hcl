@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-  source = "${get_path_to_repo_root()}/infrastructure/terraform/aws/modules//dag-parsing"
+  source = "${get_path_to_repo_root()}//infrastructure/terraform/aws/modules/dag-parsing"
 }
 
 inputs = {

@@ -1,2 +1,7 @@
 apache-airflow==2.3.2
 aws-lambda-powertools==1.26.2
+apache-airflow[postgresql]==2.3.2
+apache-airflow[postgres]==2.3.2
+apache-airflow[password]==2.3.2
+apache-airflow[virtualenv]==2.3.2
+psycopg2-binary==2.9.3
