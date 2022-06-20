@@ -5,3 +5,4 @@ apache-airflow[postgres]==2.3.2
 apache-airflow[password]==2.3.2
 apache-airflow[virtualenv]==2.3.2
 psycopg2-binary==2.9.3
+aws-lambda-powertools[pydantic]==1.26.2
