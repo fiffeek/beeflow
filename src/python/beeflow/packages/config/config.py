@@ -26,7 +26,11 @@ class Configuration:
         logger.info(f"Pulling {application}/{environment}/{app_config_name} to {airflow_home}")
 
         aws_app_config: bytes = parameters.get_app_config(
-            name=app_config_name, environment=environment, application=application, force_fetch=True
+            name=app_config_name,
+            environment=environment,
+            application=application,
+            force_fetch=True,
+            max_age=1000,
         )
         logger.info("Config has been successfully pulled")
 

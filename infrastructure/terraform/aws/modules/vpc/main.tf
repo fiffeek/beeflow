@@ -20,15 +20,6 @@ resource "aws_security_group_rule" "ingress" {
   security_group_id = module.vpc[0].vpc_default_security_group_id
 }
 
-resource "aws_security_group_rule" "egress" {
-  type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = module.vpc[0].vpc_default_security_group_id
-}
-
 module "subnets" {
   count = module.this.enabled ? 1 : 0
 

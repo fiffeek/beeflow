@@ -9,14 +9,15 @@ module "lambda" {
   source  = "cloudposse/lambda-function/aws"
   version = "0.3.6"
 
-  s3_bucket        = aws_s3_bucket_object.code.bucket
-  s3_key           = aws_s3_bucket_object.code.key
-  function_name    = module.this.id
-  handler          = var.pants_lambda_entrypoint
-  runtime          = var.pants_lambda_python_version
-  timeout          = var.spec.timeout
-  memory_size      = var.spec.memory_size
-  source_code_hash = filebase64sha256(var.package_absolute_path)
+  s3_bucket                      = aws_s3_bucket_object.code.bucket
+  s3_key                         = aws_s3_bucket_object.code.key
+  function_name                  = module.this.id
+  handler                        = var.pants_lambda_entrypoint
+  runtime                        = var.pants_lambda_python_version
+  timeout                        = var.spec.timeout
+  memory_size                    = var.spec.memory_size
+  reserved_concurrent_executions = var.spec.reserved_concurrent_executions
+  source_code_hash               = filebase64sha256(var.package_absolute_path)
 
   vpc_config = {
     subnet_ids = var.subnet_ids

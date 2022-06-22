@@ -13,6 +13,7 @@ module "lambda" {
     timeout                          = 600
     additional_environment_variables = {}
     memory_size                      = 512
+    reserved_concurrent_executions   = 1
   }
   subnet_ids = var.subnet_ids
   vpc_sg     = var.vpc_sg

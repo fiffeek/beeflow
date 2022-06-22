@@ -1,5 +1,4 @@
 from aws_lambda_powertools.utilities.parser import BaseModel
-
 from beeflow.packages.events.beeflow_event_type import BeeflowEventType
 
 

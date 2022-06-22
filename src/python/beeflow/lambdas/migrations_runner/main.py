@@ -3,7 +3,6 @@ from typing import Any, Dict
 from airflow.utils import db
 from aws_lambda_powertools import Logger
 from aws_lambda_powertools.utilities.typing import LambdaContext
-
 from beeflow.packages.events.migration_completed import MigrationCompleted
 
 logger = Logger()

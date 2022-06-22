@@ -52,6 +52,7 @@ variable "spec" {
   type = object({
     timeout : number,
     memory_size : number,
+    reserved_concurrent_executions : number,
     additional_environment_variables : map(string)
   })
   description = "The lambda meta spec."
