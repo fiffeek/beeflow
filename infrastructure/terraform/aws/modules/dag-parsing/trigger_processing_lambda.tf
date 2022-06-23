@@ -21,7 +21,7 @@ module "trigger_processing_lambda" {
   spec = {
     timeout                          = 60
     additional_environment_variables = {}
-    memory_size                      = 256
+    memory_size                      = 128
     # As this is only a trigger for parsing limiting the
     # concurrency here will result in more AWS S3 events being batched on SQS
     reserved_concurrent_executions = 1
