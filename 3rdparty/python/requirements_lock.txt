@@ -1755,36 +1755,31 @@
           "artifacts": [
             {
               "algorithm": "sha256",
-              "hash": "13efff22f1cb6d25ec7027edaccdfdd515ba593e093173beb09094cff898a8cc",
-              "url": "https://files.pythonhosted.org/packages/63/84/bf4d341c8de68d1c4ff62f53bf9a02c1a51e7d1a2ede94865dcccf688f3e/boto3-1.24.13-py3-none-any.whl"
-            },
-            {
-              "algorithm": "sha256",
-              "hash": "945d49941541a3cbb02710361be64b22f98e68c2e447229f0d51f7c215009e28",
-              "url": "https://files.pythonhosted.org/packages/28/d7/8ee3c2637f37ba3e840a784ae86b3cb30c68c7471006f211e07a3564fd95/boto3-1.24.13.tar.gz"
+              "hash": "4a7cf5fddb1626d25c5935c5a82afdff9c7fe2faac2a68d37edf0264b3a85127",
+              "url": "https://files.pythonhosted.org/packages/b3/f2/a0ea90a70f385733b17b0758ab23729d7f2c30adc4daee6f916dc60be9c7/boto3-1.24.18-py3-none-any.whl"
             }
           ],
           "project_name": "boto3",
           "requires_dists": [
-            "botocore<1.28.0,>=1.27.13",
+            "botocore<1.28.0,>=1.27.18",
             "botocore[crt]<2.0a0,>=1.21.0; extra == \"crt\"",
             "jmespath<2.0.0,>=0.7.1",
             "s3transfer<0.7.0,>=0.6.0"
           ],
           "requires_python": ">=3.7",
-          "version": "1.24.13"
+          "version": "1.24.18"
         },
         {
           "artifacts": [
             {
               "algorithm": "sha256",
-              "hash": "fbc09558c02d415e8646520f95db7e8d313460938780fa6040b00865f098fd55",
-              "url": "https://files.pythonhosted.org/packages/bf/72/27a96b8a22796a8cfc9c5a2436d7109c1efee1b871f06b4738dbf1511180/botocore-1.27.13-py3-none-any.whl"
+              "hash": "74426179c75debd77c6dcc2d66cfd506e52962e605d2b9f2dbca290474539c8b",
+              "url": "https://files.pythonhosted.org/packages/92/c7/a174bebd12d50c978efa7a8f0821940bfed9c48ecf883a40e710a694c283/botocore-1.27.18-py3-none-any.whl"
             },
             {
               "algorithm": "sha256",
-              "hash": "df75e53576b061818bbce4bd70221749e40cc91d16a2b6c03fbeec8023665734",
-              "url": "https://files.pythonhosted.org/packages/34/e5/582e80db2f430d0a376d6885d21d0cdf64d2819713f04327c6000c17b3d3/botocore-1.27.13.tar.gz"
+              "hash": "20a866351f9f65cfe27edc21d755de60e17a1fbb1273d73fc0006ed0d6f8ef86",
+              "url": "https://files.pythonhosted.org/packages/c0/23/6da8ab6d8e408aa32ca12bf619d704322a029c625d0e7b9b95be389268d9/botocore-1.27.18.tar.gz"
             }
           ],
           "project_name": "botocore",
@@ -1795,25 +1790,25 @@
             "urllib3<1.27,>=1.25.4"
           ],
           "requires_python": ">=3.7",
-          "version": "1.27.13"
+          "version": "1.27.18"
         },
         {
           "artifacts": [
             {
               "algorithm": "sha256",
-              "hash": "efb94456a4cf91669c4b6e82833b43d20c45e3c2ba8384841854c79cc7175565",
-              "url": "https://files.pythonhosted.org/packages/3d/6f/5bb35a8524d07be4947d9b494bd9a56aa4ec6029c0d74bab9245fe35266e/cachelib-0.8.0-py3-none-any.whl"
+              "hash": "811ceeb1209d2fe51cd2b62810bd1eccf70feba5c52641532498be5c675493b3",
+              "url": "https://files.pythonhosted.org/packages/93/70/58e525451478055b0fd2859b22226888a6985d404fe65e014fc4893d3b75/cachelib-0.9.0-py3-none-any.whl"
             },
             {
               "algorithm": "sha256",
-              "hash": "e358f6f82cf633891f0dbd3996e300b4657716ac44b301df33b9cb2cfd6eea6d",
-              "url": "https://files.pythonhosted.org/packages/95/c2/cf202f4bcf25946eb39067fbf17f558f8c68ceab36f2a84d203179898fcb/cachelib-0.8.0.tar.gz"
+              "hash": "38222cc7c1b79a23606de5c2607f4925779e37cdcea1c2ad21b8bae94b5425a5",
+              "url": "https://files.pythonhosted.org/packages/79/f2/1c76df4d295789bbc836eea50b813d64f86e640c29fe8f0a3686e9c4e3e9/cachelib-0.9.0.tar.gz"
             }
           ],
           "project_name": "cachelib",
           "requires_dists": [],
           "requires_python": ">=3.7",
-          "version": "0.8"
+          "version": "0.9"
         },
         {
           "artifacts": [
@@ -2082,13 +2077,13 @@
           "artifacts": [
             {
               "algorithm": "sha256",
-              "hash": "fb9a8c7a60fdecac45c913c1373948b28d8a55328472e08b5132fba36da36524",
-              "url": "https://files.pythonhosted.org/packages/3a/db/ad2c2656e07005b79efbfa8a64867fd3ae02d8a535812af7ad25b6c06dbb/connexion-2.13.1-py2.py3-none-any.whl"
+              "hash": "4e50c1b0b6d287e20830d053c8de09a73bead5ac0760200ade074364c7362ab6",
+              "url": "https://files.pythonhosted.org/packages/82/f7/7bc8db11dffc4c4ae4441dcfd05e81f9f5a1b652dfa20b3d4953c01b0771/connexion-2.14.0-py2.py3-none-any.whl"
             },
             {
               "algorithm": "sha256",
-              "hash": "80b534800b408d184fe6d36e755edefdd657e8f11756b5806d6bcf7213380d0d",
-              "url": "https://files.pythonhosted.org/packages/1e/de/fc95a0ca45808c95b7cd17f8d5e40e22be84d94d10300554c37a2533a323/connexion-2.13.1.tar.gz"
+              "hash": "ed6f9c97ca5281257935c5530570b2a2394a689ece1b171c18d855cf751adbb4",
+              "url": "https://files.pythonhosted.org/packages/31/17/c8c525fc237876ec901d2ce75c47d777ad508a4ff91c3745c7bbfac3f506/connexion-2.14.0.tar.gz"
             }
           ],
           "project_name": "connexion",
@@ -2124,7 +2119,7 @@
             "werkzeug<3,>=1.0"
           ],
           "requires_python": ">=3.6",
-          "version": "2.13.1"
+          "version": "2.14"
         },
         {
           "artifacts": [
@@ -3000,13 +2995,13 @@
           "artifacts": [
             {
               "algorithm": "sha256",
-              "hash": "c58c8eb8a762858f49e18436ff552e83914778e50e9d2f1660535ffb364552ec",
-              "url": "https://files.pythonhosted.org/packages/ab/b5/1bd220dd470b0b912fc31499e0d9c652007a60caf137995867ccc4b98cb6/importlib_metadata-4.11.4-py3-none-any.whl"
+              "hash": "7401a975809ea1fdc658c3aa4f78cc2195a0e019c5cbc4c06122884e9ae80c23",
+              "url": "https://files.pythonhosted.org/packages/d2/a2/8c239dc898138f208dd14b441b196e7b3032b94d3137d9d8453e186967fc/importlib_metadata-4.12.0-py3-none-any.whl"
             },
             {
               "algorithm": "sha256",
-              "hash": "5d26852efe48c0a32b0509ffbc583fda1a2266545a78d104a6f4aff3db17d700",
-              "url": "https://files.pythonhosted.org/packages/35/a8/f2bd0d488c2bf932b4dda0fb91cbb687c0b1132b33130d1cfad4e2b4b963/importlib_metadata-4.11.4.tar.gz"
+              "hash": "637245b8bab2b6502fcbc752cc4b7a6f6243bb02b31c5c26156ad103d3d45670",
+              "url": "https://files.pythonhosted.org/packages/1a/16/441080c907df829016729e71d8bdd42d99b9bdde48b01492ed08912c0aa9/importlib_metadata-4.12.0.tar.gz"
             }
           ],
           "project_name": "importlib-metadata",
@@ -3020,7 +3015,7 @@
             "pytest-black>=0.3.7; platform_python_implementation != \"PyPy\" and extra == \"testing\"",
             "pytest-checkdocs>=2.4; extra == \"testing\"",
             "pytest-cov; extra == \"testing\"",
-            "pytest-enabler>=1.0.1; extra == \"testing\"",
+            "pytest-enabler>=1.3; extra == \"testing\"",
             "pytest-flake8; extra == \"testing\"",
             "pytest-mypy>=0.9.1; platform_python_implementation != \"PyPy\" and extra == \"testing\"",
             "pytest-perf>=0.9.2; extra == \"testing\"",
@@ -3031,7 +3026,7 @@
             "zipp>=0.5"
           ],
           "requires_python": ">=3.7",
-          "version": "4.11.4"
+          "version": "4.12"
         },
         {
           "artifacts": [
@@ -3437,25 +3432,25 @@
           "artifacts": [
             {
               "algorithm": "sha256",
-              "hash": "53a1e0ee69f79e1f3e80d17393b25cfc917eda52f859e8183b4af72c3390c1f1",
-              "url": "https://files.pythonhosted.org/packages/5d/32/14422e07e6363051133c5a89e8275c81ee7b64daf34f0c2e394941a2f914/marshmallow-3.16.0-py3-none-any.whl"
+              "hash": "00040ab5ea0c608e8787137627a8efae97fabd60552a05dc889c888f814e75eb",
+              "url": "https://files.pythonhosted.org/packages/19/35/07a369156dc53384c381c9b2b9fa63c35478b2289b47b4ee7d81418637e5/marshmallow-3.17.0-py3-none-any.whl"
             },
             {
               "algorithm": "sha256",
-              "hash": "a762c1d8b2bcb0e5c8e964850d03f9f3bffd6a12b626f3c14b9d6b1841999af5",
-              "url": "https://files.pythonhosted.org/packages/a7/c9/59fe5693b3973861f3c9aa6ea6d616a6922d076d53a09359611034782840/marshmallow-3.16.0.tar.gz"
+              "hash": "635fb65a3285a31a30f276f30e958070f5214c7196202caa5c7ecf28f5274bc7",
+              "url": "https://files.pythonhosted.org/packages/50/23/cd717da7c1a78845b3127ba053c2a561d1193b8a0392ca1b4a4e61a5d7d4/marshmallow-3.17.0.tar.gz"
             }
           ],
           "project_name": "marshmallow",
           "requires_dists": [
             "alabaster==0.7.12; extra == \"docs\"",
             "autodocsumm==0.2.8; extra == \"docs\"",
-            "flake8-bugbear==22.4.25; extra == \"dev\"",
-            "flake8-bugbear==22.4.25; extra == \"lint\"",
+            "flake8-bugbear==22.6.22; extra == \"dev\"",
+            "flake8-bugbear==22.6.22; extra == \"lint\"",
             "flake8==4.0.1; extra == \"dev\"",
             "flake8==4.0.1; extra == \"lint\"",
-            "mypy==0.960; extra == \"dev\"",
-            "mypy==0.960; extra == \"lint\"",
+            "mypy==0.961; extra == \"dev\"",
+            "mypy==0.961; extra == \"lint\"",
             "packaging>=17.0",
             "pre-commit~=2.4; extra == \"dev\"",
             "pre-commit~=2.4; extra == \"lint\"",
@@ -3471,7 +3466,7 @@
             "tox; extra == \"dev\""
           ],
           "requires_python": ">=3.7",
-          "version": "3.16"
+          "version": "3.17"
         },
         {
           "artifacts": [
@@ -4890,21 +4885,21 @@
           "artifacts": [
             {
               "algorithm": "sha256",
-              "hash": "d7c013fe7abbc5e491394e10fa845f8f32fe54f8dc60c6622c6cf482d25d47e4",
-              "url": "https://files.pythonhosted.org/packages/ca/80/7c0cad11bd99985cfe7c09427ee0b4f9bd6b048bd13d4ffb32c6db237dfb/tabulate-0.8.9-py3-none-any.whl"
+              "hash": "0ba055423dbaa164b9e456abe7920c5e8ed33fcc16f6d1b2f2d152c8e1e8b4fc",
+              "url": "https://files.pythonhosted.org/packages/92/4e/e5a13fdb3e6f81ce11893523ff289870c87c8f1f289a7369fb0e9840c3bb/tabulate-0.8.10-py3-none-any.whl"
             },
             {
               "algorithm": "sha256",
-              "hash": "eb1d13f25760052e8931f2ef80aaf6045a6cceb47514db8beab24cded16f13a7",
-              "url": "https://files.pythonhosted.org/packages/ae/3d/9d7576d94007eaf3bb685acbaaec66ff4cdeb0b18f1bf1f17edbeebffb0a/tabulate-0.8.9.tar.gz"
+              "hash": "6c57f3f3dd7ac2782770155f3adb2db0b1a269637e42f27599925e64b114f519",
+              "url": "https://files.pythonhosted.org/packages/7a/53/afac341569b3fd558bf2b5428e925e2eb8753ad9627c1f9188104c6e0c4a/tabulate-0.8.10.tar.gz"
             }
           ],
           "project_name": "tabulate",
           "requires_dists": [
             "wcwidth; extra == \"widechars\""
           ],
-          "requires_python": null,
-          "version": "0.8.9"
+          "requires_python": "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7",
+          "version": "0.8.10"
         },
         {
           "artifacts": [
@@ -5022,13 +5017,13 @@
           "artifacts": [
             {
               "algorithm": "sha256",
-              "hash": "e617f16e25b42eb4f6e74096b9c9e37713cf10bf30168fb4a739f3fa8f898a3a",
-              "url": "https://files.pythonhosted.org/packages/9e/34/e86fc6a8f84329b49321a532b3c1fef103c67765df957fbb3852eea39d00/virtualenv-20.14.1-py2.py3-none-any.whl"
+              "hash": "804cce4de5b8a322f099897e308eecc8f6e2951f1a8e7e2b3598dff865f01336",
+              "url": "https://files.pythonhosted.org/packages/0a/d7/8f8f84aa834d9afde02055b6d11e0a0f2f35435b2ccf1a1aca4cf9046105/virtualenv-20.15.0-py2.py3-none-any.whl"
             },
             {
               "algorithm": "sha256",
-              "hash": "ef589a79795589aada0c1c5b319486797c03b67ac3984c48c669c0e4f50df3a5",
-              "url": "https://files.pythonhosted.org/packages/5f/6c/d44c403a54ceb4ec5179d1a963c69887d30dc5b300529ce67c05b4f16212/virtualenv-20.14.1.tar.gz"
+              "hash": "4c44b1d77ca81f8368e2d7414f9b20c428ad16b343ac6d226206c5b84e2b4fcc",
+              "url": "https://files.pythonhosted.org/packages/b8/5c/c6acf0fb35c2e830114a81ae771599e0dd11b5905f2386782fa2793ec6c8/virtualenv-20.15.0.tar.gz"
             }
           ],
           "project_name": "virtualenv",
@@ -5057,7 +5052,7 @@
             "towncrier>=21.3; extra == \"docs\""
           ],
           "requires_python": "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7",
-          "version": "20.14.1"
+          "version": "20.15"
         },
         {
           "artifacts": [

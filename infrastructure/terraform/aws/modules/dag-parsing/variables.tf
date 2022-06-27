@@ -47,6 +47,7 @@ variable "maximum_batching_window_in_seconds" {
   type        = number
   description = "The number of seconds that has to pass for a reload of DAG files to kick in when # files changed < batch_size."
 }
+
 variable "dag_parsing_trigger_package_absolute_path" {
   type        = string
   description = "Absolute path to the DAG parsing trigger lambda package."
@@ -55,4 +56,14 @@ variable "dag_parsing_trigger_package_absolute_path" {
 variable "dag_parsing_trigger_package_filename" {
   type        = string
   description = "Filename of the DAG parsing trigger lambda package."
+}
+
+variable "dag_parsing_processor_package_absolute_path" {
+  type        = string
+  description = "Absolute path to the DAG parsing processor lambda package."
+}
+
+variable "dag_parsing_processor_package_filename" {
+  type        = string
+  description = "Filename of the DAG parsing processor lambda package."
 }

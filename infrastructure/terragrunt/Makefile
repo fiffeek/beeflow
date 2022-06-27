@@ -16,6 +16,9 @@ apply_metadata-database:
 apply_vpc:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/vpc && terragrunt apply"
 
+apply_ecr-repositories:
+	docker-compose run --rm terragrunt_aws bash -c "cd dev/ecr-repositories && terragrunt apply"
+
 apply_buckets:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/buckets && terragrunt apply"
 

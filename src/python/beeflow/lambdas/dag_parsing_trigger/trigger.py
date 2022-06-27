@@ -13,7 +13,7 @@ logger = Logger()
 @logger.inject_lambda_context
 @event_parser(model=S3Model, envelope=envelopes.SqsEnvelope)
 def handler(events: List[S3Model], context: LambdaContext) -> Dict[str, Any]:
-    logger.info(f"Handler for DAG parsing invoked. Some DAGs might have changed.")
+    logger.info("Handler for DAG parsing invoked. Some DAGs might have changed.")
     all_records: List[S3RecordModel] = flatten([event.Records for event in events])
     affected_files_log = "\n".join(
         [

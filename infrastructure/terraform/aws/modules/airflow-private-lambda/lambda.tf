@@ -1,23 +1,20 @@
-resource "aws_s3_bucket_object" "code" {
-  bucket      = var.lambda_code_bucket_name
-  key         = var.package_filename
-  source      = var.package_absolute_path
-  source_hash = filemd5(var.package_absolute_path)
-}
+
 
 module "lambda" {
   source  = "cloudposse/lambda-function/aws"
   version = "0.3.6"
 
-  s3_bucket                      = aws_s3_bucket_object.code.bucket
-  s3_key                         = aws_s3_bucket_object.code.key
+  s3_bucket                      = var.is_lambda_packaged ? aws_s3_bucket_object.code[0].bucket : null
+  s3_key                         = var.is_lambda_packaged ? aws_s3_bucket_object.code[0].key : null
   function_name                  = module.this.id
-  handler                        = var.pants_lambda_entrypoint
-  runtime                        = var.pants_lambda_python_version
+  handler                        = var.is_lambda_packaged ? var.lambda_packaged_spec.pants_lambda_entrypoint : null
+  runtime                        = var.is_lambda_packaged ? var.lambda_packaged_spec.pants_lambda_python_version : null
   timeout                        = var.spec.timeout
   memory_size                    = var.spec.memory_size
   reserved_concurrent_executions = var.spec.reserved_concurrent_executions
-  source_code_hash               = filebase64sha256(var.package_absolute_path)
+  source_code_hash               = var.is_lambda_packaged ? filebase64sha256(var.lambda_packaged_spec.package_absolute_path) : ""
+  image_uri                      = var.is_lambda_dockerized ? "${var.lambda_dockerized_spec.repository_url}:${var.lambda_dockerized_spec.image_tag}" : null
+  package_type                   = var.is_lambda_dockerized ? "Image" : "Zip"
 
   vpc_config = {
     subnet_ids = var.subnet_ids
@@ -27,12 +24,13 @@ module "lambda" {
 
   lambda_environment = {
     variables = merge(var.spec.additional_environment_variables, {
-      BEEFLOW__APP_CONFIG_NAME = var.appconfig_application_configuration_name,
-      BEEFLOW__APPLICATION     = var.appconfig_application_name,
-      POWERTOOLS_SERVICE_NAME  = module.this.id,
-      AIRFLOW_HOME             = var.airflow_home,
-      BEEFLOW__ENVIRONMENT     = module.this.environment,
-      PYTHONUNBUFFERED         = "1"
+      BEEFLOW__APP_CONFIG_NAME    = var.appconfig_application_configuration_name,
+      BEEFLOW__APPLICATION        = var.appconfig_application_name,
+      POWERTOOLS_SERVICE_NAME     = module.this.id,
+      POWERTOOLS_LOGGER_LOG_EVENT = "true"
+      AIRFLOW_HOME                = var.airflow_home,
+      BEEFLOW__ENVIRONMENT        = module.this.environment,
+      PYTHONUNBUFFERED            = "1"
     })
   }
 

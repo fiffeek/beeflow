@@ -1,16 +1,39 @@
-variable "package_absolute_path" {
-  type        = string
-  description = "Absolute path to the migrations runner lambda package."
+variable "is_lambda_packaged" {
+  type        = bool
+  description = "Determines whether the lambda is packaged or not. If it is, the spec is under `lambda_packaged_spec`"
 }
 
-variable "package_filename" {
-  type        = string
-  description = "Filename of the migrations runner lambda package."
+variable "lambda_packaged_spec" {
+  type = object({
+    package_absolute_path       = string,
+    package_filename            = string,
+    lambda_code_bucket_name     = string,
+    pants_lambda_entrypoint     = string,
+    pants_lambda_python_version = string
+  })
+  default = {
+    package_absolute_path       = null
+    package_filename            = null
+    lambda_code_bucket_name     = null
+    pants_lambda_entrypoint     = null
+    pants_lambda_python_version = null
+  }
 }
 
-variable "lambda_code_bucket_name" {
-  type        = string
-  description = "Name of the lambda code bucket."
+variable "is_lambda_dockerized" {
+  type        = bool
+  description = "Determines whether the lambda is dockerized or not. If it is, the spec is under `lambda_dockerized_spec`."
+}
+
+variable "lambda_dockerized_spec" {
+  type = object({
+    repository_url = string,
+    image_tag      = string
+  })
+  default = {
+    repository_url = null
+    image_tag      = null
+  }
 }
 
 variable "vpc_sg" {
@@ -21,16 +44,6 @@ variable "vpc_sg" {
 variable "subnet_ids" {
   type        = list(string)
   description = "List of subnet IDs associated with the Lambda function."
-}
-
-variable "pants_lambda_entrypoint" {
-  type        = string
-  description = "Lambda entrypoint for pants generated packaged."
-}
-
-variable "pants_lambda_python_version" {
-  type        = string
-  description = "The version of python that Pants built the package with."
 }
 
 variable "appconfig_application_name" {
