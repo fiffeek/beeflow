@@ -8,3 +8,8 @@ python_awslambda(
         "src/python/beeflow/packages/config:config"
     ]
 )
+
+docker_image(
+    name="docker",
+    dependencies = [":package"],
+)

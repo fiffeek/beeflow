@@ -30,7 +30,7 @@ data "aws_iam_policy_document" "allow_s3_notifications" {
       test     = "ArnEquals"
       variable = "aws:SourceArn"
       values = [
-      aws_s3_bucket.dags_storage.arn]
+      var.dags_code_bucket.arn]
     }
   }
 }
@@ -41,7 +41,7 @@ resource "aws_sqs_queue_policy" "allow_s3_notifications" {
 }
 
 resource "aws_s3_bucket_notification" "dags_changing_notifications" {
-  bucket = aws_s3_bucket.dags_storage.id
+  bucket = var.dags_code_bucket.id
 
   queue {
     queue_arn = aws_sqs_queue.dag_parsing_wait_list.arn

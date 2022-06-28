@@ -58,12 +58,21 @@ variable "dag_parsing_trigger_package_filename" {
   description = "Filename of the DAG parsing trigger lambda package."
 }
 
-variable "dag_parsing_processor_package_absolute_path" {
+variable "dag_parsing_processor_repository_url" {
   type        = string
-  description = "Absolute path to the DAG parsing processor lambda package."
+  description = "The URL of the ECR repository."
 }
 
-variable "dag_parsing_processor_package_filename" {
+variable "dag_parsing_processor_image_tag" {
   type        = string
-  description = "Filename of the DAG parsing processor lambda package."
+  description = "The tag of the image to deploy."
+}
+
+variable "dags_code_bucket" {
+  type = object({
+    name = string
+    arn  = string
+    id   = string
+  })
+  description = "The name of the DAGs bucket."
 }
