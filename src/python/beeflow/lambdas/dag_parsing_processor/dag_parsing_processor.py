@@ -64,6 +64,11 @@ def handler(event: Dict[str, Any], context: LambdaContext) -> Dict[str, Any]:
     logger.info("DAG files downloaded locally.")
 
     logger.info("Starting a single ProcessorAgent parsing loop.")
+    # Deactivating the DAGs does not work correctly now
+    # https://github.com/apache/airflow/blob/bf727525e1fd777e51cc8bc17285f6093277fdef/airflow/dag_processing/manager.py#L496
+    # One solution would be to run this loop twice and adjust the timeout parameters?
+    # The rewrite of the subprocesses could also be made...
+    # Logs also seem to be lost, multiprocessing ftw btw.
     processor_agent = get_agent()
     processor_agent.start()
     processor_agent.run_single_parsing_loop()
