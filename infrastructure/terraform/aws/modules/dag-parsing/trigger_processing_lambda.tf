@@ -27,7 +27,7 @@ module "trigger_processing_lambda" {
     timeout                          = 60
     additional_environment_variables = {}
     memory_size                      = 128
-    reserved_concurrent_executions   = -1
+    reserved_concurrent_executions   = 1
   }
   subnet_ids = var.subnet_ids
   vpc_sg     = var.vpc_sg

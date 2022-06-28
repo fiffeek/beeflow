@@ -44,8 +44,9 @@ def get_agent():
 
 @logger.inject_lambda_context
 def handler(event: Dict[str, Any], context: LambdaContext) -> Dict[str, Any]:
-    logger.info("Downloading DAG files locally.")
-    bucket = s3.Bucket(Configuration.DAGS_BUCKET_ENV_VAR)
+    bucket_name = os.environ[Configuration.DAGS_BUCKET_ENV_VAR]
+    logger.info(f"Downloading DAG files locally to {bucket_name}.")
+    bucket = s3.Bucket(bucket_name)
     download_dags(bucket)
     logger.info("DAG files downloaded locally.")
 
