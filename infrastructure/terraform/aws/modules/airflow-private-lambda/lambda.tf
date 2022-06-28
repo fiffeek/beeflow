@@ -45,7 +45,7 @@ resource "aws_iam_role_policy_attachment" "outside" {
 module "appconfig_access_label" {
   source  = "cloudposse/label/null"
   version = "0.25.0"
-  name    = "appconfig-access"
+  name    = "${module.this.name}-appconfig-access"
   context = module.this
 }
 

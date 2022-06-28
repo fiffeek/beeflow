@@ -76,3 +76,8 @@ variable "dags_code_bucket" {
   })
   description = "The name of the DAGs bucket."
 }
+
+variable "dag_files_arrival_queue_enabled" {
+  type        = bool
+  description = "Specifies whether to enable or disable the outgoing messages to SQS from the S3 bucket."
+}

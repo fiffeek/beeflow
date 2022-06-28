@@ -14,4 +14,4 @@ trousers:
 	./pants check ::
 
 push-example-dags:
-	aws s3 cp src/python/beeflow/examples/dags s3://beeflow-dev-dags-parsing/dags --recursive
+	aws s3 cp src/python/beeflow/examples/dags s3://beeflow-dev-dags-code-bucket --recursive

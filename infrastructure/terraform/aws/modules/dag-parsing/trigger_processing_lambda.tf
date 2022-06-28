@@ -12,13 +12,16 @@ module "trigger_processing_lambda" {
   airflow_home                             = var.airflow_home
   appconfig_application_configuration_name = var.appconfig_application_configuration_name
   appconfig_application_name               = var.appconfig_application_name
-  lambda_code_bucket_name                  = var.lambda_code_bucket_name
-  package_absolute_path                    = var.dag_parsing_trigger_package_absolute_path
-  package_filename                         = var.dag_parsing_trigger_package_filename
-  pants_lambda_entrypoint                  = var.pants_lambda_entrypoint
-  pants_lambda_python_version              = var.pants_lambda_python_version
   is_lambda_dockerized                     = false
   is_lambda_packaged                       = true
+
+  lambda_packaged_spec = {
+    lambda_code_bucket_name     = var.lambda_code_bucket_name
+    package_absolute_path       = var.dag_parsing_trigger_package_absolute_path
+    package_filename            = var.dag_parsing_trigger_package_filename
+    pants_lambda_entrypoint     = var.pants_lambda_entrypoint
+    pants_lambda_python_version = var.pants_lambda_python_version
+  }
 
   spec = {
     timeout                          = 60
@@ -64,6 +67,8 @@ resource "aws_iam_role_policy_attachment" "allow_waitlist_pull" {
 }
 
 resource "aws_lambda_event_source_mapping" "dag_files_arrival" {
+  count = var.dag_files_arrival_queue_enabled ? 1 : 0
+
   event_source_arn                   = aws_sqs_queue.dag_parsing_wait_list.arn
   function_name                      = module.trigger_processing_lambda.arn
   batch_size                         = var.batch_size

@@ -31,5 +31,5 @@ module "dag_parsing_processor_lambda" {
   subnet_ids = var.subnet_ids
   vpc_sg     = var.vpc_sg
 
-  context = module.trigger_processing_lambda_label
+  context = module.dag_parsing_processor_lambda_label
 }
