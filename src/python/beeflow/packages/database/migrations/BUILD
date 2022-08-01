@@ -1,3 +1,3 @@
 python_sources(dependencies = [
-    "src/python/beeflow/packages/migrations/versions:versions"
+    "src/python/beeflow/packages/database/migrations/versions:versions"
 ])
