@@ -660,7 +660,7 @@ def initdb(session: Session = NEW_SESSION):
 def _get_alembic_config():
     from alembic.config import Config
 
-    package_dir = os.path.dirname(airflow.__file__)
+    package_dir = os.path.dirname(os.path.realpath(__file__))
     directory = os.path.join(package_dir, 'migrations')
     config = Config(os.path.join(package_dir, 'alembic.ini'))
     config.set_main_option('script_location', directory.replace('%', '%%'))
