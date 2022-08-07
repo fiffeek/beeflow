@@ -22,6 +22,9 @@ apply_ecr-repositories:
 apply_buckets:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/buckets && terragrunt apply"
 
+apply_cdc-forwarder:
+	docker-compose run --rm terragrunt_aws bash -c "cd dev/cdc-forwarder && terragrunt apply"
+
 plan_all:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev && terragrunt run-all plan"
 
