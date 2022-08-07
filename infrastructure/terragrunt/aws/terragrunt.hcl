@@ -4,6 +4,7 @@ locals {
   environment_vars = read_terragrunt_config(find_in_parent_folders("environment.hcl"))
   database_vars    = read_terragrunt_config(find_in_parent_folders("database.hcl"))
   pants_vars       = read_terragrunt_config(find_in_parent_folders("pants.hcl"))
+  events_vars      = read_terragrunt_config(find_in_parent_folders("events.hcl"))
 
   account_name = local.account_vars.locals.account_name
   account_id   = local.account_vars.locals.aws_account_id
@@ -41,5 +42,6 @@ inputs = merge(
   local.region_vars.locals,
   local.environment_vars.locals,
   local.database_vars.locals,
-  local.pants_vars.locals
+  local.pants_vars.locals,
+  local.events_vars.locals
 )

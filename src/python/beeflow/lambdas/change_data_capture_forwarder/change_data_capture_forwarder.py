@@ -12,7 +12,8 @@ logger = Logger()
 @event_parser(model=CDCInput)
 @logger.inject_lambda_context
 def handler(event: CDCInput, context: LambdaContext) -> Dict[str, Any]:
-    logger.info(f"Got event {event}")
+    # parse event somewhat and pass it to the EventBridge
+
     return {
         "lambda_request_id": context.aws_request_id,
         "lambda_arn": context.invoked_function_arn,

@@ -25,6 +25,9 @@ apply_buckets:
 apply_cdc-forwarder:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/cdc-forwarder && terragrunt apply"
 
+apply_eventbridge:
+	docker-compose run --rm terragrunt_aws bash -c "cd dev/eventbridge && terragrunt apply"
+
 plan_all:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev && terragrunt run-all plan"
 
