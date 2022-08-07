@@ -12,7 +12,7 @@ module "beeflow_events" {
   bus_name = var.beeflow_main_event_bus_name
 
   rules = {
-    orders = {
+    dag-created = {
       description = "Capture DAG creation data"
       event_pattern = jsonencode({
         "detail": {
