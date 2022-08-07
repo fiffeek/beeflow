@@ -27,7 +27,6 @@ Create Date: 2022-08-07 12:29:44.510068
 import sqlalchemy as sa
 from alembic import op
 
-
 # revision identifiers, used by Alembic.
 revision = 'b3df883b80f3'
 down_revision = '1e014567e912'
@@ -35,10 +34,14 @@ branch_labels = None
 depends_on = None
 
 
+def generate_dag_created_json_string() -> str:
+    return '{"metadata": {"event_type": "dag_created", "dag_id": NEW.dag_id}}'
+
+
 def upgrade():
     """Apply trigger event on dag creation"""
     conn = op.get_bind()
-    conn.execute("""
+    conn.execute(f"""
 CREATE OR REPLACE FUNCTION dag_created_trigger()
   RETURNS TRIGGER
   LANGUAGE PLPGSQL
@@ -46,8 +49,8 @@ CREATE OR REPLACE FUNCTION dag_created_trigger()
 $$
 BEGIN
    PERFORM * FROM aws_lambda.invoke(aws_commons.create_lambda_function_arn('beeflow-dev-cdc-forwarder', 'us-east-2'),
-                                '{"metadata": {}}'::json,
-                                'Event');
+                                    '{generate_dag_created_json_string()}'::json,
+                                    'Event');
     RETURN NEW;
 END
 $$
@@ -59,6 +62,7 @@ CREATE TRIGGER new_dag_trigger
   FOR EACH ROW
   EXECUTE PROCEDURE dag_created_trigger();
 """)
+
 
 def downgrade():
     """Unapply trigger event on dag creation"""
