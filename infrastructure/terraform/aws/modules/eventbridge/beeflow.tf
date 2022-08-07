@@ -1,7 +1,7 @@
 module "beeflow_events_label" {
-  source  = "cloudposse/label/null"
+  source = "cloudposse/label/null"
   version = "0.25.0"
-  name    = "events"
+  name = "events"
   context = module.this
 }
 
@@ -13,9 +13,14 @@ module "beeflow_events" {
 
   rules = {
     orders = {
-      description   = "Capture DAG creation data"
-      event_pattern = jsonencode({ "event_type" : ["dag_created"] })
-      enabled       = true
+      description = "Capture DAG creation data"
+      event_pattern = jsonencode({
+        "detail": {
+          "event_type" : [
+            "dag_created"]
+        }
+      })
+      enabled = true
     }
   }
 
