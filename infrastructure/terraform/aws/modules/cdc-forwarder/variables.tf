@@ -47,3 +47,8 @@ variable "package_filename" {
   type        = string
   description = "Filename of the CDC input forwarder lambda package."
 }
+
+variable "beeflow_main_event_bus_name" {
+  type = string
+  description = "The name of the main Beeflow event bus"
+}

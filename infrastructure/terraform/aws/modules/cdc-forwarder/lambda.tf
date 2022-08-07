@@ -25,7 +25,9 @@ module "cdc_forwarder_lambda" {
 
   spec = {
     timeout                          = 60
-    additional_environment_variables = {}
+    additional_environment_variables = {
+      "EVENTBRIDGE_BUS_NAME": var.beeflow_main_event_bus_name
+    }
     memory_size                      = 128
     reserved_concurrent_executions   = 1
   }
