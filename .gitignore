@@ -156,3 +156,7 @@ vendor
 .plugins
 .plugins-aws
 .terragrunt-cache-aws
+
+# SSH keys
+beeflow-dev-jump-host-ssh
+beeflow-dev-jump-host-ssh.pub

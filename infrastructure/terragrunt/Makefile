@@ -28,6 +28,9 @@ apply_cdc-forwarder:
 apply_eventbridge:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/eventbridge && terragrunt apply"
 
+apply_jump-host:
+	docker-compose run --rm terragrunt_aws bash -c "cd dev/jump-host && terragrunt apply"
+
 plan_all:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev && terragrunt run-all plan"
 
