@@ -7,3 +7,8 @@ variable "dag_parsing_processor" {
   type        = string
   description = "Name of the DAG parsing processor ECR repository."
 }
+
+variable "scheduler" {
+  type = string
+  description = "Name of the scheduler ECR repository."
+}

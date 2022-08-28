@@ -9,3 +9,9 @@ resource "aws_ecr_repository" "dag_parsing_processor" {
   image_tag_mutability = "MUTABLE"
   tags                 = module.this.tags
 }
+
+resource "aws_ecr_repository" "scheduler" {
+  name                 = var.scheduler
+  image_tag_mutability = "MUTABLE"
+  tags                 = module.this.tags
+}
