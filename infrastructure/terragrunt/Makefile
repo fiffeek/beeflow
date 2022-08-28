@@ -31,6 +31,9 @@ apply_eventbridge:
 apply_jump-host:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/jump-host && terragrunt apply"
 
+apply_scheduler:
+	docker-compose run --rm terragrunt_aws bash -c "cd dev/scheduler && terragrunt apply"
+
 plan_all:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev && terragrunt run-all plan"
 
