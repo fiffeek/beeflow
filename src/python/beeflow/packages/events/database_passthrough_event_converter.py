@@ -1,0 +1,53 @@
+from aws_lambda_powertools import Logger
+
+from beeflow.packages.events.beeflow_event import BeeflowEvent
+from beeflow.packages.events.cdc_input import CDCInput
+from beeflow.packages.events.task_instance_failed import TaskInstanceFailed
+from beeflow.packages.events.task_instance_queued_event import TaskInstanceQueued
+
+logger = Logger()
+
+
+class DatabasePassthroughEventConverter:
+
+    def __init__(self, event: CDCInput):
+        self.event = event
+        self.metadata = self.event.metadata
+
+    def __is_task_instance_event(self) -> bool:
+        required_fields = ["task_id",
+                           "dag_id",
+                           "run_id",
+                           "state",
+                           "operator",
+                           "max_tries",
+                           "queue",
+                           "pool",
+                           "try_number",
+                           "map_index"]
+        for field in required_fields:
+            if field not in self.metadata:
+                logger.info(f"Event cannot be identified as Task Instance event as {field} is missing")
+                return False
+        return True
+
+    def __convert_to_task_instance_event(self) -> BeeflowEvent:
+        if self.metadata["state"] == "queued":
+            return TaskInstanceQueued(dag_id=self.metadata["dag_id"],
+                                      run_id=self.metadata["run_id"],
+                                      task_id=self.metadata["task_id"],
+                                      map_index=self.metadata["map_index"],
+                                      try_number=self.metadata["try_number"])
+        if self.metadata["state"] == "failed":
+            return TaskInstanceFailed(dag_id=self.metadata["dag_id"],
+                                      run_id=self.metadata["run_id"],
+                                      task_id=self.metadata["task_id"],
+                                      map_index=self.metadata["map_index"],
+                                      try_number=self.metadata["try_number"])
+
+        raise ValueError(f"State {self.metadata['state']} unknown")
+
+    def convert(self) -> BeeflowEvent:
+        if self.__is_task_instance_event():
+            return self.__convert_to_task_instance_event()
+        raise ValueError(f"The input event {self.event} cannot be converted to a Beeflow event")

@@ -11,6 +11,7 @@ from beeflow.packages.events.cdc_input import CDCInput
 from aws_lambda_powertools import Logger
 
 from beeflow.packages.events.dag_created import DAGCreatedEvent
+from beeflow.packages.events.database_passthrough_event_converter import DatabasePassthroughEventConverter
 
 logger = Logger()
 cloudwatch_events = boto3.client('events')
@@ -20,10 +21,13 @@ def to_event_bridge_event(event: CDCInput) -> BeeflowEvent:
     logger.info("Converting the event to a beeflow event for event bridge")
 
     metadata = event.metadata
-    event_type = metadata["event_type"]
+    if "event_type" in metadata:
+        event_type = metadata["event_type"]
 
-    if event_type == BeeflowEventType.DAG_CREATED:
-        return DAGCreatedEvent(dag_id=metadata["dag_id"])
+        if event_type == BeeflowEventType.DAG_CREATED:
+            return DAGCreatedEvent(dag_id=metadata["dag_id"])
+    else:
+        return DatabasePassthroughEventConverter(event).convert()
 
     raise ValueError(f"Event type not supported {event_type}")
 
