@@ -13,6 +13,8 @@ logger = Logger()
 def handler(event: Dict[str, Any], context: LambdaContext) -> Dict[str, Any]:
 
     logger.info("Triggering Airflow's migrations.")
+    if "downgrade_to" in event:
+        db.downgrade(to_revision=event["downgrade_to"])
     db.upgradedb()
     logger.info("Finished running migrations")
 

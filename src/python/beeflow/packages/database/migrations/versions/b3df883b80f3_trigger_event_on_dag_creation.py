@@ -35,7 +35,7 @@ depends_on = None
 
 
 def generate_dag_created_json_string() -> str:
-    return '{"metadata": {"event_type": "dag_created", "dag_id": NEW.dag_id}}'
+    return """CONCAT('{"metadata": {"event_type": "dag_created", "dag_id": "', NEW.dag_id, '"}}')"""
 
 
 def upgrade():
@@ -49,7 +49,7 @@ CREATE OR REPLACE FUNCTION dag_created_trigger()
 $$
 BEGIN
    PERFORM * FROM aws_lambda.invoke(aws_commons.create_lambda_function_arn('beeflow-dev-cdc-forwarder', 'us-east-2'),
-                                    '{generate_dag_created_json_string()}'::json,
+                                    {generate_dag_created_json_string()}::json,
                                     'Event');
     RETURN NEW;
 END
