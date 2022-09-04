@@ -1,8 +1,6 @@
-import os
 from datetime import timedelta
 from typing import Any, Dict
 
-import boto3
 from airflow import settings
 from airflow.configuration import conf
 from airflow.dag_processing.manager import DagFileProcessorAgent
@@ -10,24 +8,11 @@ from airflow.models import DagModel
 from airflow.utils.session import provide_session
 from aws_lambda_powertools import Logger
 from aws_lambda_powertools.utilities.typing import LambdaContext
-from beeflow.packages.config.config import Configuration
+
+from beeflow.packages.dags_downloader.dags_downloader import DagsDownloader
 from beeflow.packages.events.dags_processed import DAGsProcessed
 
 logger = Logger()
-
-s3 = boto3.resource('s3')
-
-
-def download_dags(bucket):
-    for s3_object in bucket.objects.all():
-        path, filename = os.path.split(s3_object.key)
-        local_path = os.path.join(settings.DAGS_FOLDER, path)
-        if local_path.startswith("dags/"):
-            local_path = local_path[len("dags/") :]
-        os.makedirs(local_path, exist_ok=True)
-        full_local_path = os.path.join(local_path, filename)
-        logger.info(f"Downloading {s3_object.key} to {full_local_path}")
-        bucket.download_file(s3_object.key, full_local_path)
 
 
 def get_agent():
@@ -57,12 +42,7 @@ def log_parsed_dags(session=None):
 
 @logger.inject_lambda_context
 def handler(event: Dict[str, Any], context: LambdaContext) -> Dict[str, Any]:
-    bucket_name = os.environ[Configuration.DAGS_BUCKET_ENV_VAR]
-    logger.info(f"Downloading DAG files locally to {bucket_name}.")
-    bucket = s3.Bucket(bucket_name)
-    download_dags(bucket)
-    logger.info("DAG files downloaded locally.")
-
+    DagsDownloader().download_dags()
     logger.info("Starting a single ProcessorAgent parsing loop.")
     # Deactivating the DAGs does not work correctly now
     # https://github.com/apache/airflow/blob/bf727525e1fd777e51cc8bc17285f6093277fdef/airflow/dag_processing/manager.py#L496
