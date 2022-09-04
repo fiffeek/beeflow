@@ -541,13 +541,6 @@ class SchedulerJob(BaseJob):
             queue = ti.queue
             self.log.info("Sending %s to executor with priority %s and queue %s", ti.key, priority, queue)
 
-            self.executor.queue_command(
-                ti,
-                command,
-                priority=priority,
-                queue=queue,
-            )
-
     def _critical_section_enqueue_task_instances(self, session: Session) -> int:
         """
         Enqueues TaskInstances for execution.
