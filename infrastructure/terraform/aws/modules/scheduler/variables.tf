@@ -32,3 +32,12 @@ variable "image_tag" {
   type        = string
   description = "The tag of the image to deploy."
 }
+
+variable "dags_code_bucket" {
+  type = object({
+    name = string
+    arn  = string
+    id   = string
+  })
+  description = "The name of the DAGs bucket."
+}
