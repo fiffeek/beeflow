@@ -15,3 +15,9 @@ resource "aws_ecr_repository" "scheduler" {
   image_tag_mutability = "MUTABLE"
   tags                 = module.this.tags
 }
+
+resource "aws_ecr_repository" "lambda_executor" {
+  name                 = var.lambda_executor
+  image_tag_mutability = "MUTABLE"
+  tags                 = module.this.tags
+}

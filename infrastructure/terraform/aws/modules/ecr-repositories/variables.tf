@@ -12,3 +12,8 @@ variable "scheduler" {
   type = string
   description = "Name of the scheduler ECR repository."
 }
+
+variable "lambda_executor" {
+  type = string
+  description = "Name of the lambda executor ECR repository."
+}

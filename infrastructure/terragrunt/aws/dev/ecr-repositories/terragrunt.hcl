@@ -10,4 +10,5 @@ inputs = {
   migrations_runner     = "migrations_runner"
   dag_parsing_processor = "dag_parsing_processor"
   scheduler             = "scheduler"
+  lambda_executor       = "lambda_executor"
 }
