@@ -57,3 +57,39 @@ resource "aws_iam_role_policy_attachment" "readonly_dags_access" {
   policy_arn = aws_iam_policy.readonly_dags_access.arn
 }
 
+data "aws_iam_policy_document" "allow_sqs_pull" {
+  statement {
+    sid = "AllowDAGsParsingWaitlistPull"
+    actions = [
+      "sqs:ReceiveMessage",
+      "sqs:DeleteMessage",
+      "sqs:GetQueueAttributes"
+    ]
+    resources = [
+      aws_sqs_queue.scheduler_sqs.arn
+    ]
+  }
+}
+
+module "sqs_access_label" {
+  source  = "cloudposse/label/null"
+  version = "0.25.0"
+  name    = "scheduler-sqs-wait"
+  context = module.this
+}
+
+resource "aws_iam_policy" "allow_sqs_pull" {
+  name   = module.sqs_access_label.id
+  policy = data.aws_iam_policy_document.allow_sqs_pull.json
+}
+
+resource "aws_iam_role_policy_attachment" "allow_sqs_pull" {
+  role       = module.lambda.role_name
+  policy_arn = aws_iam_policy.allow_sqs_pull.arn
+}
+
+resource "aws_lambda_event_source_mapping" "scheduler_sqs_trigger" {
+  event_source_arn                   = aws_sqs_queue.scheduler_sqs.arn
+  function_name                      = module.lambda.arn
+}
+
