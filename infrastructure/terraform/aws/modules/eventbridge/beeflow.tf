@@ -13,7 +13,8 @@ module "beeflow_events" {
 
   attach_sqs_policy = true
   sqs_target_arns = [
-    var.scheduler_sqs.arn
+    var.scheduler_sqs.arn,
+    var.lambda_executor_sqs.arn
   ]
 
   rules = {
@@ -37,6 +38,16 @@ module "beeflow_events" {
       })
       enabled = true
     }
+    task-queued = {
+      description = "Capture task queued event"
+      event_pattern = jsonencode({
+        "detail": {
+          "event_type" : [
+            "task_instance_queued"]
+        }
+      })
+      enabled = true
+    }
   }
 
   targets = {
@@ -50,6 +61,12 @@ module "beeflow_events" {
       {
         name = "send-dag-updated-events-to-scheduler"
         arn = var.scheduler_sqs.arn
+      },
+    ]
+    task-queued = [
+      {
+        name = "send-task-queued-events-to-lambda-executor"
+        arn = var.lambda_executor_sqs.arn
       },
     ]
   }

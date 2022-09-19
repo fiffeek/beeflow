@@ -10,3 +10,11 @@ variable "scheduler_sqs" {
   })
   description = "The ARN/id of the SQS that serves requests to the scheduler"
 }
+
+variable "lambda_executor_sqs" {
+  type = object({
+    arn = string,
+    id = string,
+  })
+  description = "The ARN/id of the SQS that serves requests to the scheduler"
+}
