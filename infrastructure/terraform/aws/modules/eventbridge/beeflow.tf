@@ -27,12 +27,28 @@ module "beeflow_events" {
       })
       enabled = true
     }
+    dag-updated = {
+      description = "Capture DAG update data"
+      event_pattern = jsonencode({
+        "detail": {
+          "event_type" : [
+            "dag_updated"]
+        }
+      })
+      enabled = true
+    }
   }
 
   targets = {
     dag-created = [
       {
         name = "send-dag-created-orders-to-scheduler"
+        arn = var.scheduler_sqs.arn
+      },
+    ]
+    dag-updated = [
+      {
+        name = "send-dag-updated-events-to-scheduler"
         arn = var.scheduler_sqs.arn
       },
     ]
