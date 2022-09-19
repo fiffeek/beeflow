@@ -11,6 +11,11 @@ module "beeflow_events" {
 
   bus_name = var.beeflow_main_event_bus_name
 
+  attach_sqs_policy = true
+  sqs_target_arns = [
+    var.scheduler_sqs.arn
+  ]
+
   rules = {
     dag-created = {
       description = "Capture DAG creation data"
@@ -22,6 +27,15 @@ module "beeflow_events" {
       })
       enabled = true
     }
+  }
+
+  targets = {
+    dag-created = [
+      {
+        name = "send-dag-created-orders-to-scheduler"
+        arn = var.scheduler_sqs.arn
+      },
+    ]
   }
 
   tags = module.beeflow_events_label.tags
