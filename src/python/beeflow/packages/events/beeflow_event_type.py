@@ -7,5 +7,6 @@ class BeeflowEventType(str, Enum):
     DAGS_PROCESSED = 'dags_processed'
     CDC_INPUT = 'cdc_input'
     DAG_CREATED = 'dag_created'
+    DAG_UPDATED = 'dag_updated'
     TASK_INSTANCE_QUEUED = 'task_instance_queued'
     TASK_INSTANCE_FAILED = 'task_instance_failed'
