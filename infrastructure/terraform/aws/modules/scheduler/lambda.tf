@@ -28,7 +28,7 @@ module "lambda" {
 
 data "aws_iam_policy_document" "readonly_dags_access" {
   statement {
-    sid = "ReadonlyDAGsParsingProcessorAccess"
+    sid = "ReadonlyDAGAccessScheduler"
     actions = [
       "s3:Get*",
       "s3:List*"
@@ -59,7 +59,7 @@ resource "aws_iam_role_policy_attachment" "readonly_dags_access" {
 
 data "aws_iam_policy_document" "allow_sqs_pull" {
   statement {
-    sid = "AllowDAGsParsingWaitlistPull"
+    sid = "AllowSQSSchedulerPull"
     actions = [
       "sqs:ReceiveMessage",
       "sqs:DeleteMessage",
