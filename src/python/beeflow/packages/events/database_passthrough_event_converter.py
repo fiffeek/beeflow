@@ -46,6 +46,7 @@ class DatabasePassthroughEventConverter:
                                       run_id=self.metadata["run_id"],
                                       task_id=self.metadata["task_id"],
                                       map_index=self.metadata["map_index"],
+                                      pool=self.metadata["pool"],
                                       try_number=self.metadata["try_number"])
         if self.metadata["state"] == "failed":
             return TaskInstanceFailed(dag_id=self.metadata["dag_id"],

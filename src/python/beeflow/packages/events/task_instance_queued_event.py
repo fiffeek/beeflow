@@ -9,3 +9,4 @@ class TaskInstanceQueued(BeeflowEvent):
     task_id: str
     map_index: int
     try_number: int
+    pool: str
