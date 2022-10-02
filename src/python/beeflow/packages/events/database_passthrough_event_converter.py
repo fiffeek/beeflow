@@ -5,6 +5,13 @@ from beeflow.packages.events.cdc_input import CDCInput
 from beeflow.packages.events.dag_updated import DAGUpdatedEvent
 from beeflow.packages.events.task_instance_failed import TaskInstanceFailed
 from beeflow.packages.events.task_instance_queued_event import TaskInstanceQueued
+from beeflow.packages.events.task_instance_restarting import TaskInstanceRestarting
+from beeflow.packages.events.task_instance_running import TaskInstanceRunning
+from beeflow.packages.events.task_instance_shutdown import TaskInstanceShutdown
+from beeflow.packages.events.task_instance_skipped import TaskInstanceSkipped
+from beeflow.packages.events.task_instance_success import TaskInstanceSuccess
+from beeflow.packages.events.task_instance_unknown import TaskInstanceUnknown
+from beeflow.packages.events.task_instance_upstream_failed import TaskInstanceUpstreamFailed
 
 logger = Logger()
 
@@ -54,6 +61,38 @@ class DatabasePassthroughEventConverter:
                                       task_id=self.metadata["task_id"],
                                       map_index=self.metadata["map_index"],
                                       try_number=self.metadata["try_number"])
+        if self.metadata["state"] == "upstream_failed":
+            return TaskInstanceUpstreamFailed(dag_id=self.metadata["dag_id"],
+                                              run_id=self.metadata["run_id"],
+                                              task_id=self.metadata["task_id"],
+                                              try_number=self.metadata["try_number"])
+        if self.metadata["state"] == "success":
+            return TaskInstanceSuccess(dag_id=self.metadata["dag_id"],
+                                       run_id=self.metadata["run_id"],
+                                       task_id=self.metadata["task_id"],
+                                       map_index=self.metadata["map_index"],
+                                       try_number=self.metadata["try_number"])
+        if self.metadata["state"] == "skipped":
+            return TaskInstanceSkipped(dag_id=self.metadata["dag_id"],
+                                       run_id=self.metadata["run_id"],
+                                       task_id=self.metadata["task_id"],
+                                       try_number=self.metadata["try_number"])
+        if self.metadata["state"] == "running":
+            return TaskInstanceRunning(dag_id=self.metadata["dag_id"],
+                                       run_id=self.metadata["run_id"],
+                                       task_id=self.metadata["task_id"])
+        if self.metadata["state"] == "restarting":
+            return TaskInstanceRestarting(dag_id=self.metadata["dag_id"],
+                                          run_id=self.metadata["run_id"],
+                                          task_id=self.metadata["task_id"])
+        if self.metadata["state"] == "shutdown":
+            return TaskInstanceShutdown(dag_id=self.metadata["dag_id"],
+                                        run_id=self.metadata["run_id"],
+                                        task_id=self.metadata["task_id"])
+        if self.metadata["state"] is None:
+            return TaskInstanceUnknown(dag_id=self.metadata["dag_id"],
+                                       run_id=self.metadata["run_id"],
+                                       task_id=self.metadata["task_id"])
 
         raise ValueError(f"State {self.metadata['state']} unknown")
 

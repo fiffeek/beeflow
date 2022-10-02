@@ -16,6 +16,9 @@ from beeflow.packages.events.task_instance_queued_event import TaskInstanceQueue
 logger = Logger()
 
 
+# TODO: Rewrite this executor to use Step functions so if any issue arises there is a watcher
+# that propagates the issues to the database.
+
 def _run_task_by_local_task_job(pool, task_instance):
     """Run LocalTaskJob, which monitors the raw task execution process"""
     run_job = LocalTaskJob(
@@ -40,6 +43,8 @@ def get_dag(subdir: Optional[str], dag_id: str) -> "DAG":
     return dagbag.dags[dag_id]
 
 
+# Change to https://github.com/apache/airflow/blob/ce071172e22fba018889db7dcfac4a4d0fc41cda/airflow/cli/commands/task_command.py#L196 to
+# execute via LocalExecutor instead
 def execute_work(event: TaskInstanceQueued):
     # Assumes the task code lives under DAGS_FOLDER
     dag: DAG = get_dag("DAGS_FOLDER", event.dag_id)
