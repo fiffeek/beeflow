@@ -99,6 +99,26 @@ module "beeflow_events" {
       })
       enabled = true
     }
+    dag-run-failed = {
+      description = "Capture dag run failed events"
+      event_pattern = jsonencode({
+        "detail": {
+          "event_type" : [
+            "dag_run_failed"]
+        }
+      })
+      enabled = true
+    }
+    dag-run-succeeded = {
+      description = "Capture dag run succeeded events"
+      event_pattern = jsonencode({
+        "detail": {
+          "event_type" : [
+            "dag_run_success"]
+        }
+      })
+      enabled = true
+    }
   }
 
   targets = {
@@ -147,6 +167,18 @@ module "beeflow_events" {
     task-transient-states = [
       {
         name = "send-task-transient-events-to-scheduler"
+        arn = var.scheduler_sqs.arn
+      },
+    ]
+    dag-run-failed = [
+      {
+        name = "send-dag-run-failed-events-to-scheduler"
+        arn = var.scheduler_sqs.arn
+      },
+    ]
+    dag-run-succeeded = [
+      {
+        name = "send-dag-run-success-events-to-scheduler"
         arn = var.scheduler_sqs.arn
       },
     ]
