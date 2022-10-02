@@ -2,6 +2,9 @@ from aws_lambda_powertools import Logger
 
 from beeflow.packages.events.beeflow_event import BeeflowEvent
 from beeflow.packages.events.cdc_input import CDCInput
+from beeflow.packages.events.dag_run_failed import DagRunFailed
+from beeflow.packages.events.dag_run_running import DagRunRunning
+from beeflow.packages.events.dag_run_success import DagRunSuccess
 from beeflow.packages.events.dag_updated import DAGUpdatedEvent
 from beeflow.packages.events.task_instance_failed import TaskInstanceFailed
 from beeflow.packages.events.task_instance_queued_event import TaskInstanceQueued
@@ -44,6 +47,20 @@ class DatabasePassthroughEventConverter:
         for field in required_fields:
             if field not in self.metadata:
                 logger.info(f"Event cannot be identified as DAG event as {field} is missing")
+                return False
+        return True
+
+    def __is_dag_run_event(self) -> bool:
+        required_fields = ["dag_id",
+                           "dag_hash",
+                           "state",
+                           "run_id",
+                           "run_type",
+                           "queued_at",
+                           "execution_date"]
+        for field in required_fields:
+            if field not in self.metadata:
+                logger.info(f"Event cannot be identified as DAG run event as {field} is missing")
                 return False
         return True
 
@@ -101,9 +118,30 @@ class DatabasePassthroughEventConverter:
                                is_active=self.metadata["is_active"],
                                is_paused=self.metadata["is_paused"])
 
+    def __convert_to_dag_run_event(self) -> BeeflowEvent:
+        if self.metadata["state"] == "success":
+            return DagRunSuccess(dag_id=self.metadata["dag_id"],
+                                 dag_hash=self.metadata["dag_hash"],
+                                 run_id=self.metadata["run_id"],
+                                 run_type=self.metadata["run_type"])
+        if self.metadata["state"] == "failed":
+            return DagRunFailed(dag_id=self.metadata["dag_id"],
+                                dag_hash=self.metadata["dag_hash"],
+                                run_id=self.metadata["run_id"],
+                                run_type=self.metadata["run_type"])
+        if self.metadata["state"] == "running":
+            return DagRunRunning(dag_id=self.metadata["dag_id"],
+                                 dag_hash=self.metadata["dag_hash"],
+                                 run_id=self.metadata["run_id"],
+                                 run_type=self.metadata["run_type"])
+
+        raise ValueError(f"State {self.metadata['state']} unknown")
+
     def convert(self) -> BeeflowEvent:
         if self.__is_task_instance_event():
             return self.__convert_to_task_instance_event()
         if self.__is_dag_event():
             return self.__convert_to_dag_event()
+        if self.__is_dag_run_event():
+            return self.__convert_to_dag_run_event()
         raise ValueError(f"The input event {self.event} cannot be converted to a Beeflow event")

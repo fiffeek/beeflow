@@ -22,3 +22,8 @@ class BeeflowEventType(str, Enum):
     TASK_INSTANCE_RESTARTING = 'task_instance_restarting'
     TASK_INSTANCE_SHUTDOWN = 'task_instance_shutdown'
     TASK_INSTANCE_UPSTREAM_FAILED = 'task_instance_upstream_failed'
+
+    # DB DAG run events
+    DAG_RUN_SUCCESS = 'dag_run_success'
+    DAG_RUN_FAILED = 'dag_run_failed'
+    DAG_RUN_RUNNING = 'dag_run_running'
