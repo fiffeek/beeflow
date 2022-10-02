@@ -48,6 +48,36 @@ module "beeflow_events" {
       })
       enabled = true
     }
+    task-failed = {
+      description = "Capture task failed events"
+      event_pattern = jsonencode({
+        "detail": {
+          "event_type" : [
+            "task_instance_failed"]
+        }
+      })
+      enabled = true
+    }
+    task-succeeded = {
+      description = "Capture task succeeded events"
+      event_pattern = jsonencode({
+        "detail": {
+          "event_type" : [
+            "task_instance_success"]
+        }
+      })
+      enabled = true
+    }
+    task-skipped = {
+      description = "Capture task skipped events"
+      event_pattern = jsonencode({
+        "detail": {
+          "event_type" : [
+            "task_instance_skipped"]
+        }
+      })
+      enabled = true
+    }
   }
 
   targets = {
@@ -67,6 +97,24 @@ module "beeflow_events" {
       {
         name = "send-task-queued-events-to-lambda-executor"
         arn = var.lambda_executor_sqs.arn
+      },
+    ]
+    task-failed = [
+      {
+        name = "send-task-failed-events-to-lambda-executor"
+        arn = var.scheduler_sqs.arn
+      },
+    ]
+    task-succeeded = [
+      {
+        name = "send-task-success-events-to-lambda-executor"
+        arn = var.scheduler_sqs.arn
+      },
+    ]
+    task-skipped = [
+      {
+        name = "send-task-skipped-events-to-lambda-executor"
+        arn = var.scheduler_sqs.arn
       },
     ]
   }
