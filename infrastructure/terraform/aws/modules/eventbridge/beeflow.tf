@@ -78,6 +78,27 @@ module "beeflow_events" {
       })
       enabled = true
     }
+    task-up-for-retry = {
+      description = "Capture task up for retry events"
+      event_pattern = jsonencode({
+        "detail": {
+          "event_type" : [
+            "task_instance_up_for_retry"]
+        }
+      })
+      enabled = true
+    }
+    task-transient-states = {
+      description = "Capture task transient events"
+      event_pattern = jsonencode({
+        "detail": {
+          "event_type" : [
+            "task_instance_upstream_failed",
+            "task_instance_unknown"]
+        }
+      })
+      enabled = true
+    }
   }
 
   targets = {
@@ -101,19 +122,31 @@ module "beeflow_events" {
     ]
     task-failed = [
       {
-        name = "send-task-failed-events-to-lambda-executor"
+        name = "send-task-failed-events-to-scheduler"
         arn = var.scheduler_sqs.arn
       },
     ]
     task-succeeded = [
       {
-        name = "send-task-success-events-to-lambda-executor"
+        name = "send-task-success-events-to-scheduler"
         arn = var.scheduler_sqs.arn
       },
     ]
     task-skipped = [
       {
-        name = "send-task-skipped-events-to-lambda-executor"
+        name = "send-task-skipped-events-to-scheduler"
+        arn = var.scheduler_sqs.arn
+      },
+    ]
+    task-up-for-retry = [
+      {
+        name = "send-task-up-for-retry-events-to-scheduler"
+        arn = var.scheduler_sqs.arn
+      },
+    ]
+    task-transient-states = [
+      {
+        name = "send-task-transient-events-to-scheduler"
         arn = var.scheduler_sqs.arn
       },
     ]
