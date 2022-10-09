@@ -11,4 +11,5 @@ inputs = {
   dag_parsing_processor = "dag_parsing_processor"
   scheduler             = "scheduler"
   lambda_executor       = "lambda_executor"
+  dag_schedule_updater  = "dag_schedule_updater"
 }

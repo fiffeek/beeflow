@@ -37,7 +37,7 @@ def create_new_cron_schedule(event: DAGCreatedEvent) -> BeeflowEvent:
         Description=f'Rule to trigger execution of tasks for {dag.dag_id}',
         EventBusName='default'
     )
-    # TODO: Add rule target to SQS 
+    # TODO: Add rule target to SQS
     return NewCronScheduleCreated(dag_id=event.dag_id, rule_id=dag.dag_id)
 
 
