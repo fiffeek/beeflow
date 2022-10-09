@@ -82,6 +82,8 @@ def create_new_cron_schedule(event: DAGCreatedEvent) -> BeeflowEvent:
 @event_parser(model=EventBridgeModel, envelope=envelopes.SqsEnvelope)
 def handler(events: List[EventBridgeModel], context: LambdaContext) -> Dict[str, Any]:
     for event in events:
+        # TODO: On DAG update, check if rule needs to be changed
+        # TODO: On DAG deletion, delete the cron rule
         try:
             parsed_event: DAGCreatedEvent = parse(event=event.detail, model=DAGCreatedEvent)
             return create_new_cron_schedule(parsed_event).dict()
