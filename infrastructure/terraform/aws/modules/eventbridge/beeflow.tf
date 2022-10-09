@@ -14,7 +14,8 @@ module "beeflow_events" {
   attach_sqs_policy = true
   sqs_target_arns = [
     var.scheduler_sqs.arn,
-    var.lambda_executor_sqs.arn
+    var.lambda_executor_sqs.arn,
+    var.dag_schedule_updater_sqs.arn
   ]
 
   rules = {
@@ -126,6 +127,10 @@ module "beeflow_events" {
       {
         name = "send-dag-created-orders-to-scheduler"
         arn = var.scheduler_sqs.arn
+      },
+      {
+        name = "send-dag-created-orders-to-schedule-updater"
+        arn = var.dag_schedule_updater_sqs.arn
       },
     ]
     dag-updated = [
