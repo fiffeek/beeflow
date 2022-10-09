@@ -15,6 +15,8 @@ from beeflow.packages.events.dags_processed import DAGsProcessed
 logger = Logger()
 
 
+# TODO: Trigger through SQS
+
 def get_agent():
     processor_timeout_seconds: int = conf.getint('core', 'dag_file_processor_timeout')
     processor_timeout = timedelta(seconds=processor_timeout_seconds)

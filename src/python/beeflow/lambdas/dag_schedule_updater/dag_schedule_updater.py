@@ -13,6 +13,7 @@ from aws_lambda_powertools.utilities.typing import LambdaContext
 from pydantic import ValidationError
 
 from beeflow.packages.config.config import Configuration
+from beeflow.packages.dags_downloader.dags_downloader import DagsDownloader
 from beeflow.packages.events.beeflow_event import BeeflowEvent
 from beeflow.packages.events.dag_created import DAGCreatedEvent
 from beeflow.packages.events.dag_cron_triggered import DAGCronTriggered
@@ -81,6 +82,7 @@ def create_new_cron_schedule(event: DAGCreatedEvent) -> BeeflowEvent:
 @logger.inject_lambda_context
 @event_parser(model=EventBridgeModel, envelope=envelopes.SqsEnvelope)
 def handler(events: List[EventBridgeModel], context: LambdaContext) -> Dict[str, Any]:
+    DagsDownloader().download_dags()
     for event in events:
         # TODO: On DAG update, check if rule needs to be changed
         # TODO: On DAG deletion, delete the cron rule
