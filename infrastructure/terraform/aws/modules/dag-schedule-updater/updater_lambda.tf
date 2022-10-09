@@ -5,7 +5,7 @@ module "updater_lambda" {
   appconfig_application_configuration_name = var.appconfig_application_configuration_name
   appconfig_application_name = var.appconfig_application_name
   spec = {
-    timeout = 180
+    timeout = 70
     additional_environment_variables = {
       BEEFLOW__DAGS_BUCKET_NAME = var.dags_code_bucket.name
       BEEFLOW__DAG_SCHEDULE_TARGET__SQS_ARN = var.scheduler_sqs_arn

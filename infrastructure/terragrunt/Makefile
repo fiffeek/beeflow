@@ -19,6 +19,9 @@ apply_vpc:
 apply_ecr-repositories:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/ecr-repositories && terragrunt apply"
 
+apply_dag-schedule-updater:
+	docker-compose run --rm terragrunt_aws bash -c "cd dev/dag-schedule-updater && terragrunt apply"
+
 apply_buckets:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/buckets && terragrunt apply"
 
