@@ -7,6 +7,7 @@ class BeeflowEventType(str, Enum):
     DAGS_PROCESSED = 'dags_processed'
     CDC_INPUT = 'cdc_input'
     NEW_CRON_CREATED = 'new_cron_created'
+    DAG_CRON_TRIGGERED = 'dag_cron_triggered'
 
     # DB DAG events
     DAG_CREATED = 'dag_created'

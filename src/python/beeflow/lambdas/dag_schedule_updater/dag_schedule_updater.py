@@ -1,3 +1,5 @@
+import json
+import os
 from typing import Dict, Any, List
 
 import boto3
@@ -10,8 +12,10 @@ from aws_lambda_powertools.utilities.parser.models import EventBridgeModel
 from aws_lambda_powertools.utilities.typing import LambdaContext
 from pydantic import ValidationError
 
+from beeflow.packages.config.config import Configuration
 from beeflow.packages.events.beeflow_event import BeeflowEvent
 from beeflow.packages.events.dag_created import DAGCreatedEvent
+from beeflow.packages.events.dag_cron_triggered import DAGCronTriggered
 from beeflow.packages.events.new_cron_created import NewCronScheduleCreated
 
 logger = Logger()
@@ -24,20 +28,53 @@ def get_dag_by_id(dag_id: str) -> DAG:
     return dagbag.dags[dag_id]
 
 
+# Example of an Airflow cron: "0 0 * * *"
+# Example of the desired cron: "cron(0 20 * * ? *)"
 def from_airflow_schedule_to_aws_cron(airflow_schedule: ScheduleInterval) -> str:
-    pass
+    if not isinstance(airflow_schedule, str):
+        raise ValueError(
+            f"Currently supporting only schedule intervals for cron string type, got {airflow_schedule} instead")
+    airflow_cron = airflow_schedule.replace('"', '')
+    parts = airflow_cron.split(' ')
+    if len(parts) < 5:
+        raise ValueError(f"Invalid Airflow cron format, got {airflow_schedule}, expected sample: '0 0 * * *'")
+
+    minutes = parts[0]
+    hours = parts[1]
+    day_month = parts[2]
+    month = parts[3]
+    day_week = parts[4].replace("*", "?")
+    year = "*"
+
+    return f"cron({minutes} {hours} {day_month} {month} {day_week} {year})"
 
 
 def create_new_cron_schedule(event: DAGCreatedEvent) -> BeeflowEvent:
     dag = get_dag_by_id(event.dag_id)
+    rule_name = dag.dag_id
+    eventbus_name = 'default'  # Cron rules can only run on the default bus
+    target = os.environ[Configuration.DAG_SCHEDULE_RULES_TARGET_ARN]
+
+    logger.info(f"Putting a new event bridge rule for cron triggering {event.dag_id}")
     eventbridge_client.put_rule(
-        Name=dag.dag_id,
+        Name=rule_name,
         ScheduleExpression=from_airflow_schedule_to_aws_cron(dag.normalized_schedule_interval),
         State='ENABLED',
         Description=f'Rule to trigger execution of tasks for {dag.dag_id}',
-        EventBusName='default'
+        EventBusName=eventbus_name
     )
-    # TODO: Add rule target to SQS
+    logger.info(f"Attaching a new target {target} for rule {rule_name}")
+    eventbridge_client.put_targets(
+        Rule=rule_name,
+        EventBusName=eventbus_name,
+        Targets=[
+            {
+                'Id': 'trigger-scheduler-by-sqs-forward',
+                'Arn': target,
+                'Input': json.dumps(DAGCronTriggered(dag_id=dag.dag_id).dict())
+            }
+        ])
+
     return NewCronScheduleCreated(dag_id=event.dag_id, rule_id=dag.dag_id)
 
 
