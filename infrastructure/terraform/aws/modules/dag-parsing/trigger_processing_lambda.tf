@@ -25,7 +25,9 @@ module "trigger_processing_lambda" {
 
   spec = {
     timeout                          = 60
-    additional_environment_variables = {}
+    additional_environment_variables = {
+      BEEFLOW__DAG_PARSING_PROCESSOR__SQS_URL = aws_sqs_queue.dag_parsing_processor_funnel.url
+    }
     memory_size                      = 128
     reserved_concurrent_executions   = 1
   }

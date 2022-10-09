@@ -54,7 +54,7 @@ def create_new_cron_schedule(event: DAGCreatedEvent) -> BeeflowEvent:
     dag = get_dag_by_id(event.dag_id)
     rule_name = dag.dag_id
     eventbus_name = 'default'  # Cron rules can only run on the default bus
-    target = os.environ[Configuration.DAG_SCHEDULE_RULES_TARGET_ARN]
+    target = os.environ[Configuration.DAG_SCHEDULE_RULES_TARGET_ARN_ENV_VAR]
 
     logger.info(f"Putting a new event bridge rule for cron triggering {event.dag_id}")
     eventbridge_client.put_rule(
@@ -85,6 +85,7 @@ def handler(events: List[EventBridgeModel], context: LambdaContext) -> Dict[str,
     DagsDownloader().download_dags()
     for event in events:
         # TODO: On DAG update, check if rule needs to be changed
+        #  (that should include disabling / enabling the rule on DAG pause)
         # TODO: On DAG deletion, delete the cron rule
         try:
             parsed_event: DAGCreatedEvent = parse(event=event.detail, model=DAGCreatedEvent)

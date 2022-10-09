@@ -3,6 +3,7 @@ from enum import Enum
 
 class BeeflowEventType(str, Enum):
     MIGRATION_COMPLETED = 'migration_completed'
+    TRIGGER_DAGS_PROCESSING_COMMAND = 'trigger_dags_processing_command'
     DAGS_PROCESSING_TRIGGERED = 'dags_processing_triggered'
     DAGS_PROCESSED = 'dags_processed'
     CDC_INPUT = 'cdc_input'

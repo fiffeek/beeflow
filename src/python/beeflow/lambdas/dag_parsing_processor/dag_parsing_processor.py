@@ -1,5 +1,5 @@
 from datetime import timedelta
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from airflow import settings
 from airflow.configuration import conf
@@ -8,14 +8,14 @@ from airflow.models import DagModel
 from airflow.utils.session import provide_session
 from aws_lambda_powertools import Logger
 from aws_lambda_powertools.utilities.typing import LambdaContext
+from aws_lambda_powertools.utilities.parser import parse, envelopes, event_parser
 
 from beeflow.packages.dags_downloader.dags_downloader import DagsDownloader
 from beeflow.packages.events.dags_processed import DAGsProcessed
+from beeflow.packages.events.trigger_dags_processing_command import TriggerDAGsProcessingCommand
 
 logger = Logger()
 
-
-# TODO: Trigger through SQS
 
 def get_agent():
     processor_timeout_seconds: int = conf.getint('core', 'dag_file_processor_timeout')
@@ -43,7 +43,8 @@ def log_parsed_dags(session=None):
 
 
 @logger.inject_lambda_context
-def handler(event: Dict[str, Any], context: LambdaContext) -> Dict[str, Any]:
+@event_parser(model=TriggerDAGsProcessingCommand, envelope=envelopes.SqsEnvelope)
+def handler(event: List[TriggerDAGsProcessingCommand], context: LambdaContext) -> Dict[str, Any]:
     DagsDownloader().download_dags()
     logger.info("Starting a single ProcessorAgent parsing loop.")
     # Deactivating the DAGs does not work correctly now

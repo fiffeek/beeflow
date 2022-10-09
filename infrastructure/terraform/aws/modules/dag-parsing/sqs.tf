@@ -9,6 +9,7 @@ resource "aws_sqs_queue" "dag_parsing_wait_list" {
   name                       = module.sqs_label.id
   tags                       = module.sqs_label.tags
   visibility_timeout_seconds = 80
+  message_retention_seconds  = 600
 }
 
 data "aws_iam_policy_document" "allow_s3_notifications" {
