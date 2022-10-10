@@ -14,6 +14,7 @@ module "dag_parsing_processor_lambda" {
   appconfig_application_name               = var.appconfig_application_name
   is_lambda_dockerized                     = true
   is_lambda_packaged                       = false
+  airflow_logs_bucket_arn                  = var.airflow_logs_bucket_arn
 
   lambda_dockerized_spec = {
     repository_url = var.dag_parsing_processor_repository_url

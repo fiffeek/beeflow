@@ -81,3 +81,8 @@ variable "dag_files_arrival_queue_enabled" {
   type        = bool
   description = "Specifies whether to enable or disable the outgoing messages to SQS from the S3 bucket."
 }
+
+variable "airflow_logs_bucket_arn" {
+  type        = string
+  description = "The ARN of the airflow logs bucket"
+}

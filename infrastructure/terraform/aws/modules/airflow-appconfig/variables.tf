@@ -23,3 +23,12 @@ variable "database_endpoint" {
   description = "DNS Endpoint of the Metadata database instance"
 }
 
+variable "airflow_logs_bucket_name" {
+  type        = string
+  description = "The name of the airflow logs bucket"
+}
+
+variable "airflow_logs_bucket_key" {
+  type        = string
+  description = "The key of the Airflow logs bucket"
+}

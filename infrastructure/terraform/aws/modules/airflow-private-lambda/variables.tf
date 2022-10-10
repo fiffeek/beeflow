@@ -70,3 +70,8 @@ variable "spec" {
   })
   description = "The lambda meta spec."
 }
+
+variable "airflow_logs_bucket_arn" {
+  type        = string
+  description = "The ARN of the airflow logs bucket"
+}

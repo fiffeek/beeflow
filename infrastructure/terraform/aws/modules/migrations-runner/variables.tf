@@ -32,3 +32,8 @@ variable "image_tag" {
   type        = string
   description = "The tag of the image to deploy."
 }
+
+variable "airflow_logs_bucket_arn" {
+  type        = string
+  description = "The ARN of the airflow logs bucket"
+}

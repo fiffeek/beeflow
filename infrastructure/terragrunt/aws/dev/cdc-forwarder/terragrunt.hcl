@@ -27,4 +27,5 @@ inputs = {
   vpc_sg                                   = dependency.vpc.outputs.vpc_default_security_group_id
   subnet_ids                               = dependency.vpc.outputs.private_subnet_ids
   lambda_code_bucket_name                  = dependency.buckets.outputs.lambda_code_bucket_name
+  airflow_logs_bucket_arn                  = dependency.buckets.outputs.airflow_logs_bucket_arn
 }

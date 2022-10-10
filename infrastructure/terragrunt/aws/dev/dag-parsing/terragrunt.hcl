@@ -14,7 +14,6 @@ dependency "buckets" {
   config_path = "../buckets"
 }
 
-
 terraform {
   source = "${get_path_to_repo_root()}//infrastructure/terraform/aws/modules/dag-parsing"
 }
@@ -38,4 +37,5 @@ inputs = {
     arn  = dependency.buckets.outputs.dags_code_bucket_arn,
     id   = dependency.buckets.outputs.dags_code_bucket_id
   }
+  airflow_logs_bucket_arn                  = dependency.buckets.outputs.airflow_logs_bucket_arn
 }

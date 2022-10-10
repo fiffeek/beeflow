@@ -14,6 +14,7 @@ module "trigger_processing_lambda" {
   appconfig_application_name               = var.appconfig_application_name
   is_lambda_dockerized                     = false
   is_lambda_packaged                       = true
+  airflow_logs_bucket_arn                  = var.airflow_logs_bucket_arn
 
   lambda_packaged_spec = {
     lambda_code_bucket_name     = var.lambda_code_bucket_name

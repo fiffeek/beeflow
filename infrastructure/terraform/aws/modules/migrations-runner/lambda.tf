@@ -3,6 +3,7 @@ module "lambda" {
 
   airflow_home                             = var.airflow_home
   appconfig_application_configuration_name = var.appconfig_application_configuration_name
+  airflow_logs_bucket_arn                  = var.airflow_logs_bucket_arn
   appconfig_application_name               = var.appconfig_application_name
   spec = {
     timeout                          = 600

@@ -1,5 +1,4 @@
 
-
 module "lambda" {
   source  = "cloudposse/lambda-function/aws"
   version = "0.3.6"
@@ -29,6 +28,7 @@ module "lambda" {
       POWERTOOLS_SERVICE_NAME     = module.this.id,
       POWERTOOLS_LOGGER_LOG_EVENT = "true"
       AIRFLOW_HOME                = var.airflow_home,
+      AIRFLOW_CONN_AWS_DEFAULT    = "aws://"
       BEEFLOW__ENVIRONMENT        = module.this.environment,
       PYTHONUNBUFFERED            = "1"
     })
@@ -81,3 +81,41 @@ resource "aws_iam_policy" "appconfig_access" {
     ]
   })
 }
+
+resource "aws_iam_role_policy_attachment" "airflow_logs" {
+  role = module.lambda.role_name
+  policy_arn = aws_iam_policy.airflow_logs.arn
+}
+
+module "airflow_logs" {
+  source = "cloudposse/label/null"
+  version = "0.25.0"
+  name = "${module.this.name}-s3-airflow-logs"
+  context = module.this
+}
+
+resource "aws_iam_policy" "airflow_logs" {
+  name = module.airflow_logs.id
+  path = "/"
+  description = "Access to S3 for Airflow logs storage."
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "s3:Get*",
+          "s3:List*",
+          "s3:Put*",
+          "s3:Delete*",
+        ]
+        Effect = "Allow"
+        Resource = [
+          var.airflow_logs_bucket_arn,
+          "${var.airflow_logs_bucket_arn}/*"
+        ]
+      },
+    ]
+  })
+}
+
