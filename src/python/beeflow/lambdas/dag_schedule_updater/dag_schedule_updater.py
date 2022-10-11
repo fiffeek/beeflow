@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 
 import boto3
 from airflow import DAG
@@ -17,10 +17,14 @@ from beeflow.packages.dags_downloader.dags_downloader import DagsDownloader
 from beeflow.packages.events.beeflow_event import BeeflowEvent
 from beeflow.packages.events.dag_created import DAGCreatedEvent
 from beeflow.packages.events.dag_cron_triggered import DAGCronTriggered
+from beeflow.packages.events.dag_schedule_updater_empty_event import DAGScheduleUpdaterEmptyEvent
+from beeflow.packages.events.dag_updated import DAGUpdatedEvent
 from beeflow.packages.events.new_cron_created import NewCronScheduleCreated
 
 logger = Logger()
 eventbridge_client = boto3.client('events')
+# Cron rules can only run on the default bus
+EVENTBUS_NAME = 'default'
 
 
 def get_dag_by_id(dag_id: str) -> DAG:
@@ -50,24 +54,34 @@ def from_airflow_schedule_to_aws_cron(airflow_schedule: ScheduleInterval) -> str
     return f"cron({minutes} {hours} {day_month} {month} {day_week} {year})"
 
 
-def create_new_cron_schedule(event: DAGCreatedEvent) -> BeeflowEvent:
-    dag = get_dag_by_id(event.dag_id)
+def get_rule_state(is_dag_paused: bool) -> str:
+    if is_dag_paused:
+        return 'DISABLED'
+    return 'ENABLED'
+
+
+def upsert_new_cron_schedule(dag_id: str) -> BeeflowEvent:
+    """
+    Pulls the DAG dag_id from the metadata database with the most recent information.
+    Upserts the cron schedule and enables or disables the cron rule if the DAG is paused or un-paused accordingly.
+    """
+
+    dag = get_dag_by_id(dag_id)
     rule_name = dag.dag_id
-    eventbus_name = 'default'  # Cron rules can only run on the default bus
     target = os.environ[Configuration.DAG_SCHEDULE_RULES_TARGET_ARN_ENV_VAR]
 
-    logger.info(f"Putting a new event bridge rule for cron triggering {event.dag_id}")
+    logger.info(f"Putting a new event bridge rule for cron triggering {dag_id}")
     eventbridge_client.put_rule(
         Name=rule_name,
         ScheduleExpression=from_airflow_schedule_to_aws_cron(dag.normalized_schedule_interval),
-        State='ENABLED',
-        Description=f'Rule to trigger execution of tasks for {dag.dag_id}',
-        EventBusName=eventbus_name
+        State=get_rule_state(is_dag_paused=dag.get_is_active()),
+        Description=f'Rule to trigger execution of tasks for {dag_id}',
+        EventBusName=EVENTBUS_NAME
     )
     logger.info(f"Attaching a new target {target} for rule {rule_name}")
     eventbridge_client.put_targets(
         Rule=rule_name,
-        EventBusName=eventbus_name,
+        EventBusName=EVENTBUS_NAME,
         Targets=[
             {
                 'Id': 'trigger-scheduler-by-sqs-forward',
@@ -76,20 +90,39 @@ def create_new_cron_schedule(event: DAGCreatedEvent) -> BeeflowEvent:
             }
         ])
 
-    return NewCronScheduleCreated(dag_id=event.dag_id, rule_id=dag.dag_id)
+    return NewCronScheduleCreated(dag_id=dag_id, rule_id=dag.dag_id)
 
 
+def act_on_dag_created_event(event: EventBridgeModel) -> Optional[BeeflowEvent]:
+    try:
+        parsed_event: DAGCreatedEvent = parse(event=event.detail, model=DAGCreatedEvent)
+        return upsert_new_cron_schedule(parsed_event.dag_id)
+    except ValidationError:
+        logger.warning(f"Event {event} does not conform to DAGCreatedEvent")
+    return None
+
+
+def act_on_dag_updated_event(event: EventBridgeModel) -> Optional[BeeflowEvent]:
+    try:
+        parsed_event: DAGUpdatedEvent = parse(event=event.detail, model=DAGUpdatedEvent)
+        return upsert_new_cron_schedule(parsed_event.dag_id)
+    except ValidationError:
+        logger.warning(f"Event {event} does not conform to DAGCreatedEvent")
+    return None
+
+
+def act_on_event(event: EventBridgeModel) -> BeeflowEvent:
+    handlers = [act_on_dag_created_event, act_on_dag_updated_event]
+    for event_handler in handlers:
+        maybe_result = event_handler(event)
+        if maybe_result is not None:
+            return maybe_result
+    return DAGScheduleUpdaterEmptyEvent()
+
+
+# TODO: On DAG deletion, delete the cron rule
 @logger.inject_lambda_context
 @event_parser(model=EventBridgeModel, envelope=envelopes.SqsEnvelope)
-def handler(events: List[EventBridgeModel], context: LambdaContext) -> Dict[str, Any]:
+def handler(events: List[EventBridgeModel], context: LambdaContext) -> List[Dict[str, Any]]:
     DagsDownloader().download_dags()
-    for event in events:
-        # TODO: On DAG update, check if rule needs to be changed
-        #  (that should include disabling / enabling the rule on DAG pause)
-        # TODO: On DAG deletion, delete the cron rule
-        try:
-            parsed_event: DAGCreatedEvent = parse(event=event.detail, model=DAGCreatedEvent)
-            return create_new_cron_schedule(parsed_event).dict()
-        except ValidationError:
-            logger.warning(f"Event {event} does not conform to DAGCreatedEvent")
-    return {}
+    return [act_on_event(event).dict() for event in events]
