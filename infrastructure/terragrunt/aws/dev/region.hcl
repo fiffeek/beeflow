@@ -1,3 +1,3 @@
 locals {
-  aws_region = "us-east-2"
+  aws_region = get_env("BEEFLOW_AWS_REGION")
 }

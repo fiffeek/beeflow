@@ -1,5 +1,6 @@
 include "root" {
-  path = find_in_parent_folders()
+  path   = find_in_parent_folders()
+  expose = true
 }
 
 dependency "airflow_appconfig" {
@@ -24,7 +25,7 @@ inputs = {
   appconfig_application_configuration_name  = dependency.airflow_appconfig.outputs.application_configuration_name
   dag_parsing_trigger_package_absolute_path = "${get_repo_root()}/dist/src.python.beeflow.lambdas.dag_parsing_trigger/package.zip"
   dag_parsing_trigger_package_filename      = "src.python.beeflow.lambdas.dag_parsing_trigger.zip"
-  dag_parsing_processor_repository_url      = "239132468951.dkr.ecr.us-east-2.amazonaws.com/dag_parsing_processor"
+  dag_parsing_processor_repository_url      = "${include.root.locals.ecr_region_path}/dag_parsing_processor"
   dag_parsing_processor_image_tag           = "latest"
   vpc_sg                                    = dependency.vpc.outputs.vpc_default_security_group_id
   subnet_ids                                = dependency.vpc.outputs.private_subnet_ids
@@ -37,5 +38,5 @@ inputs = {
     arn  = dependency.buckets.outputs.dags_code_bucket_arn,
     id   = dependency.buckets.outputs.dags_code_bucket_id
   }
-  airflow_logs_bucket_arn                  = dependency.buckets.outputs.airflow_logs_bucket_arn
+  airflow_logs_bucket_arn = dependency.buckets.outputs.airflow_logs_bucket_arn
 }

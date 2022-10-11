@@ -1,4 +1,4 @@
 locals {
   account_name   = "fiffeek"
-  aws_account_id = "239132468951"
+  aws_account_id = get_env("BEEFLOW_AWS_ACCOUNT_ID")
 }

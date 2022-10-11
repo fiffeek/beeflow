@@ -1,5 +1,6 @@
 include "root" {
-  path = find_in_parent_folders()
+  path   = find_in_parent_folders()
+  expose = true
 }
 
 dependency "airflow_appconfig" {
@@ -20,7 +21,7 @@ terraform {
 
 inputs = {
   name                                     = "scheduler"
-  repository_url                           = "239132468951.dkr.ecr.us-east-2.amazonaws.com/scheduler"
+  repository_url                           = "${include.root.locals.ecr_region_path}/scheduler"
   image_tag                                = "latest"
   appconfig_application_name               = dependency.airflow_appconfig.outputs.application_name
   appconfig_application_configuration_name = dependency.airflow_appconfig.outputs.application_configuration_name

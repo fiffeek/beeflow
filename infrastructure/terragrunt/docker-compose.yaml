@@ -30,3 +30,5 @@ services:
     environment:
       - TERRAGRUNT_DOWNLOAD=/data/.terragrunt-cache-aws
       - TF_PLUGIN_CACHE_DIR=/data/.plugins-aws
+      - BEEFLOW_AWS_REGION=${BEEFLOW_AWS_REGION}
+      - BEEFLOW_AWS_ACCOUNT_ID=${BEEFLOW_AWS_ACCOUNT_ID}
