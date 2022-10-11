@@ -138,6 +138,10 @@ module "beeflow_events" {
         name = "send-dag-updated-events-to-scheduler"
         arn = var.scheduler_sqs.arn
       },
+      {
+        name = "send-dag-updated-events-to-schedule-updater"
+        arn = var.dag_schedule_updater_sqs.arn
+      },
     ]
     task-queued = [
       {
