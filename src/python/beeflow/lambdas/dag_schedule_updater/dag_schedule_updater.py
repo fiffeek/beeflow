@@ -74,7 +74,7 @@ def upsert_new_cron_schedule(dag_id: str) -> BeeflowEvent:
     eventbridge_client.put_rule(
         Name=rule_name,
         ScheduleExpression=from_airflow_schedule_to_aws_cron(dag.normalized_schedule_interval),
-        State=get_rule_state(is_dag_paused=dag.get_is_active()),
+        State=get_rule_state(is_dag_paused=dag.get_is_paused()),
         Description=f'Rule to trigger execution of tasks for {dag_id}',
         EventBusName=EVENTBUS_NAME
     )
