@@ -12,4 +12,5 @@ inputs = {
   scheduler             = "scheduler"
   lambda_executor       = "lambda_executor"
   dag_schedule_updater  = "dag_schedule_updater"
+  webserver             = "webserver"
 }

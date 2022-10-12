@@ -22,3 +22,8 @@ variable "dag_schedule_updater" {
   type = string
   description = "Name of the dag schedule updater ECR repository."
 }
+
+variable "webserver" {
+  type = string
+  description = "Name of the webserver ECR repository."
+}
