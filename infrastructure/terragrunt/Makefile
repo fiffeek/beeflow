@@ -25,6 +25,9 @@ apply_dag-schedule-updater:
 apply_buckets:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/buckets && terragrunt apply"
 
+apply_webserver:
+	docker-compose run --rm terragrunt_aws bash -c "cd dev/webserver && terragrunt apply"
+
 apply_cdc-forwarder:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/cdc-forwarder && terragrunt apply"
 
