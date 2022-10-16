@@ -19,6 +19,10 @@ dependency "scheduler" {
   config_path = "../scheduler"
 }
 
+dependency "cloudwatch_logs" {
+  config_path = "../cloudwatch-logs"
+}
+
 terraform {
   source = "${get_path_to_repo_root()}//infrastructure/terraform/aws/modules/dag-schedule-updater"
 }
@@ -31,7 +35,7 @@ inputs = {
   appconfig_application_configuration_name = dependency.airflow_appconfig.outputs.application_configuration_name
   vpc_sg                                   = dependency.vpc.outputs.vpc_default_security_group_id
   subnet_ids                               = dependency.vpc.outputs.private_subnet_ids
-  airflow_logs_bucket_arn                  = dependency.buckets.outputs.airflow_logs_bucket_arn
+  airflow_cloudwatch_logs_group_arn        = dependency.cloudwatch_logs.outputs.airflow_events_arn
   dags_code_bucket = {
     name = dependency.buckets.outputs.dags_code_bucket_name,
     arn  = dependency.buckets.outputs.dags_code_bucket_arn,

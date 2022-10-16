@@ -82,7 +82,7 @@ variable "dag_files_arrival_queue_enabled" {
   description = "Specifies whether to enable or disable the outgoing messages to SQS from the S3 bucket."
 }
 
-variable "airflow_logs_bucket_arn" {
+variable "airflow_cloudwatch_logs_group_arn" {
   type        = string
-  description = "The ARN of the airflow logs bucket"
+  description = "The ARN for the Airflow logs in cloudwatch group"
 }

@@ -1,4 +1,3 @@
-
 module "lambda" {
   source  = "cloudposse/lambda-function/aws"
   version = "0.3.6"
@@ -90,32 +89,47 @@ resource "aws_iam_role_policy_attachment" "airflow_logs" {
 module "airflow_logs" {
   source = "cloudposse/label/null"
   version = "0.25.0"
-  name = "${module.this.name}-s3-airflow-logs"
+  name = "${module.this.name}-cloudwatch-airflow-logs"
   context = module.this
 }
 
 resource "aws_iam_policy" "airflow_logs" {
   name = module.airflow_logs.id
   path = "/"
-  description = "Access to S3 for Airflow logs storage."
+  description = "Access to Cloudwatch for Airflow logs storage."
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
         Action = [
-          "s3:Get*",
-          "s3:List*",
-          "s3:Put*",
-          "s3:Delete*",
+          "logs:createLogStream",
+          "logs:deleteLogStream",
+          "logs:createLogGroup",
+          "logs:cancelExportTask",
+          "logs:createExportTask",
+          "logs:deleteRetentionPolicy",
+          "logs:describeLogStreams",
+          "logs:filterLogEvents",
+          "logs:getLogEvents",
+          "logs:getLogEvents",
+          "logs:describe*",
+          "logs:get*",
+          "logs:list*",
+          "logs:startQuery",
+          "logs:stopQuery",
+          "logs:testMetricFilter",
+          "logs:filterLogEvents",
+          "logs:putLogEvents",
+          "logs:createLogStream",
         ]
         Effect = "Allow"
         Resource = [
-          var.airflow_logs_bucket_arn,
-          "${var.airflow_logs_bucket_arn}/*"
+          var.airflow_cloudwatch_logs_group_arn,
+          "${var.airflow_cloudwatch_logs_group_arn}:log-stream:*",
+          "${var.airflow_cloudwatch_logs_group_arn}:*"
         ]
       },
     ]
   })
 }
-

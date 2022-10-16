@@ -42,7 +42,7 @@ variable "dags_code_bucket" {
   description = "The name of the DAGs bucket."
 }
 
-variable "airflow_logs_bucket_arn" {
+variable "airflow_cloudwatch_logs_group_arn" {
   type        = string
-  description = "The ARN of the airflow logs bucket"
+  description = "The ARN for the Airflow logs in cloudwatch group"
 }
