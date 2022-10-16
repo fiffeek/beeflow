@@ -26,12 +26,30 @@ resource "aws_iam_role_policy_attachment" "role-attach" {
 data "aws_iam_policy_document" "airflow_logs" {
   statement {
     actions = [
-      "s3:Get*",
-      "s3:List*"
+      "logs:createLogStream",
+      "logs:deleteLogStream",
+      "logs:createLogGroup",
+      "logs:cancelExportTask",
+      "logs:createExportTask",
+      "logs:deleteRetentionPolicy",
+      "logs:describeLogStreams",
+      "logs:filterLogEvents",
+      "logs:getLogEvents",
+      "logs:getLogEvents",
+      "logs:describe*",
+      "logs:get*",
+      "logs:list*",
+      "logs:startQuery",
+      "logs:stopQuery",
+      "logs:testMetricFilter",
+      "logs:filterLogEvents",
+      "logs:putLogEvents",
+      "logs:createLogStream",
     ]
     resources = [
-      var.airflow_logs_bucket_arn,
-      "${var.airflow_logs_bucket_arn}/*"
+      var.airflow_cloudwatch_logs_group_arn,
+      "${var.airflow_cloudwatch_logs_group_arn}:log-stream:*",
+      "${var.airflow_cloudwatch_logs_group_arn}:*"
     ]
   }
 }
