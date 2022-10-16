@@ -43,6 +43,9 @@ apply_lambda-executor:
 apply_scheduler:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/scheduler && terragrunt apply"
 
+apply_cloudwatch-logs:
+	docker-compose run --rm terragrunt_aws bash -c "cd dev/cloudwatch-logs && terragrunt apply"
+
 plan_all:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev && terragrunt run-all plan"
 
