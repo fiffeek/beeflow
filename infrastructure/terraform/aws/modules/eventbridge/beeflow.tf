@@ -39,12 +39,14 @@ module "beeflow_events" {
       })
       enabled = true
     }
-    task-queued = {
-      description = "Capture task queued event"
+    task-queued-lambda = {
+      description = "Capture task queued event for the lambda executor"
       event_pattern = jsonencode({
         "detail": {
           "event_type" : [
-            "task_instance_queued"]
+            "task_instance_queued"],
+          "queue": [
+          "lambda"]
         }
       })
       enabled = true
@@ -143,7 +145,7 @@ module "beeflow_events" {
         arn = var.dag_schedule_updater_sqs.arn
       },
     ]
-    task-queued = [
+    task-queued-lambda = [
       {
         name = "send-task-queued-events-to-lambda-executor"
         arn = var.lambda_executor_sqs.arn

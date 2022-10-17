@@ -5,6 +5,9 @@ from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.empty import EmptyOperator
 
+LAMBDA_QUEUE = "lambda"
+
+
 with DAG(
     dag_id='beeflow_testing40',
     schedule_interval='*/5 * * * *',
@@ -16,12 +19,14 @@ with DAG(
 ) as dag:
     run_this_last = EmptyOperator(
         task_id='run_this_last',
+        queue=LAMBDA_QUEUE,
     )
 
     # [START howto_operator_bash]
     run_this = BashOperator(
         task_id='run_after_loop',
         bash_command='echo 1',
+        queue=LAMBDA_QUEUE,
     )
     # [END howto_operator_bash]
 
@@ -31,6 +36,7 @@ with DAG(
         task = BashOperator(
             task_id='runme_' + str(i),
             bash_command='echo "{{ task_instance_key_str }}" && sleep 1',
+            queue=LAMBDA_QUEUE,
         )
         task >> run_this
 
@@ -38,6 +44,7 @@ with DAG(
     also_run_this = BashOperator(
         task_id='also_run_this',
         bash_command='echo "run_id={{ run_id }} | dag_run={{ dag_run }}"',
+        queue=LAMBDA_QUEUE,
     )
     # [END howto_operator_bash_template]
     also_run_this >> run_this_last
@@ -47,6 +54,7 @@ this_will_skip = BashOperator(
     task_id='this_will_skip',
     bash_command='echo "hello world"; exit 99;',
     dag=dag,
+    queue=LAMBDA_QUEUE,
 )
 # [END howto_operator_bash_skip]
 this_will_skip >> run_this_last
