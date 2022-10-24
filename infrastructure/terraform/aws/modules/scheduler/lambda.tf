@@ -9,6 +9,7 @@ module "lambda" {
     timeout                          = 60
     additional_environment_variables = {
       BEEFLOW__DAGS_BUCKET_NAME = var.dags_code_bucket.name
+      AIRFLOW__LOGGING__LOGGING_LEVEL = "DEBUG"
     }
     memory_size                      = 512
     reserved_concurrent_executions   = -1

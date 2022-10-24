@@ -844,6 +844,7 @@ class SchedulerJob(BaseJob):
 
             callback_tuples = []
             for dag_run in dag_runs:
+                self.log.info("Investigating dag_run %s", dag_run.dag_id)
                 callback_to_run = self._schedule_dag_run(dag_run, session)
                 callback_tuples.append((dag_run, callback_to_run))
 
@@ -1084,6 +1085,10 @@ class SchedulerJob(BaseJob):
         self._verify_integrity_if_dag_changed(dag_run=dag_run, session=session)
         # TODO[HA]: Rename update_state -> schedule_dag_run, ?? something else?
         schedulable_tis, callback_to_run = dag_run.update_state(session=session, execute_callbacks=False)
+        self.log.info("Run update_state on dag_run %s, arrived at state %s. Remaining TIs is %d",
+                      dag_run.dag_id,
+                      dag_run.state,
+                      len(schedulable_tis))
         if dag_run.state in State.finished:
             active_runs = dag.get_num_active_runs(only_running=False, session=session)
             # Work out if we should allow creating a new DagRun now?
