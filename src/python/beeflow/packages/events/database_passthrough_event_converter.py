@@ -3,6 +3,7 @@ from aws_lambda_powertools import Logger
 from beeflow.packages.events.beeflow_event import BeeflowEvent
 from beeflow.packages.events.cdc_input import CDCInput
 from beeflow.packages.events.dag_run_failed import DagRunFailed
+from beeflow.packages.events.dag_run_queued import DagRunQueued
 from beeflow.packages.events.dag_run_running import DagRunRunning
 from beeflow.packages.events.dag_run_success import DagRunSuccess
 from beeflow.packages.events.dag_updated import DAGUpdatedEvent
@@ -10,6 +11,7 @@ from beeflow.packages.events.task_instance_failed import TaskInstanceFailed
 from beeflow.packages.events.task_instance_queued_event import TaskInstanceQueued
 from beeflow.packages.events.task_instance_restarting import TaskInstanceRestarting
 from beeflow.packages.events.task_instance_running import TaskInstanceRunning
+from beeflow.packages.events.task_instance_scheduled import TaskInstanceScheduled
 from beeflow.packages.events.task_instance_shutdown import TaskInstanceShutdown
 from beeflow.packages.events.task_instance_skipped import TaskInstanceSkipped
 from beeflow.packages.events.task_instance_success import TaskInstanceSuccess
@@ -111,6 +113,10 @@ class DatabasePassthroughEventConverter:
             return TaskInstanceUnknown(dag_id=self.metadata["dag_id"],
                                        run_id=self.metadata["run_id"],
                                        task_id=self.metadata["task_id"])
+        if self.metadata["state"] == "scheduled":
+            return TaskInstanceScheduled(dag_id=self.metadata["dag_id"],
+                                         run_id=self.metadata["run_id"],
+                                         task_id=self.metadata["task_id"])
 
         raise ValueError(f"State {self.metadata['state']} unknown")
 
@@ -135,6 +141,11 @@ class DatabasePassthroughEventConverter:
                                  dag_hash=self.metadata["dag_hash"],
                                  run_id=self.metadata["run_id"],
                                  run_type=self.metadata["run_type"])
+        if self.metadata["state"] == "queued":
+            return DagRunQueued(dag_id=self.metadata["dag_id"],
+                                dag_hash=self.metadata["dag_hash"],
+                                run_id=self.metadata["run_id"],
+                                run_type=self.metadata["run_type"])
 
         raise ValueError(f"State {self.metadata['state']} unknown")
 

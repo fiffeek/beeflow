@@ -17,6 +17,7 @@ class BeeflowEventType(str, Enum):
 
     # DB Task instance events
     TASK_INSTANCE_QUEUED = 'task_instance_queued'
+    TASK_INSTANCE_SCHEDULED = 'task_instance_scheduled'
     TASK_INSTANCE_FAILED = 'task_instance_failed'
     TASK_INSTANCE_SUCCESS = 'task_instance_success'
     TASK_INSTANCE_SKIPPED = 'task_instance_skipped'
@@ -31,3 +32,4 @@ class BeeflowEventType(str, Enum):
     DAG_RUN_SUCCESS = 'dag_run_success'
     DAG_RUN_FAILED = 'dag_run_failed'
     DAG_RUN_RUNNING = 'dag_run_running'
+    DAG_RUN_QUEUED = 'dag_run_queued'
