@@ -40,6 +40,27 @@ data "aws_iam_policy_document" "lambda_executor" {
   }
 }
 
+resource "aws_sqs_queue_policy" "batch_executor" {
+  queue_url = var.batch_executor_sqs.id
+  policy    = data.aws_iam_policy_document.batch_executor.json
+}
+
+data "aws_iam_policy_document" "batch_executor" {
+  statement {
+    sid     = "batch_executor-events-policy"
+    actions = ["sqs:SendMessage"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["events.amazonaws.com"]
+    }
+
+    resources = [
+      var.batch_executor_sqs.arn
+    ]
+  }
+}
+
 resource "aws_sqs_queue_policy" "dag_schedule_updater" {
   queue_url = var.dag_schedule_updater_sqs.id
   policy    = data.aws_iam_policy_document.dag_schedule_updater.json

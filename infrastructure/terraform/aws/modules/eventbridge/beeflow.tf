@@ -15,7 +15,8 @@ module "beeflow_events" {
   sqs_target_arns = [
     var.scheduler_sqs.arn,
     var.lambda_executor_sqs.arn,
-    var.dag_schedule_updater_sqs.arn
+    var.dag_schedule_updater_sqs.arn,
+    var.batch_executor_sqs.arn,
   ]
 
   rules = {
@@ -46,7 +47,19 @@ module "beeflow_events" {
           "event_type" : [
             "task_instance_queued"],
           "queue": [
-          "lambda"]
+            "lambda"]
+        }
+      })
+      enabled = true
+    }
+    task-queued-batch = {
+      description = "Capture task queued event for the batch executor"
+      event_pattern = jsonencode({
+        "detail": {
+          "event_type" : [
+            "task_instance_queued"],
+          "queue": [
+            "batch"]
         }
       })
       enabled = true
@@ -149,6 +162,12 @@ module "beeflow_events" {
       {
         name = "send-task-queued-events-to-lambda-executor"
         arn = var.lambda_executor_sqs.arn
+      },
+    ]
+    task-queued-batch = [
+      {
+        name = "send-task-queued-events-to-batch-executor"
+        arn = var.batch_executor_sqs.arn
       },
     ]
     task-failed = [

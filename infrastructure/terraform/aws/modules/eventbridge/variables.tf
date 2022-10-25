@@ -16,7 +16,15 @@ variable "lambda_executor_sqs" {
     arn = string,
     id = string,
   })
-  description = "The ARN/id of the SQS that serves requests to the scheduler"
+  description = "The ARN/id of the SQS that serves requests to the lambda executor"
+}
+
+variable "batch_executor_sqs" {
+  type = object({
+    arn = string,
+    id = string,
+  })
+  description = "The ARN/id of the SQS that serves requests to the Batch executor"
 }
 
 variable "dag_schedule_updater_sqs" {
