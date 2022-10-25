@@ -9,3 +9,4 @@ apache-airflow[amazon]==2.3.2
 psycopg2-binary==2.9.3
 aws-lambda-powertools[pydantic]==1.26.2
 dependency-injector==4.39.1
+backoff==2.2.1

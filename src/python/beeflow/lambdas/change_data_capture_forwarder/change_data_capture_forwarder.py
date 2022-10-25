@@ -1,6 +1,7 @@
 import os
 from typing import Dict, Any
 
+import backoff
 import boto3
 from aws_lambda_powertools.utilities.parser import event_parser
 from aws_lambda_powertools.utilities.typing import LambdaContext
@@ -32,6 +33,9 @@ def to_event_bridge_event(event: CDCInput) -> BeeflowEvent:
     raise ValueError(f"Event type not supported {event_type}")
 
 
+@backoff.on_exception(backoff.expo,
+                      Exception,
+                      max_time=800)
 def push_to_event_bridge(event: CDCInput):
     event_bridge_event = to_event_bridge_event(event)
     response = cloudwatch_events.put_events(
@@ -45,6 +49,8 @@ def push_to_event_bridge(event: CDCInput):
             }
         ]
     )
+    if response["FailedEntryCount"] > 0:
+        raise Exception("Failed to publish to the eventbridge")
     logger.info(f"Put events returned {response}")
     return response
 
