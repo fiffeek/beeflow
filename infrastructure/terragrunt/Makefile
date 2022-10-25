@@ -40,6 +40,9 @@ apply_jump-host:
 apply_lambda-executor:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/lambda-executor && terragrunt apply"
 
+apply_batch-executor:
+	docker-compose run --rm terragrunt_aws bash -c "cd dev/batch-executor && terragrunt apply"
+
 apply_scheduler:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/scheduler && terragrunt apply"
 
