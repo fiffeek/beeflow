@@ -14,4 +14,5 @@ inputs = {
   dag_schedule_updater  = "dag_schedule_updater"
   webserver             = "webserver"
   batch_executor        = "batch_executor"
+  batch_worker          = "batch_worker"
 }
