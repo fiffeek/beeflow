@@ -33,3 +33,9 @@ resource "aws_ecr_repository" "webserver" {
   image_tag_mutability = "MUTABLE"
   tags                 = module.this.tags
 }
+
+resource "aws_ecr_repository" "batch_executor" {
+  name                 = var.batch_executor
+  image_tag_mutability = "MUTABLE"
+  tags                 = module.this.tags
+}

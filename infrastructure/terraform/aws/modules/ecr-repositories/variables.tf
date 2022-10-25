@@ -27,3 +27,8 @@ variable "webserver" {
   type = string
   description = "Name of the webserver ECR repository."
 }
+
+variable "batch_executor" {
+  type = string
+  description = "Name of the batch executor ECR repository."
+}
