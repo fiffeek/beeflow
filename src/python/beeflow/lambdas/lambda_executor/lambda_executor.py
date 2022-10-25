@@ -16,9 +16,6 @@ from beeflow.packages.events.task_instance_queued_event import TaskInstanceQueue
 logger = Logger()
 
 
-# TODO: Rewrite this executor to use Step functions so if any issue arises there is a watcher
-# that propagates the issues to the database.
-
 def _run_task_by_local_task_job(pool, task_instance):
     """Run LocalTaskJob, which monitors the raw task execution process"""
     run_job = LocalTaskJob(
