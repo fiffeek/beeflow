@@ -11,7 +11,7 @@ logger = Logger()
 @logger.inject_lambda_context
 def handler(event: Dict[str, Any], context: LambdaContext) -> Dict[str, Any]:
     job = SchedulerJob(
-        num_runs=1,
+        num_runs=5,
     )
     job.run()
     return {}
