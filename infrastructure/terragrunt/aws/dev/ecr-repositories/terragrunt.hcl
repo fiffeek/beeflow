@@ -7,12 +7,13 @@ terraform {
 }
 
 inputs = {
-  migrations_runner     = "migrations_runner"
-  dag_parsing_processor = "dag_parsing_processor"
-  scheduler             = "scheduler"
-  lambda_executor       = "lambda_executor"
-  dag_schedule_updater  = "dag_schedule_updater"
-  webserver             = "webserver"
-  batch_executor        = "batch_executor"
-  batch_worker          = "batch_worker"
+  migrations_runner      = "migrations_runner"
+  dag_parsing_processor  = "dag_parsing_processor"
+  scheduler              = "scheduler"
+  lambda_executor        = "lambda_executor"
+  dag_schedule_updater   = "dag_schedule_updater"
+  webserver              = "webserver"
+  batch_executor         = "batch_executor"
+  batch_worker           = "batch_worker"
+  batch_executor_catcher = "batch_executor_catcher"
 }

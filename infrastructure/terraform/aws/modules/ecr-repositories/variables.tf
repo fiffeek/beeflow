@@ -37,3 +37,8 @@ variable "batch_worker" {
   type = string
   description = "Name of the batch worker ECR repository."
 }
+
+variable "batch_executor_catcher" {
+  type = string
+  description = "Name of the batch executor catcher ECR repository."
+}
