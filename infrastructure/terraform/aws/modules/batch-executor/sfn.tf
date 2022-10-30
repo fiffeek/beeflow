@@ -7,7 +7,6 @@ module "sfn_wrapper_label" {
   context = module.this
 }
 
-
 module "batch_executor_wrapper" {
   source = "terraform-aws-modules/step-functions/aws"
   version = "2.7.1"
@@ -17,9 +16,9 @@ module "batch_executor_wrapper" {
 
   definition = jsonencode(
   {
-    "StartAt": "BATCH_JOB",
+    "StartAt": "EXECUTE_AIRFLOW_TASK",
     "States": {
-      "BATCH_JOB": {
+      "EXECUTE_AIRFLOW_TASK": {
         "Type": "Task",
         "Resource": "arn:aws:states:::batch:submitJob.sync",
         "Parameters": {
@@ -35,7 +34,19 @@ module "batch_executor_wrapper" {
               "Ref::serialized"]
           }
         },
+        "Catch": [
+          {
+            "ErrorEquals": [
+              "States.ALL"],
+            "Next": "MARK_TASK_AS_FAILED",
+            "ResultPath": "$.error"
+          }],
         "End": true
+      },
+      "MARK_TASK_AS_FAILED": {
+         "Type": "Task",
+         "Resource": module.catcher_lambda.arn,
+         "End": true
       }
     }
   }
@@ -46,6 +57,9 @@ module "batch_executor_wrapper" {
       batch = true,
       events = [
         "arn:aws:events:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:rule/StepFunctionsGetEventsForBatchJobsRule"],
+    }
+    lambda = {
+      lambda = [module.catcher_lambda.arn]
     }
     batch_WaitForTaskToken = {
       batch = true,

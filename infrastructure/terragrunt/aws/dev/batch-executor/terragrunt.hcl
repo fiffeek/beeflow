@@ -43,4 +43,8 @@ inputs = {
     arn  = dependency.buckets.outputs.dags_code_bucket_arn,
     id   = dependency.buckets.outputs.dags_code_bucket_id
   }
+  catcher_lambda = {
+    repository_url = "${include.root.locals.ecr_region_path}/batch_executor_catcher",
+    image_tag      = "latest"
+  }
 }

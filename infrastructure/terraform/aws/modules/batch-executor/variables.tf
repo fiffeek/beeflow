@@ -56,3 +56,11 @@ variable "job_definition_name" {
   type = string
   description = "The name of the Batch job definition"
 }
+
+variable "catcher_lambda" {
+  type = object({
+    repository_url = string
+    image_tag = string
+  })
+  description = "Repository and tag for the batch executor catcher lambda"
+}
