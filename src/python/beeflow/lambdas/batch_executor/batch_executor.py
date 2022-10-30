@@ -26,10 +26,10 @@ def get_name(event: TaskInstanceQueued) -> str:
 
 def prepare_input(event: TaskInstanceQueued) -> Dict[str, str]:
     """
-    Serializes the event input into a json string, quoting the entire string with single quotes
+    Serializes the event input into a json string
     """
     return {
-        os.environ[Configuration.SERIALIZED_INPUT_FIELD_NAME_ENV_VAR]: f"'{json.dumps(event.dict())}'"
+        os.environ[Configuration.SERIALIZED_INPUT_FIELD_NAME_ENV_VAR]: json.dumps(event.dict())
     }
 
 
