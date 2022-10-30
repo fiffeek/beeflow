@@ -6,11 +6,12 @@ from airflow.operators.bash import BashOperator
 from airflow.operators.empty import EmptyOperator
 
 LAMBDA_QUEUE = "lambda"
+BATCH_QUEUE = "batch"
 
 
 with DAG(
     dag_id='beeflow_testing40',
-    schedule_interval='*/5 * * * *',
+    schedule_interval='*/15 * * * *',
     start_date=pendulum.datetime(2021, 1, 1, tz="UTC"),
     catchup=False,
     dagrun_timeout=datetime.timedelta(minutes=60),
@@ -26,7 +27,7 @@ with DAG(
     run_this = BashOperator(
         task_id='run_after_loop',
         bash_command='echo 1',
-        queue=LAMBDA_QUEUE,
+        queue=BATCH_QUEUE,
     )
     # [END howto_operator_bash]
 
