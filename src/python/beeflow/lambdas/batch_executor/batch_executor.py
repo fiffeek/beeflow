@@ -24,6 +24,15 @@ def get_name(event: TaskInstanceQueued) -> str:
     return name[0:79]
 
 
+def prepare_input(event: TaskInstanceQueued) -> Dict[str, str]:
+    """
+    Serializes the event input into a json string, quoting the entire string with single quotes
+    """
+    return {
+        os.environ[Configuration.SERIALIZED_INPUT_FIELD_NAME_ENV_VAR]: f"'{json.dumps(event.dict())}'"
+    }
+
+
 @backoff.on_exception(backoff.expo,
                       Exception,
                       max_time=800)
@@ -32,7 +41,7 @@ def trigger_step_functions(event: TaskInstanceQueued) -> None:
     response = sfn_client.start_execution(
         stateMachineArn=state_machine_arn,
         name=get_name(event),
-        input=json.dumps(event.dict()),
+        input=prepare_input(event),
     )
     logger.info(f"Scheduled the worker for batch {response}")
 
