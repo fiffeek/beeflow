@@ -43,6 +43,9 @@ apply_lambda-executor:
 apply_batch-executor:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/batch-executor && terragrunt apply"
 
+apply_batch-worker:
+	docker-compose run --rm terragrunt_aws bash -c "cd dev/batch-worker && terragrunt apply"
+
 apply_scheduler:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/scheduler && terragrunt apply"
 

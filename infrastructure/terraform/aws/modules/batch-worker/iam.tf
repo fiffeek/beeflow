@@ -1,0 +1,113 @@
+data "aws_iam_policy_document" "ecs_task_execution_role" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "ecs_task_execution_role" {
+  name               = "${module.this.id}-ecs-task-exec"
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_execution_role.json
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_role" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+data "aws_iam_policy_document" "airflow_logs" {
+  statement {
+    actions = [
+      "logs:createLogStream",
+      "logs:deleteLogStream",
+      "logs:createLogGroup",
+      "logs:cancelExportTask",
+      "logs:createExportTask",
+      "logs:deleteRetentionPolicy",
+      "logs:describeLogStreams",
+      "logs:filterLogEvents",
+      "logs:getLogEvents",
+      "logs:getLogEvents",
+      "logs:describe*",
+      "logs:get*",
+      "logs:list*",
+      "logs:startQuery",
+      "logs:stopQuery",
+      "logs:testMetricFilter",
+      "logs:filterLogEvents",
+      "logs:putLogEvents",
+      "logs:createLogStream",
+    ]
+    resources = [
+      var.airflow_cloudwatch_logs_group_arn,
+      "${var.airflow_cloudwatch_logs_group_arn}:log-stream:*",
+      "${var.airflow_cloudwatch_logs_group_arn}:*"
+    ]
+  }
+}
+
+module "airflow_logs_label" {
+  source = "cloudposse/label/null"
+  version = "0.25.0"
+  name = "${module.this.id}-airflow-logs"
+  context = module.this
+}
+
+resource "aws_iam_policy" "airflow_logs" {
+  name = module.airflow_logs_label.id
+  policy = data.aws_iam_policy_document.airflow_logs.json
+}
+
+resource "aws_iam_role_policy_attachment" "airflow_logs" {
+  role = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = aws_iam_policy.airflow_logs.arn
+}
+
+resource "aws_iam_role_policy_attachment" "appconfig_access" {
+  role = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = aws_iam_policy.appconfig_access.arn
+}
+
+module "appconfig_access_label" {
+  source = "cloudposse/label/null"
+  version = "0.25.0"
+  name = "${module.this.name}-appconfig-access"
+  context = module.this
+}
+
+resource "aws_iam_policy" "appconfig_access" {
+  name = module.appconfig_access_label.id
+  path = "/"
+  description = "Access to AppConfig."
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "ssm:GetDocument",
+          "ssm:ListDocuments",
+          "appconfig:GetLatestConfiguration",
+          "appconfig:StartConfigurationSession",
+          "appconfig:ListApplications",
+          "appconfig:GetApplication",
+          "appconfig:ListEnvironments",
+          "appconfig:GetEnvironment",
+          "appconfig:ListConfigurationProfiles",
+          "appconfig:GetConfigurationProfile",
+          "appconfig:ListDeploymentStrategies",
+          "appconfig:GetDeploymentStrategy",
+          "appconfig:GetConfiguration",
+          "appconfig:ListDeployments",
+          "appconfig:GetDeployment"
+        ]
+        Effect = "Allow"
+        Resource = "*"
+      },
+    ]
+  })
+}
