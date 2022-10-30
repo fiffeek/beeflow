@@ -88,6 +88,7 @@ module "worker" {
             value = "512"
           }
         ],
+        jobRoleArn = aws_iam_role.ecs_task_execution_role.arn
         executionRoleArn = aws_iam_role.ecs_task_execution_role.arn
         logConfiguration = {
           logDriver = "awslogs"

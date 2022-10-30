@@ -27,11 +27,10 @@ module "batch_executor_wrapper" {
           "JobName": "AirflowBatchWorkerExecuteTask",
           "JobQueue": var.job_queue_name,
           "Parameters": {
-            "serialized": "$.${local.input_field_name}"
+            "serialized.$": "$.${local.input_field_name}"
           }
           "ContainerOverrides": {
             "Command": [
-              "/bin/batch_worker",
               "--event",
               "Ref::serialized"]
           }
