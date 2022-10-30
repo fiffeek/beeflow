@@ -8,6 +8,7 @@ locals {
     AIRFLOW_CONN_AWS_DEFAULT = "aws://"
     BEEFLOW__ENVIRONMENT = module.this.environment,
     PYTHONUNBUFFERED = "1"
+    BEEFLOW__DAGS_BUCKET_NAME = var.dags_code_bucket.name
   }
   transformed_env_vars = [
   for key, value in local.environment_variables : {
