@@ -111,3 +111,35 @@ resource "aws_iam_policy" "appconfig_access" {
     ]
   })
 }
+
+
+data "aws_iam_policy_document" "readonly_dags_access" {
+  statement {
+    sid = "ReadonlyDAGsBatchWorker"
+    actions = [
+      "s3:Get*",
+      "s3:List*"
+    ]
+    resources = [
+      var.dags_code_bucket.arn,
+      "${var.dags_code_bucket.arn}/*"
+    ]
+  }
+}
+
+module "readonly_dags_access_label" {
+  source = "cloudposse/label/null"
+  version = "0.25.0"
+  name = "batch-worker-readonly-dags-access"
+  context = module.this
+}
+
+resource "aws_iam_policy" "readonly_dags_access" {
+  name = module.readonly_dags_access_label.id
+  policy = data.aws_iam_policy_document.readonly_dags_access.json
+}
+
+resource "aws_iam_role_policy_attachment" "readonly_dags_access" {
+  role = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = aws_iam_policy.readonly_dags_access.arn
+}

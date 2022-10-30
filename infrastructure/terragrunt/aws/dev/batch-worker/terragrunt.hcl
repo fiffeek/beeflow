@@ -11,6 +11,11 @@ dependency "vpc" {
   config_path = "../vpc"
 }
 
+dependency "buckets" {
+  config_path = "../buckets"
+}
+
+
 dependency "cloudwatch_logs" {
   config_path = "../cloudwatch-logs"
 }
@@ -30,4 +35,9 @@ inputs = {
   airflow_cloudwatch_logs_group_arn        = dependency.cloudwatch_logs.outputs.airflow_events_arn
   batch_job_retries                        = 3
   task_timeout                             = 600
+  dags_code_bucket = {
+    name = dependency.buckets.outputs.dags_code_bucket_name,
+    arn  = dependency.buckets.outputs.dags_code_bucket_arn,
+    id   = dependency.buckets.outputs.dags_code_bucket_id
+  }
 }

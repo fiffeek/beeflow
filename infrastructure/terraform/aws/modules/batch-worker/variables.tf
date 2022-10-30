@@ -47,3 +47,12 @@ variable "airflow_home" {
   type        = string
   description = "Airflow home directory."
 }
+
+variable "dags_code_bucket" {
+  type = object({
+    name = string
+    arn  = string
+    id   = string
+  })
+  description = "The name of the DAGs bucket."
+}
