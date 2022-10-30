@@ -54,6 +54,8 @@ module "worker" {
       name = "BatchWorkerQueue"
       state = "ENABLED"
       priority = 1
+      # FIFO for the time being
+      create_scheduling_policy = false
 
       tags = {
         JobQueue = "Priority job queue with 1 prio"
