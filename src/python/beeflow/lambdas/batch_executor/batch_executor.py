@@ -24,13 +24,13 @@ def get_name(event: TaskInstanceQueued) -> str:
     return name[0:79]
 
 
-def prepare_input(event: TaskInstanceQueued) -> Dict[str, str]:
+def prepare_input(event: TaskInstanceQueued) -> str:
     """
     Serializes the event input into a json string
     """
-    return {
+    return json.dumps({
         os.environ[Configuration.SERIALIZED_INPUT_FIELD_NAME_ENV_VAR]: json.dumps(event.dict())
-    }
+    })
 
 
 @backoff.on_exception(backoff.expo,
