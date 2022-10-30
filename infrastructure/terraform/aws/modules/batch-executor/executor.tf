@@ -3,12 +3,14 @@ module "executor_lambda" {
 
   airflow_home = var.airflow_home
   appconfig_application_configuration_name = var.appconfig_application_configuration_name
-  airflow_cloudwatch_logs_group_arn        = var.airflow_cloudwatch_logs_group_arn
+  airflow_cloudwatch_logs_group_arn = var.airflow_cloudwatch_logs_group_arn
   appconfig_application_name = var.appconfig_application_name
   spec = {
     timeout = 180
     additional_environment_variables = {
       BEEFLOW__DAGS_BUCKET_NAME = var.dags_code_bucket.name
+      BEEFLOW__BATCH_EXECUTOR_STATE_MACHINE__INPUT_FIELD_NAME = local.input_field_name
+      BEEFLOW__BATCH_EXECUTOR_STATE_MACHINE__ARN = module.batch_executor_wrapper.state_machine_arn
     }
     memory_size = 512
     reserved_concurrent_executions = -1
@@ -92,4 +94,44 @@ resource "aws_iam_role_policy_attachment" "allow_sqs_pull" {
 resource "aws_lambda_event_source_mapping" "executor_sqs_trigger" {
   event_source_arn = aws_sqs_queue.executor_sqs.arn
   function_name = module.executor_lambda.arn
+}
+
+data "aws_iam_policy_document" "sfn_invoke_access" {
+  statement {
+    actions = [
+      "states:ListActivities",
+      "states:CreateActivity",
+      "states:DescribeStateMachine",
+      "states:StartExecution",
+      "states:ListExecutions",
+      "states:DescribeExecution",
+      "states:DescribeStateMachineForExecution",
+      "states:GetExecutionHistory",
+      "states:StopExecution",
+      "states:DescribeActivity",
+      "states:DeleteActivity",
+      "states:GetActivityTask",
+      "states:SendTaskHeartbeat"
+    ]
+    resources = [
+      module.batch_executor_wrapper.state_machine_arn
+    ]
+  }
+}
+
+module "sfn_invoke_access" {
+  source = "cloudposse/label/null"
+  version = "0.25.0"
+  name = "batch-executor-sfn-wrapper-access"
+  context = module.this
+}
+
+resource "aws_iam_policy" "sfn_invoke_access" {
+  name = module.sfn_invoke_access.id
+  policy = data.aws_iam_policy_document.sfn_invoke_access.json
+}
+
+resource "aws_iam_role_policy_attachment" "sfn_invoke_access" {
+  role = module.executor_lambda.role_name
+  policy_arn = aws_iam_policy.sfn_invoke_access.arn
 }

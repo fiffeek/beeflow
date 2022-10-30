@@ -46,3 +46,13 @@ variable "airflow_cloudwatch_logs_group_arn" {
   type        = string
   description = "The ARN for the Airflow logs in cloudwatch group"
 }
+
+variable "job_queue_name" {
+  type = string
+  description = "The name of the Batch worker job queue"
+}
+
+variable "job_definition_name" {
+  type = string
+  description = "The name of the Batch job definition"
+}
