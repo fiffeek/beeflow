@@ -1,12 +1,12 @@
 module "beeflow_events_label" {
-  source = "cloudposse/label/null"
+  source  = "cloudposse/label/null"
   version = "0.25.0"
-  name = "events"
+  name    = "events"
   context = module.this
 }
 
 module "beeflow_events" {
-  source = "terraform-aws-modules/eventbridge/aws"
+  source  = "terraform-aws-modules/eventbridge/aws"
   version = "1.14.2"
 
   bus_name = var.beeflow_main_event_bus_name
@@ -23,9 +23,9 @@ module "beeflow_events" {
     dag-created = {
       description = "Capture DAG creation data"
       event_pattern = jsonencode({
-        "detail": {
+        "detail" : {
           "event_type" : [
-            "dag_created"]
+          "dag_created"]
         }
       })
       enabled = true
@@ -33,9 +33,9 @@ module "beeflow_events" {
     dag-updated = {
       description = "Capture DAG update data"
       event_pattern = jsonencode({
-        "detail": {
+        "detail" : {
           "event_type" : [
-            "dag_updated"]
+          "dag_updated"]
         }
       })
       enabled = true
@@ -43,11 +43,11 @@ module "beeflow_events" {
     task-queued-lambda = {
       description = "Capture task queued event for the lambda executor"
       event_pattern = jsonencode({
-        "detail": {
+        "detail" : {
           "event_type" : [
-            "task_instance_queued"],
-          "queue": [
-            "lambda"]
+          "task_instance_queued"],
+          "queue" : [
+          "lambda"]
         }
       })
       enabled = true
@@ -55,11 +55,11 @@ module "beeflow_events" {
     task-queued-batch = {
       description = "Capture task queued event for the batch executor"
       event_pattern = jsonencode({
-        "detail": {
+        "detail" : {
           "event_type" : [
-            "task_instance_queued"],
-          "queue": [
-            "batch"]
+          "task_instance_queued"],
+          "queue" : [
+          "batch"]
         }
       })
       enabled = true
@@ -67,9 +67,9 @@ module "beeflow_events" {
     task-failed = {
       description = "Capture task failed events"
       event_pattern = jsonencode({
-        "detail": {
+        "detail" : {
           "event_type" : [
-            "task_instance_failed"]
+          "task_instance_failed"]
         }
       })
       enabled = true
@@ -77,9 +77,9 @@ module "beeflow_events" {
     task-succeeded = {
       description = "Capture task succeeded events"
       event_pattern = jsonencode({
-        "detail": {
+        "detail" : {
           "event_type" : [
-            "task_instance_success"]
+          "task_instance_success"]
         }
       })
       enabled = true
@@ -87,9 +87,9 @@ module "beeflow_events" {
     task-skipped = {
       description = "Capture task skipped events"
       event_pattern = jsonencode({
-        "detail": {
+        "detail" : {
           "event_type" : [
-            "task_instance_skipped"]
+          "task_instance_skipped"]
         }
       })
       enabled = true
@@ -97,9 +97,9 @@ module "beeflow_events" {
     task-up-for-retry = {
       description = "Capture task up for retry events"
       event_pattern = jsonencode({
-        "detail": {
+        "detail" : {
           "event_type" : [
-            "task_instance_up_for_retry"]
+          "task_instance_up_for_retry"]
         }
       })
       enabled = true
@@ -107,10 +107,10 @@ module "beeflow_events" {
     task-transient-states = {
       description = "Capture task transient events"
       event_pattern = jsonencode({
-        "detail": {
+        "detail" : {
           "event_type" : [
             "task_instance_upstream_failed",
-            "task_instance_unknown"]
+          "task_instance_unknown"]
         }
       })
       enabled = true
@@ -118,9 +118,9 @@ module "beeflow_events" {
     dag-run-failed = {
       description = "Capture dag run failed events"
       event_pattern = jsonencode({
-        "detail": {
+        "detail" : {
           "event_type" : [
-            "dag_run_failed"]
+          "dag_run_failed"]
         }
       })
       enabled = true
@@ -128,9 +128,9 @@ module "beeflow_events" {
     dag-run-succeeded = {
       description = "Capture dag run succeeded events"
       event_pattern = jsonencode({
-        "detail": {
+        "detail" : {
           "event_type" : [
-            "dag_run_success"]
+          "dag_run_success"]
         }
       })
       enabled = true
@@ -141,75 +141,75 @@ module "beeflow_events" {
     dag-created = [
       {
         name = "send-dag-created-orders-to-scheduler"
-        arn = var.scheduler_sqs.arn
+        arn  = var.scheduler_sqs.arn
       },
       {
         name = "send-dag-created-orders-to-schedule-updater"
-        arn = var.dag_schedule_updater_sqs.arn
+        arn  = var.dag_schedule_updater_sqs.arn
       },
     ]
     dag-updated = [
       {
         name = "send-dag-updated-events-to-scheduler"
-        arn = var.scheduler_sqs.arn
+        arn  = var.scheduler_sqs.arn
       },
       {
         name = "send-dag-updated-events-to-schedule-updater"
-        arn = var.dag_schedule_updater_sqs.arn
+        arn  = var.dag_schedule_updater_sqs.arn
       },
     ]
     task-queued-lambda = [
       {
         name = "send-task-queued-events-to-lambda-executor"
-        arn = var.lambda_executor_sqs.arn
+        arn  = var.lambda_executor_sqs.arn
       },
     ]
     task-queued-batch = [
       {
         name = "send-task-queued-events-to-batch-executor"
-        arn = var.batch_executor_sqs.arn
+        arn  = var.batch_executor_sqs.arn
       },
     ]
     task-failed = [
       {
         name = "send-task-failed-events-to-scheduler"
-        arn = var.scheduler_sqs.arn
+        arn  = var.scheduler_sqs.arn
       },
     ]
     task-succeeded = [
       {
         name = "send-task-success-events-to-scheduler"
-        arn = var.scheduler_sqs.arn
+        arn  = var.scheduler_sqs.arn
       },
     ]
     task-skipped = [
       {
         name = "send-task-skipped-events-to-scheduler"
-        arn = var.scheduler_sqs.arn
+        arn  = var.scheduler_sqs.arn
       },
     ]
     task-up-for-retry = [
       {
         name = "send-task-up-for-retry-events-to-scheduler"
-        arn = var.scheduler_sqs.arn
+        arn  = var.scheduler_sqs.arn
       },
     ]
     task-transient-states = [
       {
         name = "send-task-transient-events-to-scheduler"
-        arn = var.scheduler_sqs.arn
+        arn  = var.scheduler_sqs.arn
       },
     ]
     dag-run-failed = [
       {
         name = "send-dag-run-failed-events-to-scheduler"
-        arn = var.scheduler_sqs.arn
+        arn  = var.scheduler_sqs.arn
       },
     ]
     dag-run-succeeded = [
       {
         name = "send-dag-run-success-events-to-scheduler"
-        arn = var.scheduler_sqs.arn
+        arn  = var.scheduler_sqs.arn
       },
     ]
   }

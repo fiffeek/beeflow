@@ -1,8 +1,8 @@
 resource "aws_apprunner_vpc_connector" "connector" {
   vpc_connector_name = module.this.id
-  subnets = var.private_subnet_ids
+  subnets            = var.private_subnet_ids
   security_groups = [
-    var.vpc_sg]
+  var.vpc_sg]
 }
 
 resource "aws_apprunner_auto_scaling_configuration_version" "webserver" {
@@ -16,14 +16,14 @@ resource "aws_apprunner_auto_scaling_configuration_version" "webserver" {
 
 locals {
   runtime_args_base = {
-    BEEFLOW__APP_CONFIG_NAME = var.appconfig_application_configuration_name,
-    BEEFLOW__APPLICATION = var.appconfig_application_name,
-    POWERTOOLS_SERVICE_NAME = module.this.id,
-    POWERTOOLS_LOGGER_LOG_EVENT = "true"
-    AIRFLOW_HOME = var.airflow_home,
-    AIRFLOW_CONN_AWS_DEFAULT = "aws://"
-    BEEFLOW__ENVIRONMENT = module.this.environment,
-    PYTHONUNBUFFERED = "1",
+    BEEFLOW__APP_CONFIG_NAME             = var.appconfig_application_configuration_name,
+    BEEFLOW__APPLICATION                 = var.appconfig_application_name,
+    POWERTOOLS_SERVICE_NAME              = module.this.id,
+    POWERTOOLS_LOGGER_LOG_EVENT          = "true"
+    AIRFLOW_HOME                         = var.airflow_home,
+    AIRFLOW_CONN_AWS_DEFAULT             = "aws://"
+    BEEFLOW__ENVIRONMENT                 = module.this.environment,
+    PYTHONUNBUFFERED                     = "1",
     AIRFLOW__WEBSERVER__UPDATE_FAB_PERMS = "false",
     # https://stackoverflow.com/a/52451737
     FORWARDED_ALLOW_IPS = "*",
@@ -40,10 +40,10 @@ resource "aws_apprunner_service" "webserver" {
 
     image_repository {
       image_configuration {
-        port = var.port
+        port                          = var.port
         runtime_environment_variables = local.runtime_args_base
       }
-      image_identifier = "${var.repository_url}:${var.image_tag}"
+      image_identifier      = "${var.repository_url}:${var.image_tag}"
       image_repository_type = "ECR"
     }
     auto_deployments_enabled = false
@@ -53,15 +53,15 @@ resource "aws_apprunner_service" "webserver" {
 
   network_configuration {
     egress_configuration {
-      egress_type = "VPC"
+      egress_type       = "VPC"
       vpc_connector_arn = aws_apprunner_vpc_connector.connector.arn
     }
   }
 
   health_check_configuration {
-    interval = 20
-    path = "/health"
-    protocol = "HTTP"
+    interval            = 20
+    path                = "/health"
+    protocol            = "HTTP"
     unhealthy_threshold = 10
   }
 

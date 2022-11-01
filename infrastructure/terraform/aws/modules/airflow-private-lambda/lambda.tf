@@ -82,20 +82,20 @@ resource "aws_iam_policy" "appconfig_access" {
 }
 
 resource "aws_iam_role_policy_attachment" "airflow_logs" {
-  role = module.lambda.role_name
+  role       = module.lambda.role_name
   policy_arn = aws_iam_policy.airflow_logs.arn
 }
 
 module "airflow_logs" {
-  source = "cloudposse/label/null"
+  source  = "cloudposse/label/null"
   version = "0.25.0"
-  name = "${module.this.name}-cloudwatch-airflow-logs"
+  name    = "${module.this.name}-cloudwatch-airflow-logs"
   context = module.this
 }
 
 resource "aws_iam_policy" "airflow_logs" {
-  name = module.airflow_logs.id
-  path = "/"
+  name        = module.airflow_logs.id
+  path        = "/"
   description = "Access to Cloudwatch for Airflow logs storage."
 
   policy = jsonencode({

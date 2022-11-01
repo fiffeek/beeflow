@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 from airflow import DAG
 from airflow.cli.commands.task_command import _get_ti
@@ -8,7 +8,6 @@ from airflow.utils.cli import process_subdir
 from aws_lambda_powertools import Logger
 from aws_lambda_powertools.utilities.parser import parse
 from aws_lambda_powertools.utilities.typing import LambdaContext
-
 from beeflow.packages.config.config import Configuration
 from beeflow.packages.dags_downloader.dags_downloader import DagsDownloader
 from beeflow.packages.events.task_instance_queued_event import TaskInstanceQueued
@@ -17,8 +16,9 @@ logger = Logger()
 
 
 def get_dag(subdir: Optional[str], dag_id: str) -> Optional["DAG"]:
-    """Returns DAG of a given dag_id"""
+    """Returns DAG of a given dag_id."""
     from airflow.models import DagBag
+
     dagbag = DagBag(process_subdir(subdir), include_examples=False)
     if dag_id not in dagbag.dags:
         return None

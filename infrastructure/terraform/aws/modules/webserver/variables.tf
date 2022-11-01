@@ -9,7 +9,7 @@ variable "private_subnet_ids" {
 }
 
 variable "port" {
-  type = string
+  type        = string
   description = "The webserver's port."
 }
 

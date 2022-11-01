@@ -1,17 +1,15 @@
 import json
 import os
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 import boto3
 from airflow import DAG
 from airflow.models.dag import ScheduleInterval
 from airflow.utils.cli import process_subdir
 from aws_lambda_powertools import Logger
-from aws_lambda_powertools.utilities.parser import parse, envelopes, event_parser
+from aws_lambda_powertools.utilities.parser import envelopes, event_parser, parse
 from aws_lambda_powertools.utilities.parser.models import EventBridgeModel
 from aws_lambda_powertools.utilities.typing import LambdaContext
-from pydantic import ValidationError
-
 from beeflow.packages.config.config import Configuration
 from beeflow.packages.dags_downloader.dags_downloader import DagsDownloader
 from beeflow.packages.events.beeflow_event import BeeflowEvent
@@ -20,6 +18,7 @@ from beeflow.packages.events.dag_cron_triggered import DAGCronTriggered
 from beeflow.packages.events.dag_schedule_updater_empty_event import DAGScheduleUpdaterEmptyEvent
 from beeflow.packages.events.dag_updated import DAGUpdatedEvent
 from beeflow.packages.events.new_cron_created import NewCronScheduleCreated
+from pydantic import ValidationError
 
 logger = Logger()
 eventbridge_client = boto3.client('events')
@@ -29,6 +28,7 @@ EVENTBUS_NAME = 'default'
 
 def get_dag_by_id(dag_id: str) -> DAG:
     from airflow.models import DagBag
+
     dagbag = DagBag(process_subdir("DAGS_FOLDER"), include_examples=False)
     return dagbag.dags[dag_id]
 
@@ -38,7 +38,9 @@ def get_dag_by_id(dag_id: str) -> DAG:
 def from_airflow_schedule_to_aws_cron(airflow_schedule: ScheduleInterval) -> str:
     if not isinstance(airflow_schedule, str):
         raise ValueError(
-            f"Currently supporting only schedule intervals for cron string type, got {airflow_schedule} instead")
+            f"Currently supporting only schedule intervals for cron string type,"
+            f" got {airflow_schedule} instead"
+        )
     airflow_cron = airflow_schedule.replace('"', '')
     parts = airflow_cron.split(' ')
     if len(parts) < 5:
@@ -61,9 +63,11 @@ def get_rule_state(is_dag_paused: bool) -> str:
 
 
 def upsert_new_cron_schedule(dag_id: str) -> BeeflowEvent:
-    """
-    Pulls the DAG dag_id from the metadata database with the most recent information.
-    Upserts the cron schedule and enables or disables the cron rule if the DAG is paused or un-paused accordingly.
+    """Pulls the DAG dag_id from the metadata database with the most recent
+    information.
+
+    Upserts the cron schedule and enables or disables the cron rule if
+    the DAG is paused or un-paused accordingly.
     """
 
     dag = get_dag_by_id(dag_id)
@@ -76,7 +80,7 @@ def upsert_new_cron_schedule(dag_id: str) -> BeeflowEvent:
         ScheduleExpression=from_airflow_schedule_to_aws_cron(dag.normalized_schedule_interval),
         State=get_rule_state(is_dag_paused=dag.get_is_paused()),
         Description=f'Rule to trigger execution of tasks for {dag_id}',
-        EventBusName=EVENTBUS_NAME
+        EventBusName=EVENTBUS_NAME,
     )
     logger.info(f"Attaching a new target {target} for rule {rule_name}")
     eventbridge_client.put_targets(
@@ -86,9 +90,10 @@ def upsert_new_cron_schedule(dag_id: str) -> BeeflowEvent:
             {
                 'Id': 'trigger-scheduler-by-sqs-forward',
                 'Arn': target,
-                'Input': json.dumps(DAGCronTriggered(dag_id=dag.dag_id).dict())
+                'Input': json.dumps(DAGCronTriggered(dag_id=dag.dag_id).dict()),
             }
-        ])
+        ],
+    )
 
     return NewCronScheduleCreated(dag_id=dag_id, rule_id=dag.dag_id)
 

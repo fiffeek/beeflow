@@ -5,11 +5,11 @@ resource "aws_iam_policy" "invoke_lambda_policy" {
   path        = "/"
   description = "A policy which grants permission to invoke a Lambda function."
 
-  policy      = jsonencode({
+  policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Action = "lambda:InvokeFunction"
+        Action   = "lambda:InvokeFunction"
         Effect   = "Allow"
         Resource = "arn:aws:lambda:*:${data.aws_caller_identity.current.account_id}:function:*"
       },
@@ -17,7 +17,7 @@ resource "aws_iam_policy" "invoke_lambda_policy" {
   })
 }
 resource "aws_iam_role" "rds_lambda_role" {
-  name               = "rds_lambda_role"
+  name = "rds_lambda_role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [

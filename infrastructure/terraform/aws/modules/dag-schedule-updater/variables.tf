@@ -43,7 +43,7 @@ variable "dags_code_bucket" {
 }
 
 variable "scheduler_sqs_arn" {
-  type = string
+  type        = string
   description = "The ARN of the scheduler SQS to forward the eventbridge cron trigger to."
 }
 

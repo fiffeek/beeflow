@@ -1,14 +1,13 @@
 import argparse
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, Optional
 
 from airflow import DAG, AirflowException
-from airflow.cli.commands.task_command import _get_ti, _capture_task_logs
+from airflow.cli.commands.task_command import _capture_task_logs, _get_ti
 from airflow.jobs.local_task_job import LocalTaskJob
 from airflow.utils.cli import process_subdir
 from aws_lambda_powertools import Logger
-from aws_lambda_powertools.utilities.parser import parse, envelopes, event_parser
-
+from aws_lambda_powertools.utilities.parser import parse
 from beeflow.packages.dags_downloader.dags_downloader import DagsDownloader
 from beeflow.packages.events.task_instance_queued_event import TaskInstanceQueued
 
@@ -16,7 +15,7 @@ logger = Logger()
 
 
 def _run_task_by_local_task_job(pool, task_instance):
-    """Run LocalTaskJob, which monitors the raw task execution process"""
+    """Run LocalTaskJob, which monitors the raw task execution process."""
     run_job = LocalTaskJob(
         task_instance=task_instance,
         pool=pool,
@@ -28,7 +27,7 @@ def _run_task_by_local_task_job(pool, task_instance):
 
 
 def get_dag(subdir: Optional[str], dag_id: str) -> "DAG":
-    """Returns DAG of a given dag_id"""
+    """Returns DAG of a given dag_id."""
     from airflow.models import DagBag
 
     dagbag = DagBag(process_subdir(subdir), include_examples=False)

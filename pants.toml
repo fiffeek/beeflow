@@ -1,5 +1,5 @@
 [GLOBAL]
-pants_version = "2.11.0"
+pants_version = "2.14.0"
 build_ignore = [
   "3rdparty/python/*",
   "docs/*"
@@ -7,6 +7,7 @@ build_ignore = [
 backend_packages.add = [
   "pants.backend.awslambda.python",
   "pants.backend.experimental.terraform",
+  "pants.backend.build_files.fmt.buildifier",
   "pants.backend.python",
   "pants.backend.python.lint.docformatter",
   "pants.backend.python.lint.black",
@@ -29,7 +30,6 @@ root_patterns = [
 interpreter_constraints = [">=3.9"]
 enable_resolves = true
 resolves = { python-default = "3rdparty/python/requirements_lock.txt"}
-lockfile_generator = "pex"
 
 [python-bootstrap]
 search_path = ["<PATH>", "<PYENV>"]

@@ -1,3 +1,3 @@
 docker_image(
-    name="docker",
+    name = "docker",
 )

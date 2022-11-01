@@ -102,9 +102,7 @@ def webserver(args):
             master_timeout=conf.getint('webserver', 'web_server_master_timeout'),
             worker_refresh_interval=conf.getint('webserver', 'worker_refresh_interval', fallback=30),
             worker_refresh_batch_size=conf.getint('webserver', 'worker_refresh_batch_size', fallback=1),
-            reload_on_plugin_change=conf.getboolean(
-                'webserver', 'reload_on_plugin_change', fallback=False
-            ),
+            reload_on_plugin_change=conf.getboolean('webserver', 'reload_on_plugin_change', fallback=False),
         ).start()
 
     with subprocess.Popen(run_args, close_fds=True) as gunicorn_master_proc:

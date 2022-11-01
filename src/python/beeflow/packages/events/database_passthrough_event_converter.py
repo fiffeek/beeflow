@@ -1,5 +1,4 @@
 from aws_lambda_powertools import Logger
-
 from beeflow.packages.events.beeflow_event import BeeflowEvent
 from beeflow.packages.events.cdc_input import CDCInput
 from beeflow.packages.events.dag_run_failed import DagRunFailed
@@ -22,22 +21,23 @@ logger = Logger()
 
 
 class DatabasePassthroughEventConverter:
-
     def __init__(self, event: CDCInput):
         self.event = event
         self.metadata = self.event.metadata
 
     def __is_task_instance_event(self) -> bool:
-        required_fields = ["task_id",
-                           "dag_id",
-                           "run_id",
-                           "state",
-                           "operator",
-                           "max_tries",
-                           "queue",
-                           "pool",
-                           "try_number",
-                           "map_index"]
+        required_fields = [
+            "task_id",
+            "dag_id",
+            "run_id",
+            "state",
+            "operator",
+            "max_tries",
+            "queue",
+            "pool",
+            "try_number",
+            "map_index",
+        ]
         for field in required_fields:
             if field not in self.metadata:
                 logger.info(f"Event cannot be identified as Task Instance event as {field} is missing")
@@ -53,13 +53,7 @@ class DatabasePassthroughEventConverter:
         return True
 
     def __is_dag_run_event(self) -> bool:
-        required_fields = ["dag_id",
-                           "dag_hash",
-                           "state",
-                           "run_id",
-                           "run_type",
-                           "queued_at",
-                           "execution_date"]
+        required_fields = ["dag_id", "dag_hash", "state", "run_id", "run_type", "queued_at", "execution_date"]
         for field in required_fields:
             if field not in self.metadata:
                 logger.info(f"Event cannot be identified as DAG run event as {field} is missing")
@@ -68,84 +62,114 @@ class DatabasePassthroughEventConverter:
 
     def __convert_to_task_instance_event(self) -> BeeflowEvent:
         if self.metadata["state"] == "queued":
-            return TaskInstanceQueued(dag_id=self.metadata["dag_id"],
-                                      run_id=self.metadata["run_id"],
-                                      task_id=self.metadata["task_id"],
-                                      map_index=self.metadata["map_index"],
-                                      pool=self.metadata["pool"],
-                                      queue=self.metadata["queue"],
-                                      try_number=self.metadata["try_number"])
+            return TaskInstanceQueued(
+                dag_id=self.metadata["dag_id"],
+                run_id=self.metadata["run_id"],
+                task_id=self.metadata["task_id"],
+                map_index=self.metadata["map_index"],
+                pool=self.metadata["pool"],
+                queue=self.metadata["queue"],
+                try_number=self.metadata["try_number"],
+            )
         if self.metadata["state"] == "failed":
-            return TaskInstanceFailed(dag_id=self.metadata["dag_id"],
-                                      run_id=self.metadata["run_id"],
-                                      task_id=self.metadata["task_id"],
-                                      map_index=self.metadata["map_index"],
-                                      try_number=self.metadata["try_number"])
+            return TaskInstanceFailed(
+                dag_id=self.metadata["dag_id"],
+                run_id=self.metadata["run_id"],
+                task_id=self.metadata["task_id"],
+                map_index=self.metadata["map_index"],
+                try_number=self.metadata["try_number"],
+            )
         if self.metadata["state"] == "upstream_failed":
-            return TaskInstanceUpstreamFailed(dag_id=self.metadata["dag_id"],
-                                              run_id=self.metadata["run_id"],
-                                              task_id=self.metadata["task_id"],
-                                              try_number=self.metadata["try_number"])
+            return TaskInstanceUpstreamFailed(
+                dag_id=self.metadata["dag_id"],
+                run_id=self.metadata["run_id"],
+                task_id=self.metadata["task_id"],
+                try_number=self.metadata["try_number"],
+            )
         if self.metadata["state"] == "success":
-            return TaskInstanceSuccess(dag_id=self.metadata["dag_id"],
-                                       run_id=self.metadata["run_id"],
-                                       task_id=self.metadata["task_id"],
-                                       map_index=self.metadata["map_index"],
-                                       try_number=self.metadata["try_number"])
+            return TaskInstanceSuccess(
+                dag_id=self.metadata["dag_id"],
+                run_id=self.metadata["run_id"],
+                task_id=self.metadata["task_id"],
+                map_index=self.metadata["map_index"],
+                try_number=self.metadata["try_number"],
+            )
         if self.metadata["state"] == "skipped":
-            return TaskInstanceSkipped(dag_id=self.metadata["dag_id"],
-                                       run_id=self.metadata["run_id"],
-                                       task_id=self.metadata["task_id"],
-                                       try_number=self.metadata["try_number"])
+            return TaskInstanceSkipped(
+                dag_id=self.metadata["dag_id"],
+                run_id=self.metadata["run_id"],
+                task_id=self.metadata["task_id"],
+                try_number=self.metadata["try_number"],
+            )
         if self.metadata["state"] == "running":
-            return TaskInstanceRunning(dag_id=self.metadata["dag_id"],
-                                       run_id=self.metadata["run_id"],
-                                       task_id=self.metadata["task_id"])
+            return TaskInstanceRunning(
+                dag_id=self.metadata["dag_id"],
+                run_id=self.metadata["run_id"],
+                task_id=self.metadata["task_id"],
+            )
         if self.metadata["state"] == "restarting":
-            return TaskInstanceRestarting(dag_id=self.metadata["dag_id"],
-                                          run_id=self.metadata["run_id"],
-                                          task_id=self.metadata["task_id"])
+            return TaskInstanceRestarting(
+                dag_id=self.metadata["dag_id"],
+                run_id=self.metadata["run_id"],
+                task_id=self.metadata["task_id"],
+            )
         if self.metadata["state"] == "shutdown":
-            return TaskInstanceShutdown(dag_id=self.metadata["dag_id"],
-                                        run_id=self.metadata["run_id"],
-                                        task_id=self.metadata["task_id"])
+            return TaskInstanceShutdown(
+                dag_id=self.metadata["dag_id"],
+                run_id=self.metadata["run_id"],
+                task_id=self.metadata["task_id"],
+            )
         if self.metadata["state"] is None:
-            return TaskInstanceUnknown(dag_id=self.metadata["dag_id"],
-                                       run_id=self.metadata["run_id"],
-                                       task_id=self.metadata["task_id"])
+            return TaskInstanceUnknown(
+                dag_id=self.metadata["dag_id"],
+                run_id=self.metadata["run_id"],
+                task_id=self.metadata["task_id"],
+            )
         if self.metadata["state"] == "scheduled":
-            return TaskInstanceScheduled(dag_id=self.metadata["dag_id"],
-                                         run_id=self.metadata["run_id"],
-                                         task_id=self.metadata["task_id"])
+            return TaskInstanceScheduled(
+                dag_id=self.metadata["dag_id"],
+                run_id=self.metadata["run_id"],
+                task_id=self.metadata["task_id"],
+            )
 
         raise ValueError(f"State {self.metadata['state']} unknown")
 
     def __convert_to_dag_event(self) -> BeeflowEvent:
-        return DAGUpdatedEvent(dag_id=self.metadata["dag_id"],
-                               is_active=self.metadata["is_active"],
-                               is_paused=self.metadata["is_paused"])
+        return DAGUpdatedEvent(
+            dag_id=self.metadata["dag_id"],
+            is_active=self.metadata["is_active"],
+            is_paused=self.metadata["is_paused"],
+        )
 
     def __convert_to_dag_run_event(self) -> BeeflowEvent:
         if self.metadata["state"] == "success":
-            return DagRunSuccess(dag_id=self.metadata["dag_id"],
-                                 dag_hash=self.metadata["dag_hash"],
-                                 run_id=self.metadata["run_id"],
-                                 run_type=self.metadata["run_type"])
+            return DagRunSuccess(
+                dag_id=self.metadata["dag_id"],
+                dag_hash=self.metadata["dag_hash"],
+                run_id=self.metadata["run_id"],
+                run_type=self.metadata["run_type"],
+            )
         if self.metadata["state"] == "failed":
-            return DagRunFailed(dag_id=self.metadata["dag_id"],
-                                dag_hash=self.metadata["dag_hash"],
-                                run_id=self.metadata["run_id"],
-                                run_type=self.metadata["run_type"])
+            return DagRunFailed(
+                dag_id=self.metadata["dag_id"],
+                dag_hash=self.metadata["dag_hash"],
+                run_id=self.metadata["run_id"],
+                run_type=self.metadata["run_type"],
+            )
         if self.metadata["state"] == "running":
-            return DagRunRunning(dag_id=self.metadata["dag_id"],
-                                 dag_hash=self.metadata["dag_hash"],
-                                 run_id=self.metadata["run_id"],
-                                 run_type=self.metadata["run_type"])
+            return DagRunRunning(
+                dag_id=self.metadata["dag_id"],
+                dag_hash=self.metadata["dag_hash"],
+                run_id=self.metadata["run_id"],
+                run_type=self.metadata["run_type"],
+            )
         if self.metadata["state"] == "queued":
-            return DagRunQueued(dag_id=self.metadata["dag_id"],
-                                dag_hash=self.metadata["dag_hash"],
-                                run_id=self.metadata["run_id"],
-                                run_type=self.metadata["run_type"])
+            return DagRunQueued(
+                dag_id=self.metadata["dag_id"],
+                dag_hash=self.metadata["dag_hash"],
+                run_id=self.metadata["run_id"],
+                run_type=self.metadata["run_type"],
+            )
 
         raise ValueError(f"State {self.metadata['state']} unknown")
 

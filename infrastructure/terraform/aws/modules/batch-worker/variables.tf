@@ -9,7 +9,7 @@ variable "subnet_ids" {
 }
 
 variable "task_timeout" {
-  type = number
+  type        = number
   description = "The timeout of an Airflow task. Equivalent to a max duration"
 }
 
@@ -24,7 +24,7 @@ variable "image_tag" {
 }
 
 variable "batch_job_retries" {
-  type = number
+  type        = number
   description = "The number of internal Batch job retries."
 }
 

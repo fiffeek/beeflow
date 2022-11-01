@@ -3,7 +3,6 @@ import os
 import boto3
 from airflow import settings
 from aws_lambda_powertools import Logger
-
 from beeflow.packages.config.config import Configuration
 
 s3 = boto3.resource('s3')
@@ -21,7 +20,7 @@ class DagsDownloader:
             path, filename = os.path.split(s3_object.key)
             local_path = os.path.join(settings.DAGS_FOLDER, path)
             if local_path.startswith("dags/"):
-                local_path = local_path[len("dags/"):]
+                local_path = local_path[len("dags/") :]
             os.makedirs(local_path, exist_ok=True)
             full_local_path = os.path.join(local_path, filename)
             logger.info(f"Downloading {s3_object.key} to {full_local_path}")

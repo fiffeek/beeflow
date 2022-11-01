@@ -1,12 +1,12 @@
 python_sources()
 
 python_awslambda(
-    name="package",
-    runtime="python3.9",
-    handler="batch_executor_catcher.py:handler"
+    name = "package",
+    handler = "batch_executor_catcher.py:handler",
+    runtime = "python3.9",
 )
 
 docker_image(
-    name="docker",
+    name = "docker",
     dependencies = [":package"],
 )

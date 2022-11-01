@@ -1,7 +1,7 @@
 python_sources()
 
 python_awslambda(
-    name="package",
-    runtime="python3.9",
-    handler="trigger.py:handler"
+    name = "package",
+    handler = "trigger.py:handler",
+    runtime = "python3.9",
 )

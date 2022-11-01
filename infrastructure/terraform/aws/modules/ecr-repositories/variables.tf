@@ -9,36 +9,36 @@ variable "dag_parsing_processor" {
 }
 
 variable "scheduler" {
-  type = string
+  type        = string
   description = "Name of the scheduler ECR repository."
 }
 
 variable "lambda_executor" {
-  type = string
+  type        = string
   description = "Name of the lambda executor ECR repository."
 }
 
 variable "dag_schedule_updater" {
-  type = string
+  type        = string
   description = "Name of the dag schedule updater ECR repository."
 }
 
 variable "webserver" {
-  type = string
+  type        = string
   description = "Name of the webserver ECR repository."
 }
 
 variable "batch_executor" {
-  type = string
+  type        = string
   description = "Name of the batch executor ECR repository."
 }
 
 variable "batch_worker" {
-  type = string
+  type        = string
   description = "Name of the batch worker ECR repository."
 }
 
 variable "batch_executor_catcher" {
-  type = string
+  type        = string
   description = "Name of the batch executor catcher ECR repository."
 }

@@ -98,7 +98,7 @@ resource "aws_iam_role_policy_attachment" "allow_processor_sqs_pull" {
 }
 
 resource "aws_lambda_event_source_mapping" "allow_processor_sqs_pull" {
-  count = var.dag_files_arrival_queue_enabled ? 1 : 0
-  event_source_arn                   = aws_sqs_queue.dag_parsing_processor_funnel.arn
-  function_name                      = module.dag_parsing_processor_lambda.arn
+  count            = var.dag_files_arrival_queue_enabled ? 1 : 0
+  event_source_arn = aws_sqs_queue.dag_parsing_processor_funnel.arn
+  function_name    = module.dag_parsing_processor_lambda.arn
 }

@@ -1,16 +1,14 @@
 import os
-from typing import Dict, Any
+from typing import Any, Dict
 
 import backoff
 import boto3
+from aws_lambda_powertools import Logger
 from aws_lambda_powertools.utilities.parser import event_parser
 from aws_lambda_powertools.utilities.typing import LambdaContext
-
 from beeflow.packages.events.beeflow_event import BeeflowEvent
 from beeflow.packages.events.beeflow_event_type import BeeflowEventType
 from beeflow.packages.events.cdc_input import CDCInput
-from aws_lambda_powertools import Logger
-
 from beeflow.packages.events.dag_created import DAGCreatedEvent
 from beeflow.packages.events.database_passthrough_event_converter import DatabasePassthroughEventConverter
 
@@ -33,9 +31,7 @@ def to_event_bridge_event(event: CDCInput) -> BeeflowEvent:
     raise ValueError(f"Event type not supported {event_type}")
 
 
-@backoff.on_exception(backoff.expo,
-                      Exception,
-                      max_time=800)
+@backoff.on_exception(backoff.expo, Exception, max_time=800)
 def push_to_event_bridge(event: CDCInput):
     event_bridge_event = to_event_bridge_event(event)
     response = cloudwatch_events.put_events(

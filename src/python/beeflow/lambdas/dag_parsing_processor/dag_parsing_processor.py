@@ -7,9 +7,8 @@ from airflow.dag_processing.manager import DagFileProcessorAgent
 from airflow.models import DagModel
 from airflow.utils.session import provide_session
 from aws_lambda_powertools import Logger
+from aws_lambda_powertools.utilities.parser import envelopes, event_parser
 from aws_lambda_powertools.utilities.typing import LambdaContext
-from aws_lambda_powertools.utilities.parser import parse, envelopes, event_parser
-
 from beeflow.packages.dags_downloader.dags_downloader import DagsDownloader
 from beeflow.packages.events.dags_processed import DAGsProcessed
 from beeflow.packages.events.trigger_dags_processing_command import TriggerDAGsProcessingCommand
@@ -48,7 +47,8 @@ def handler(event: List[TriggerDAGsProcessingCommand], context: LambdaContext) -
     DagsDownloader().download_dags()
     logger.info("Starting a single ProcessorAgent parsing loop.")
     # Deactivating the DAGs does not work correctly now
-    # https://github.com/apache/airflow/blob/bf727525e1fd777e51cc8bc17285f6093277fdef/airflow/dag_processing/manager.py#L496
+    # https://github.com/apache/airflow/blob/bf727525e1fd777e51cc8bc17285f6093277fdef/airflow/\
+    # dag_processing/manager.py#L496
     # One solution would be to run this loop twice and adjust the timeout parameters?
     # The rewrite of the subprocesses could also be made...
     # Logs also seem to be lost, multiprocessing ftw btw.

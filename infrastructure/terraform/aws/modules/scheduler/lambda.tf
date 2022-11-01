@@ -6,13 +6,13 @@ module "lambda" {
   airflow_cloudwatch_logs_group_arn        = var.airflow_cloudwatch_logs_group_arn
   appconfig_application_name               = var.appconfig_application_name
   spec = {
-    timeout                          = 60
+    timeout = 60
     additional_environment_variables = {
-      BEEFLOW__DAGS_BUCKET_NAME = var.dags_code_bucket.name
+      BEEFLOW__DAGS_BUCKET_NAME       = var.dags_code_bucket.name
       AIRFLOW__LOGGING__LOGGING_LEVEL = "DEBUG"
     }
-    memory_size                      = 512
-    reserved_concurrent_executions   = -1
+    memory_size                    = 512
+    reserved_concurrent_executions = -1
   }
   subnet_ids = var.subnet_ids
   vpc_sg     = var.vpc_sg
@@ -91,7 +91,7 @@ resource "aws_iam_role_policy_attachment" "allow_sqs_pull" {
 }
 
 resource "aws_lambda_event_source_mapping" "scheduler_sqs_trigger" {
-  event_source_arn                   = aws_sqs_queue.scheduler_sqs.arn
-  function_name                      = module.lambda.arn
+  event_source_arn = aws_sqs_queue.scheduler_sqs.arn
+  function_name    = module.lambda.arn
 }
 

@@ -1,17 +1,15 @@
 python_sources(
-    name="package",
-    dependencies=[
-        "src/python/beeflow/packages/config:config"
-    ]
+    name = "package",
+    dependencies = ["src/python/beeflow/packages/config:config"],
 )
 
 pex_binary(
-    name="bin",
-    entry_point="webserver.py",
-    dependencies=[":package"]
+    name = "bin",
+    dependencies = [":package"],
+    entry_point = "webserver.py",
 )
 
 docker_image(
-    name="docker",
+    name = "docker",
     dependencies = [":bin"],
 )

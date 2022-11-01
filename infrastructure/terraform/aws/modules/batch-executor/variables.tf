@@ -48,19 +48,19 @@ variable "airflow_cloudwatch_logs_group_arn" {
 }
 
 variable "job_queue_name" {
-  type = string
+  type        = string
   description = "The name of the Batch worker job queue"
 }
 
 variable "job_definition_name" {
-  type = string
+  type        = string
   description = "The name of the Batch job definition"
 }
 
 variable "catcher_lambda" {
   type = object({
     repository_url = string
-    image_tag = string
+    image_tag      = string
   })
   description = "Repository and tag for the batch executor catcher lambda"
 }

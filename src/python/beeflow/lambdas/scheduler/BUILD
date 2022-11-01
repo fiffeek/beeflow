@@ -1,15 +1,23 @@
-python_sources()
+python_sources(
+    overrides = {
+        "scheduler_job.py": {
+            "skip_flake8": True,
+            "skip_isort": True,
+            "skip_black": True,
+            "skip_docformatter": True,
+            "skip_mypy": True,
+        },
+    },
+)
 
 python_awslambda(
-    name="package",
-    runtime="python3.9",
-    handler="scheduler_runner.py:handler",
-    dependencies=[
-        "src/python/beeflow/packages/config:config"
-    ]
+    name = "package",
+    dependencies = ["src/python/beeflow/packages/config:config"],
+    handler = "scheduler_runner.py:handler",
+    runtime = "python3.9",
 )
 
 docker_image(
-    name="docker",
+    name = "docker",
     dependencies = [":package"],
 )
