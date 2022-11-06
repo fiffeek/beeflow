@@ -6,8 +6,11 @@ module "sqs_label" {
 }
 
 resource "aws_sqs_queue" "scheduler_sqs" {
-  name                       = module.sqs_label.id
+  name                       = "${module.sqs_label.id}.fifo"
   tags                       = module.sqs_label.tags
   visibility_timeout_seconds = 80
   message_retention_seconds  = 300
+
+  fifo_queue                  = true
+  content_based_deduplication = true
 }

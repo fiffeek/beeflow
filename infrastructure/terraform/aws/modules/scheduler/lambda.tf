@@ -93,5 +93,6 @@ resource "aws_iam_role_policy_attachment" "allow_sqs_pull" {
 resource "aws_lambda_event_source_mapping" "scheduler_sqs_trigger" {
   event_source_arn = aws_sqs_queue.scheduler_sqs.arn
   function_name    = module.lambda.arn
+  batch_size       = 1
 }
 
