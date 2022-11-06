@@ -91,10 +91,10 @@ def upsert_new_cron_schedule(dag_id: str) -> BeeflowEvent:
                 'Id': 'trigger-scheduler-by-sqs-forward',
                 'Arn': target,
                 'InputTransformer': {
-                    'InputPathsMap': {
-                        "eventTime": "$.time"
-                    },
-                    'InputTemplate': json.dumps(DAGCronTriggered(dag_id=dag.dag_id, trigger_time="<eventTime>").dict()),
+                    'InputPathsMap': {"eventTime": "$.time"},
+                    'InputTemplate': json.dumps(
+                        DAGCronTriggered(dag_id=dag.dag_id, trigger_time="<eventTime>").dict()
+                    ),
                 },
                 'SqsParameters': {
                     'MessageGroupId': os.environ[

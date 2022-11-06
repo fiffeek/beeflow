@@ -2,17 +2,18 @@ module "lambda" {
   source  = "cloudposse/lambda-function/aws"
   version = "0.3.6"
 
-  s3_bucket                      = var.is_lambda_packaged ? aws_s3_bucket_object.code[0].bucket : null
-  s3_key                         = var.is_lambda_packaged ? aws_s3_bucket_object.code[0].key : null
-  function_name                  = module.this.id
-  handler                        = var.is_lambda_packaged ? var.lambda_packaged_spec.pants_lambda_entrypoint : null
-  runtime                        = var.is_lambda_packaged ? var.lambda_packaged_spec.pants_lambda_python_version : null
-  timeout                        = var.spec.timeout
-  memory_size                    = var.spec.memory_size
-  reserved_concurrent_executions = var.spec.reserved_concurrent_executions
-  source_code_hash               = var.is_lambda_packaged ? filebase64sha256(var.lambda_packaged_spec.package_absolute_path) : ""
-  image_uri                      = var.is_lambda_dockerized ? "${var.lambda_dockerized_spec.repository_url}:${var.lambda_dockerized_spec.image_tag}" : null
-  package_type                   = var.is_lambda_dockerized ? "Image" : "Zip"
+  s3_bucket                         = var.is_lambda_packaged ? aws_s3_bucket_object.code[0].bucket : null
+  s3_key                            = var.is_lambda_packaged ? aws_s3_bucket_object.code[0].key : null
+  function_name                     = module.this.id
+  handler                           = var.is_lambda_packaged ? var.lambda_packaged_spec.pants_lambda_entrypoint : null
+  runtime                           = var.is_lambda_packaged ? var.lambda_packaged_spec.pants_lambda_python_version : null
+  timeout                           = var.spec.timeout
+  memory_size                       = var.spec.memory_size
+  cloudwatch_logs_retention_in_days = 14
+  reserved_concurrent_executions    = var.spec.reserved_concurrent_executions
+  source_code_hash                  = var.is_lambda_packaged ? filebase64sha256(var.lambda_packaged_spec.package_absolute_path) : ""
+  image_uri                         = var.is_lambda_dockerized ? "${var.lambda_dockerized_spec.repository_url}:${var.lambda_dockerized_spec.image_tag}" : null
+  package_type                      = var.is_lambda_dockerized ? "Image" : "Zip"
 
   vpc_config = {
     subnet_ids = var.subnet_ids
