@@ -140,8 +140,9 @@ module "beeflow_events" {
   targets = {
     dag-created = [
       {
-        name = "send-dag-created-orders-to-scheduler"
-        arn  = var.scheduler_sqs.arn
+        name             = "send-dag-created-orders-to-scheduler"
+        arn              = var.scheduler_sqs.arn
+        message_group_id = var.scheduler_sqs.message_group_id
       },
       {
         name = "send-dag-created-orders-to-schedule-updater"
@@ -150,8 +151,9 @@ module "beeflow_events" {
     ]
     dag-updated = [
       {
-        name = "send-dag-updated-events-to-scheduler"
-        arn  = var.scheduler_sqs.arn
+        name             = "send-dag-updated-events-to-scheduler"
+        arn              = var.scheduler_sqs.arn
+        message_group_id = var.scheduler_sqs.message_group_id
       },
       {
         name = "send-dag-updated-events-to-schedule-updater"
@@ -172,44 +174,51 @@ module "beeflow_events" {
     ]
     task-failed = [
       {
-        name = "send-task-failed-events-to-scheduler"
-        arn  = var.scheduler_sqs.arn
+        name             = "send-task-failed-events-to-scheduler"
+        arn              = var.scheduler_sqs.arn
+        message_group_id = var.scheduler_sqs.message_group_id
       },
     ]
     task-succeeded = [
       {
-        name = "send-task-success-events-to-scheduler"
-        arn  = var.scheduler_sqs.arn
+        name             = "send-task-success-events-to-scheduler"
+        arn              = var.scheduler_sqs.arn
+        message_group_id = var.scheduler_sqs.message_group_id
       },
     ]
     task-skipped = [
       {
-        name = "send-task-skipped-events-to-scheduler"
-        arn  = var.scheduler_sqs.arn
+        name             = "send-task-skipped-events-to-scheduler"
+        arn              = var.scheduler_sqs.arn
+        message_group_id = var.scheduler_sqs.message_group_id
       },
     ]
     task-up-for-retry = [
       {
-        name = "send-task-up-for-retry-events-to-scheduler"
-        arn  = var.scheduler_sqs.arn
+        name             = "send-task-up-for-retry-events-to-scheduler"
+        arn              = var.scheduler_sqs.arn
+        message_group_id = var.scheduler_sqs.message_group_id
       },
     ]
     task-transient-states = [
       {
-        name = "send-task-transient-events-to-scheduler"
-        arn  = var.scheduler_sqs.arn
+        name             = "send-task-transient-events-to-scheduler"
+        arn              = var.scheduler_sqs.arn
+        message_group_id = var.scheduler_sqs.message_group_id
       },
     ]
     dag-run-failed = [
       {
-        name = "send-dag-run-failed-events-to-scheduler"
-        arn  = var.scheduler_sqs.arn
+        name             = "send-dag-run-failed-events-to-scheduler"
+        arn              = var.scheduler_sqs.arn
+        message_group_id = var.scheduler_sqs.message_group_id
       },
     ]
     dag-run-succeeded = [
       {
-        name = "send-dag-run-success-events-to-scheduler"
-        arn  = var.scheduler_sqs.arn
+        name             = "send-dag-run-success-events-to-scheduler"
+        arn              = var.scheduler_sqs.arn
+        message_group_id = var.scheduler_sqs.message_group_id
       },
     ]
   }

@@ -27,6 +27,7 @@ inputs = {
   scheduler_sqs = {
     arn : dependency.scheduler.outputs.scheduler_sqs_arn,
     id : dependency.scheduler.outputs.scheduler_sqs_id,
+    message_group_id : dependency.scheduler.outputs.scheduler_common_message_group_id,
   }
   lambda_executor_sqs = {
     arn : dependency.lambda_executor.outputs.executor_sqs_arn,

@@ -5,8 +5,9 @@ variable "beeflow_main_event_bus_name" {
 
 variable "scheduler_sqs" {
   type = object({
-    arn = string,
-    id  = string,
+    arn              = string,
+    id               = string,
+    message_group_id = string,
   })
   description = "The ARN/id of the SQS that serves requests to the scheduler"
 }
