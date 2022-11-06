@@ -91,6 +91,11 @@ def upsert_new_cron_schedule(dag_id: str) -> BeeflowEvent:
                 'Id': 'trigger-scheduler-by-sqs-forward',
                 'Arn': target,
                 'Input': json.dumps(DAGCronTriggered(dag_id=dag.dag_id).dict()),
+                'SqsParameters': {
+                    'MessageGroupId': os.environ[
+                        Configuration.DAG_SCHEDULE_RULES_TARGET_MESSAGE_GROUP_ID_ENV_VAR
+                    ]
+                },
             }
         ],
     )

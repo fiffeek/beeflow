@@ -8,8 +8,9 @@ module "updater_lambda" {
   spec = {
     timeout = 70
     additional_environment_variables = {
-      BEEFLOW__DAGS_BUCKET_NAME             = var.dags_code_bucket.name
-      BEEFLOW__DAG_SCHEDULE_TARGET__SQS_ARN = var.scheduler_sqs_arn
+      BEEFLOW__DAGS_BUCKET_NAME                          = var.dags_code_bucket.name
+      BEEFLOW__DAG_SCHEDULE_TARGET__SQS_ARN              = var.scheduler_sqs_arn
+      BEEFLOW__DAG_SCHEDULE_TARGET__SQS_MESSAGE_GROUP_ID = var.scheduler_sqs_static_message_group_id
     }
     memory_size                    = 512
     reserved_concurrent_executions = -1

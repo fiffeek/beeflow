@@ -47,6 +47,11 @@ variable "scheduler_sqs_arn" {
   description = "The ARN of the scheduler SQS to forward the eventbridge cron trigger to."
 }
 
+variable "scheduler_sqs_static_message_group_id" {
+  type        = string
+  description = "The static message group id for the scheduler's FIFO SQS eventbridge rules."
+}
+
 variable "airflow_cloudwatch_logs_group_arn" {
   type        = string
   description = "The ARN for the Airflow logs in cloudwatch group"

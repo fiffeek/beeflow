@@ -41,5 +41,6 @@ inputs = {
     arn  = dependency.buckets.outputs.dags_code_bucket_arn,
     id   = dependency.buckets.outputs.dags_code_bucket_id
   }
-  scheduler_sqs_arn = dependency.scheduler.outputs.scheduler_sqs_arn
+  scheduler_sqs_arn                     = dependency.scheduler.outputs.scheduler_sqs_arn
+  scheduler_sqs_static_message_group_id = dependency.scheduler.outputs.scheduler_common_message_group_id
 }
