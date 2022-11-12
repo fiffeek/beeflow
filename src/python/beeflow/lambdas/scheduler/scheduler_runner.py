@@ -15,6 +15,7 @@ def handler(event: SqsModel, context: LambdaContext) -> Dict[str, Any]:
     records = len(event.Records)
     job = SchedulerJob(
         num_runs=records,
+        scheduler_idle_sleep_time=0,
     )
     job.run()
     return {}
