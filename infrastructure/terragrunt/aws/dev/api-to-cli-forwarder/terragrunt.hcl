@@ -20,12 +20,12 @@ dependency "cloudwatch_logs" {
 }
 
 terraform {
-  source = "${get_path_to_repo_root()}//infrastructure/terraform/aws/modules/migrations-runner"
+  source = "${get_path_to_repo_root()}//infrastructure/terraform/aws/modules/api-to-cli-forwarder"
 }
 
 inputs = {
-  name                                     = "migrations-runner"
-  repository_url                           = "${include.root.locals.ecr_region_path}/migrations_runner"
+  name                                     = "api-to-cli-forwarder"
+  repository_url                           = "${include.root.locals.ecr_region_path}/api_to_cli_forwarder"
   image_tag                                = "latest"
   appconfig_application_name               = dependency.airflow_appconfig.outputs.application_name
   appconfig_application_configuration_name = dependency.airflow_appconfig.outputs.application_configuration_name

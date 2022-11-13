@@ -7,6 +7,9 @@ apply_airflow-appconfig:
 apply_migrations-runner:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/migrations-runner && terragrunt apply"
 
+apply_api-to-cli-forwarder:
+	docker-compose run --rm terragrunt_aws bash -c "cd dev/api-to-cli-forwarder && terragrunt apply"
+
 apply_dag-parsing:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/dag-parsing && terragrunt apply"
 
