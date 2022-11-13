@@ -14,7 +14,9 @@ backend_packages.add = [
   "pants.backend.python.lint.flake8",
   "pants.backend.python.lint.isort",
   "pants.backend.python.typecheck.mypy",
-  "pants.backend.docker"
+  "pants.backend.docker",
+  "pants.backend.shell",
+  "pants.backend.shell.lint.shfmt",
 ]
 
 [anonymous-telemetry]
@@ -40,6 +42,6 @@ skip = true
 [docker]
 default_repository = "{directory}"
 
-[docker.registries.company-registry1]
-address = "239132468951.dkr.ecr.us-east-2.amazonaws.com"
+[docker.registries.default-registry]
+address = "%(env.BEEFLOW_AWS_ACCOUNT_ID)s.dkr.ecr.%(env.BEEFLOW_AWS_REGION)s.amazonaws.com"
 default = true
