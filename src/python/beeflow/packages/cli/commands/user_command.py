@@ -28,8 +28,8 @@ from marshmallow import Schema, fields, validate
 from marshmallow.exceptions import ValidationError
 
 from airflow.cli.simple_table import AirflowConsole
-from airflow.utils import cli as cli_utils
-from airflow.utils.cli import suppress_logs_and_warning
+from beeflow.packages.cli.utils import cli as cli_utils
+from beeflow.packages.cli.utils.cli import suppress_logs_and_warning
 from airflow.www.app import cached_app
 
 
@@ -56,7 +56,7 @@ def users_list(args):
     )
 
 
-@cli_utils.action_cli(check_db=True)
+@cli_utils.action_cli
 def users_create(args):
     """Creates new user in the DB"""
     appbuilder = cached_app().appbuilder

@@ -39,7 +39,7 @@ from airflow.utils.helpers import partition
 from airflow.utils.module_loading import import_string
 from airflow.utils.timezone import parse as parsedate
 
-from beeflow.packages.cli.commands import dag_command
+from beeflow.packages.cli.commands import dag_command, user_command
 
 BUILD_DOCS = "BUILDING_AIRFLOW_DOCS" in os.environ
 
@@ -1585,13 +1585,13 @@ USERS_COMMANDS = (
     ActionCommand(
         name='list',
         help='List users',
-        func=lazy_load_command('airflow.cli.commands.user_command.users_list'),
+        func=user_command.users_list,
         args=(ARG_OUTPUT, ARG_VERBOSE),
     ),
     ActionCommand(
         name='create',
         help='Create a user',
-        func=lazy_load_command('airflow.cli.commands.user_command.users_create'),
+        func=user_command.users_create,
         args=(
             ARG_ROLE,
             ARG_USERNAME,
@@ -1616,31 +1616,31 @@ USERS_COMMANDS = (
     ActionCommand(
         name='delete',
         help='Delete a user',
-        func=lazy_load_command('airflow.cli.commands.user_command.users_delete'),
+        func=user_command.users_delete,
         args=(ARG_USERNAME_OPTIONAL, ARG_EMAIL_OPTIONAL),
     ),
     ActionCommand(
         name='add-role',
         help='Add role to a user',
-        func=lazy_load_command('airflow.cli.commands.user_command.add_role'),
+        func=user_command.add_role,
         args=(ARG_USERNAME_OPTIONAL, ARG_EMAIL_OPTIONAL, ARG_ROLE),
     ),
     ActionCommand(
         name='remove-role',
         help='Remove role from a user',
-        func=lazy_load_command('airflow.cli.commands.user_command.remove_role'),
+        func=user_command.remove_role,
         args=(ARG_USERNAME_OPTIONAL, ARG_EMAIL_OPTIONAL, ARG_ROLE),
     ),
     ActionCommand(
         name='import',
         help='Import users',
-        func=lazy_load_command('airflow.cli.commands.user_command.users_import'),
+        func=user_command.users_import,
         args=(ARG_USER_IMPORT,),
     ),
     ActionCommand(
         name='export',
         help='Export all users',
-        func=lazy_load_command('airflow.cli.commands.user_command.users_export'),
+        func=user_command.users_export,
         args=(ARG_USER_EXPORT,),
     ),
 )

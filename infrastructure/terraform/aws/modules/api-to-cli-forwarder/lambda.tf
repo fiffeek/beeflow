@@ -6,10 +6,12 @@ module "lambda" {
   airflow_cloudwatch_logs_group_arn        = var.airflow_cloudwatch_logs_group_arn
   appconfig_application_name               = var.appconfig_application_name
   spec = {
-    timeout                          = 60
-    additional_environment_variables = {}
-    memory_size                      = 256
-    reserved_concurrent_executions   = -1
+    timeout = 180
+    additional_environment_variables = {
+      AIRFLOW__WEBSERVER__UPDATE_FAB_PERMS = "false",
+    }
+    memory_size                    = 512
+    reserved_concurrent_executions = -1
   }
   subnet_ids = var.subnet_ids
   vpc_sg     = var.vpc_sg
