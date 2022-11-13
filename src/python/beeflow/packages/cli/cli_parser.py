@@ -39,6 +39,8 @@ from airflow.utils.helpers import partition
 from airflow.utils.module_loading import import_string
 from airflow.utils.timezone import parse as parsedate
 
+from beeflow.packages.cli.commands import dag_command
+
 BUILD_DOCS = "BUILDING_AIRFLOW_DOCS" in os.environ
 
 
@@ -963,19 +965,19 @@ DAGS_COMMANDS = (
     ActionCommand(
         name='list',
         help="List all the DAGs",
-        func=lazy_load_command('airflow.cli.commands.dag_command.dag_list_dags'),
+        func=dag_command.dag_list_dags,
         args=(ARG_SUBDIR, ARG_OUTPUT, ARG_VERBOSE),
     ),
     ActionCommand(
         name='list-import-errors',
         help="List all the DAGs that have import errors",
-        func=lazy_load_command('airflow.cli.commands.dag_command.dag_list_import_errors'),
+        func=dag_command.dag_list_import_errors,
         args=(ARG_SUBDIR, ARG_OUTPUT, ARG_VERBOSE),
     ),
     ActionCommand(
         name='report',
         help='Show DagBag loading report',
-        func=lazy_load_command('airflow.cli.commands.dag_command.dag_report'),
+        func=lazy_load_command('beeflow.packages.cli.commands.dag_command.dag_report'),
         args=(ARG_SUBDIR, ARG_OUTPUT, ARG_VERBOSE),
     ),
     ActionCommand(
@@ -988,7 +990,7 @@ DAGS_COMMANDS = (
             "dagruns that were executed before this date. If end_date is given, it will filter out "
             "all the dagruns that were executed after this date. "
         ),
-        func=lazy_load_command('airflow.cli.commands.dag_command.dag_list_dag_runs'),
+        func=dag_command.dag_list_dag_runs,
         args=(
             ARG_DAG_ID_OPT,
             ARG_NO_BACKFILL,
@@ -1002,13 +1004,13 @@ DAGS_COMMANDS = (
     ActionCommand(
         name='list-jobs',
         help="List the jobs",
-        func=lazy_load_command('airflow.cli.commands.dag_command.dag_list_jobs'),
+        func=dag_command.dag_list_jobs,
         args=(ARG_DAG_ID_OPT, ARG_STATE, ARG_LIMIT, ARG_OUTPUT, ARG_VERBOSE),
     ),
     ActionCommand(
         name='state',
         help="Get the status of a dag run",
-        func=lazy_load_command('airflow.cli.commands.dag_command.dag_state'),
+        func=dag_command.dag_state,
         args=(ARG_DAG_ID, ARG_EXECUTION_DATE, ARG_SUBDIR),
     ),
     ActionCommand(
@@ -1018,31 +1020,31 @@ DAGS_COMMANDS = (
             "Get the next execution datetimes of a DAG. It returns one execution unless the "
             "num-executions option is given"
         ),
-        func=lazy_load_command('airflow.cli.commands.dag_command.dag_next_execution'),
+        func=dag_command.dag_next_execution,
         args=(ARG_DAG_ID, ARG_SUBDIR, ARG_NUM_EXECUTIONS),
     ),
     ActionCommand(
         name='pause',
         help='Pause a DAG',
-        func=lazy_load_command('airflow.cli.commands.dag_command.dag_pause'),
+        func=dag_command.dag_pause,
         args=(ARG_DAG_ID, ARG_SUBDIR),
     ),
     ActionCommand(
         name='unpause',
         help='Resume a paused DAG',
-        func=lazy_load_command('airflow.cli.commands.dag_command.dag_unpause'),
+        func=dag_command.dag_unpause,
         args=(ARG_DAG_ID, ARG_SUBDIR),
     ),
     ActionCommand(
         name='trigger',
         help='Trigger a DAG run',
-        func=lazy_load_command('airflow.cli.commands.dag_command.dag_trigger'),
+        func=dag_command.dag_trigger,
         args=(ARG_DAG_ID, ARG_SUBDIR, ARG_RUN_ID, ARG_CONF, ARG_EXEC_DATE),
     ),
     ActionCommand(
         name='delete',
         help="Delete all DB records related to the specified DAG",
-        func=lazy_load_command('airflow.cli.commands.dag_command.dag_delete'),
+        func=dag_command.dag_delete,
         args=(ARG_DAG_ID, ARG_YES),
     ),
     ActionCommand(
@@ -1065,7 +1067,7 @@ DAGS_COMMANDS = (
             "If you want to create a DOT file then you should execute the following command:\n"
             "airflow dags show <DAG_ID> --save output.dot\n"
         ),
-        func=lazy_load_command('airflow.cli.commands.dag_command.dag_show'),
+        func=dag_command.dag_show,
         args=(
             ARG_DAG_ID,
             ARG_SUBDIR,
@@ -1093,7 +1095,7 @@ DAGS_COMMANDS = (
             "If you want to create a DOT file then you should execute the following command:\n"
             "airflow dags show-dependencies --save output.dot\n"
         ),
-        func=lazy_load_command('airflow.cli.commands.dag_command.dag_dependencies_show'),
+        func=dag_command.dag_dependencies_show,
         args=(
             ARG_SUBDIR,
             ARG_SAVE,
@@ -1109,7 +1111,7 @@ DAGS_COMMANDS = (
             "task_instances within the backfill date range. If rerun_failed_tasks is used, backfill "
             "will auto re-run the previous failed task instances  within the backfill date range"
         ),
-        func=lazy_load_command('airflow.cli.commands.dag_command.dag_backfill'),
+        func=dag_command.dag_backfill,
         args=(
             ARG_DAG_ID,
             ARG_TASK_REGEX,
@@ -1156,7 +1158,7 @@ DAGS_COMMANDS = (
             "If you want to create a DOT file then you should execute the following command:\n"
             "airflow dags test <DAG_ID> <EXECUTION_DATE> --save-dagrun output.dot\n"
         ),
-        func=lazy_load_command('airflow.cli.commands.dag_command.dag_test'),
+        func=dag_command.dag_test,
         args=(
             ARG_DAG_ID,
             ARG_EXECUTION_DATE,
@@ -1174,7 +1176,7 @@ DAGS_COMMANDS = (
             "from the DagBag folder. This can be helpful if your serialized DAGs get out of sync with the "
             "version of Airflow that you are running."
         ),
-        func=lazy_load_command('airflow.cli.commands.dag_command.dag_reserialize'),
+        func=dag_command.dag_reserialize,
         args=(ARG_CLEAR_ONLY,),
     ),
 )

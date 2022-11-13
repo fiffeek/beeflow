@@ -53,7 +53,7 @@ def _check_cli_args(args):
         )
 
 
-def action_cli(func=None, check_db=True):
+def action_cli(func=None):
     def action_logging(f: T) -> T:
         """
         Decorates function to execute function at the same time submitting action_logging
@@ -90,12 +90,6 @@ def action_cli(func=None, check_db=True):
             metrics = _build_metrics(f.__name__, args[0])
             cli_action_loggers.on_pre_execution(**metrics)
             try:
-                # Check and run migrations if necessary
-                if check_db:
-                    from airflow.utils.db import check_and_run_migrations, synchronize_log_template
-
-                    check_and_run_migrations()
-                    synchronize_log_template()
                 return f(*args, **kwargs)
             except Exception as e:
                 metrics['error'] = e

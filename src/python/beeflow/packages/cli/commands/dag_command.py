@@ -38,8 +38,8 @@ from airflow.jobs.base_job import BaseJob
 from airflow.models import DagBag, DagModel, DagRun, TaskInstance
 from airflow.models.dag import DAG
 from airflow.models.serialized_dag import SerializedDagModel
-from airflow.utils import cli as cli_utils
-from airflow.utils.cli import get_dag, process_subdir, sigint_handler, suppress_logs_and_warning
+from beeflow.packages.cli.utils import cli as cli_utils
+from beeflow.packages.cli.utils.cli import get_dag, process_subdir, sigint_handler, suppress_logs_and_warning
 from airflow.utils.dot_renderer import render_dag, render_dag_dependencies
 from airflow.utils.session import NEW_SESSION, create_session, provide_session
 from airflow.utils.state import DagRunState
@@ -248,9 +248,9 @@ def _save_dot_to_file(dot: Dot, filename: str):
 def dag_state(args, session=NEW_SESSION):
     """
     Returns the state (and conf if exists) of a DagRun at the command line.
-    >>> airflow dags state tutorial 2015-01-01T00:00:00.000000
+    >> airflow dags state tutorial 2015-01-01T00:00:00.000000
     running
-    >>> airflow dags state a_dag_with_conf_passed 2015-01-01T00:00:00.000000
+    >> airflow dags state a_dag_with_conf_passed 2015-01-01T00:00:00.000000
     failed, {"name": "bob", "age": "42"}
     """
 
@@ -270,7 +270,7 @@ def dag_state(args, session=NEW_SESSION):
 def dag_next_execution(args):
     """
     Returns the next execution datetime of a DAG at the command line.
-    >>> airflow dags next-execution tutorial
+    >> airflow dags next-execution tutorial
     2018-08-31 10:38:00
     """
     dag = get_dag(args.subdir, args.dag_id)
