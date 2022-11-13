@@ -10,15 +10,6 @@ services:
       - ../..:/data
       - /data/dist/export
 
-  terragrunt_localstack:
-    extends:
-      service: terragrunt_base
-    working_dir: /data/infrastructure/terragrunt/localstack
-    # NOTE: This is not concurrency safe (https://github.com/gruntwork-io/terragrunt/issues/561)
-    environment:
-      - TERRAGRUNT_DOWNLOAD=/data/.terragrunt-cache
-      - TF_PLUGIN_CACHE_DIR=/data/.plugins
-
   terragrunt_aws:
     extends:
       service: terragrunt_base
