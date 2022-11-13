@@ -16,4 +16,5 @@ inputs = {
   batch_executor         = "batch_executor"
   batch_worker           = "batch_worker"
   batch_executor_catcher = "batch_executor_catcher"
+  api_to_cli_forwarder   = "api_to_cli_forwarder"
 }

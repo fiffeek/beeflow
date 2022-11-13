@@ -10,6 +10,7 @@ class BeeflowEventType(str, Enum):
     NEW_CRON_CREATED = 'new_cron_created'
     DAG_CRON_TRIGGERED = 'dag_cron_triggered'
     DAG_SCHEDULE_UPDATER_EMPTY = 'dag_schedule_updater_empty'
+    API_TO_CLI_FORWARDER_INPUT = 'api_to_cli_forwarder_input'
 
     # DB DAG events
     DAG_CREATED = 'dag_created'

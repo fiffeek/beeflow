@@ -42,3 +42,8 @@ variable "batch_executor_catcher" {
   type        = string
   description = "Name of the batch executor catcher ECR repository."
 }
+
+variable "api_to_cli_forwarder" {
+  type        = string
+  description = "Name of the API to CLI forwarder ECR repository."
+}

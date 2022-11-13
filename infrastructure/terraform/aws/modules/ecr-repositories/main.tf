@@ -52,3 +52,8 @@ resource "aws_ecr_repository" "batch_executor_catcher" {
   tags                 = module.this.tags
 }
 
+resource "aws_ecr_repository" "api_to_cli_forwarder" {
+  name                 = var.api_to_cli_forwarder
+  image_tag_mutability = "MUTABLE"
+  tags                 = module.this.tags
+}
