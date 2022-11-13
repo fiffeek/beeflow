@@ -1,10 +1,10 @@
-from typing import Dict, Any
+from typing import Any, Dict
 
-from airflow.cli.cli_parser import get_parser
 from aws_lambda_powertools import Logger
 from aws_lambda_powertools.utilities.parser import event_parser
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
+from beeflow.packages.cli.cli_parser import get_parser
 from beeflow.packages.events.api_to_cli_forwarder_input import APIToCLIForwarderInput
 
 logger = Logger()

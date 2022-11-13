@@ -11,4 +11,3 @@ docker_image(
     name = "docker",
     dependencies = [":package"],
 )
-
