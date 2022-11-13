@@ -27,4 +27,5 @@ make apply_all
 echo "Invoking migrations"
 aws lambda invoke \
 	--function-name beeflow-dev-migrations-runner \
-	--payload '{}'
+	--payload '{}' \
+	response.json

@@ -160,3 +160,6 @@ vendor
 # SSH keys
 beeflow-dev-jump-host-ssh
 beeflow-dev-jump-host-ssh.pub
+
+# json
+response.json
