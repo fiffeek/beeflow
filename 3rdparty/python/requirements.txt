@@ -1,5 +1,5 @@
 apache-airflow==2.3.2
-aws-lambda-powertools==1.26.2
+aws-lambda-powertools==2.2.0
 apache-airflow[postgresql]==2.3.2
 apache-airflow[postgres]==2.3.2
 apache-airflow[password]==2.3.2
@@ -7,6 +7,6 @@ apache-airflow[virtualenv]==2.3.2
 cryptography==36.0.2
 apache-airflow[amazon]==2.3.2
 psycopg2-binary==2.9.3
-aws-lambda-powertools[pydantic]==1.26.2
+aws-lambda-powertools[parser]==2.2.0
 dependency-injector==4.39.1
 backoff==2.2.1
