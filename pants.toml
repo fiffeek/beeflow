@@ -45,3 +45,6 @@ default_repository = "{directory}"
 [docker.registries.default-registry]
 address = "%(env.BEEFLOW_AWS_ACCOUNT_ID)s.dkr.ecr.%(env.BEEFLOW_AWS_REGION)s.amazonaws.com"
 default = true
+
+[test]
+extra_env_vars = ["BEEFLOW__SKIP_CONFIG_PULL=1"]

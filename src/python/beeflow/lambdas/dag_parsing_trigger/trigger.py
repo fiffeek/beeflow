@@ -1,5 +1,6 @@
 import json
 import os
+import time
 from typing import Any, Dict, List
 
 import boto3
@@ -16,11 +17,19 @@ logger = Logger()
 sqs = boto3.client('sqs')
 
 
+def prepare_event() -> TriggerDAGsProcessingCommand:
+    # SQS will deduplicate messages on the content hash
+    # In this case we want to trigger reprocessing if the DAG changed in <5mins
+    current_time = time.time()
+    time_to_min_intervals = int(current_time / 60)
+    return TriggerDAGsProcessingCommand(triggered_at=str(time_to_min_intervals))
+
+
 def trigger_processing():
     processor_queue_url = os.environ[Configuration.DAG_PARSING_PROCESSOR_QUEUE_URL_ENV_VAR]
     response = sqs.send_message(
         QueueUrl=processor_queue_url,
-        MessageBody=json.dumps(TriggerDAGsProcessingCommand().dict()),
+        MessageBody=json.dumps(prepare_event().dict()),
         MessageGroupId='globalDedup',
     )
     logger.info(f"Successfully triggered processing of all DAGs {response}")

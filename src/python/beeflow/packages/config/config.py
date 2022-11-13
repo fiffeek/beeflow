@@ -17,9 +17,13 @@ class Configuration:
     BATCH_EXECUTOR_STATE_MACHINE_ENV_VAR = "BEEFLOW__BATCH_EXECUTOR_STATE_MACHINE__ARN"
     AIRFLOW_HOME_ENV_VAR = "AIRFLOW_HOME"
     SERIALIZED_INPUT_FIELD_NAME_ENV_VAR = "BEEFLOW__BATCH_EXECUTOR_STATE_MACHINE__INPUT_FIELD_NAME"
+    SKIP_CONFIG_PULL_ENV_VAR = "BEEFLOW__SKIP_CONFIG_PULL"
 
     @staticmethod
     def load(app_config_name=None, environment=None, application=None, airflow_home=None):
+        if os.environ.get(Configuration.SKIP_CONFIG_PULL_ENV_VAR) is not None:
+            return
+
         if app_config_name is None:
             app_config_name = os.environ[Configuration.APP_CONFIG_NAME_ENV_VAR]
         if environment is None:
