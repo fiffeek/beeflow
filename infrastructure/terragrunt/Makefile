@@ -55,6 +55,9 @@ apply_scheduler:
 apply_cloudwatch-logs:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/cloudwatch-logs && terragrunt apply"
 
+apply_testing-mwaa:
+	docker-compose run --rm terragrunt_aws bash -c "cd dev/testing-mwaa && terragrunt apply"
+
 plan_all:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev && terragrunt run-all plan"
 
