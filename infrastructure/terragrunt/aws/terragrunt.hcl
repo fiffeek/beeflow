@@ -10,6 +10,8 @@ locals {
   account_id      = local.account_vars.locals.aws_account_id
   aws_region      = local.region_vars.locals.aws_region
   ecr_region_path = "${local.account_id}.dkr.ecr.${local.aws_region}.amazonaws.com"
+
+  enable_resources_for_testing = true
 }
 
 generate "provider" {

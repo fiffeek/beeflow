@@ -15,6 +15,10 @@ dependency "buckets" {
   config_path = "../buckets"
 }
 
+dependency "testing_buckets" {
+  config_path = "../testing-buckets"
+}
+
 dependency "cloudwatch_logs" {
   config_path = "../cloudwatch-logs"
 }
@@ -37,4 +41,8 @@ inputs = {
     arn  = dependency.buckets.outputs.dags_code_bucket_arn,
     id   = dependency.buckets.outputs.dags_code_bucket_id
   }
+  additional_environment_variables = include.root.locals.enable_resources_for_testing ? {
+    BEEFLOW__EXTRACT_METADATA_S3_BUCKET = dependency.testing_buckets.outputs.metadata_dumps_bucket_name,
+    BEEFLOW__EXTRACT_METADATA_S3_PREFIX = "serverless"
+  } : {}
 }

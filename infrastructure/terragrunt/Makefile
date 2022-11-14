@@ -28,6 +28,12 @@ apply_dag-schedule-updater:
 apply_buckets:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/buckets && terragrunt apply"
 
+apply_testing-buckets:
+	docker-compose run --rm terragrunt_aws bash -c "cd dev/testing-buckets && terragrunt apply"
+
+apply_testing-lambda-executor-iam:
+	docker-compose run --rm terragrunt_aws bash -c "cd dev/testing-lambda-executor-iam && terragrunt apply"
+
 apply_webserver:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/webserver && terragrunt apply"
 

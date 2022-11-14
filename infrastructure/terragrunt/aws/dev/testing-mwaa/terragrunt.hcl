@@ -15,5 +15,5 @@ inputs = {
   name               = "mwaa"
   vpc_id             = dependency.vpc.outputs.vpc_id
   private_subnet_ids = dependency.vpc.outputs.private_subnet_ids
-  enabled            = false
+  enabled            = include.root.locals.enable_resources_for_testing
 }

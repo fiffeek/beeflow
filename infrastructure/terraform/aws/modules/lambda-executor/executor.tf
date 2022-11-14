@@ -7,9 +7,9 @@ module "executor_lambda" {
   appconfig_application_name               = var.appconfig_application_name
   spec = {
     timeout = 180
-    additional_environment_variables = {
+    additional_environment_variables = merge({
       BEEFLOW__DAGS_BUCKET_NAME = var.dags_code_bucket.name
-    }
+    }, var.additional_environment_variables)
     memory_size                    = 512
     reserved_concurrent_executions = -1
   }
