@@ -21,7 +21,7 @@ def get_agent():
     processor_timeout = timedelta(seconds=processor_timeout_seconds)
     processor_agent = DagFileProcessorAgent(
         dag_directory=settings.DAGS_FOLDER,
-        max_runs=5,
+        max_runs=10,
         processor_timeout=processor_timeout,
         dag_ids=[],
         pickle_dags=False,
@@ -44,18 +44,15 @@ def log_parsed_dags(session=None):
 @logger.inject_lambda_context
 @event_parser(model=TriggerDAGsProcessingCommand, envelope=envelopes.SqsEnvelope)
 def handler(event: List[TriggerDAGsProcessingCommand], context: LambdaContext) -> Dict[str, Any]:
-    DagsDownloader().download_dags()
+    dags_downloader = DagsDownloader()
+    dags_downloader.download_dags()
     logger.info("Starting a single ProcessorAgent parsing loop.")
-    # Deactivating the DAGs does not work correctly now
-    # https://github.com/apache/airflow/blob/bf727525e1fd777e51cc8bc17285f6093277fdef/airflow/\
-    # dag_processing/manager.py#L496
-    # One solution would be to run this loop twice and adjust the timeout parameters?
-    # The rewrite of the subprocesses could also be made...
-    # Logs also seem to be lost, multiprocessing ftw btw.
     processor_agent = get_agent()
     processor_agent.start()
-    processor_agent.run_single_parsing_loop()
-    processor_agent.wait_until_finished()
+    for _ in range(max(dags_downloader.get_dag_files_number(), len(event))):
+        logger.info("Looping through single parsing loop")
+        processor_agent.run_single_parsing_loop()
+        processor_agent.wait_until_finished()
     processor_agent.end()
     logger.info("Finished a single ProcessorAgent parsing loop.")
     log_parsed_dags()
