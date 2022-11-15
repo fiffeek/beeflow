@@ -24,7 +24,7 @@ def export_db_fn():
     s3_bucket_prefix = os.environ["BEEFLOW__EXTRACT_METADATA_S3_PREFIX"]
 
     with create_session() as session:
-        s3_folder_name = datetime.today().strftime('%Y-%m-%d')
+        s3_folder_name = datetime.today().strftime('%Y-%m-%d_%H-%M')
         oldest_date = pendulum.today('UTC').add(days=-MAX_AGE_IN_DAYS)
 
         s3_hook = S3Hook()
@@ -53,4 +53,4 @@ def export_db_fn():
 with DAG(
     dag_id='db_export_dag', schedule_interval=None, catchup=False, start_date=datetime(2022, 2, 18)
 ) as dag:
-    export_db = PythonOperator(task_id='export_db', python_callable=export_db_fn)
+    export_db = PythonOperator(task_id='export_db', python_callable=export_db_fn, queue="lambda")
