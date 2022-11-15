@@ -14,7 +14,7 @@ MAX_AGE_IN_DAYS = 30
 
 OBJECTS_TO_EXPORT = [
     [DagRun, DagRun.execution_date],
-    [TaskFail, TaskFail.execution_date],
+    [TaskFail, TaskFail.start_date],
     [TaskInstance, TaskInstance.execution_date],
 ]
 
