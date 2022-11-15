@@ -9,6 +9,6 @@ output "executor_sqs_id" {
 }
 
 output "lambda_role_name" {
-  value = module.executor_lambda.role_name
+  value       = module.executor_lambda.role_name
   description = "The name of the execution role associated with the lambda executor"
 }

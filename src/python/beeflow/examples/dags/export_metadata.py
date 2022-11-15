@@ -11,8 +11,6 @@ from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 from airflow.utils.session import create_session
 
 MAX_AGE_IN_DAYS = 30
-S3_BUCKET = os.environ["BEEFLOW__EXTRACT_METADATA_S3_BUCKET"]
-S3_BUCKET_PREFIX = os.environ["BEEFLOW__EXTRACT_METADATA_S3_PREFIX"]
 
 OBJECTS_TO_EXPORT = [
     [DagRun, DagRun.execution_date],
@@ -22,6 +20,9 @@ OBJECTS_TO_EXPORT = [
 
 
 def export_db_fn():
+    s3_bucket = os.environ["BEEFLOW__EXTRACT_METADATA_S3_BUCKET"]
+    s3_bucket_prefix = os.environ["BEEFLOW__EXTRACT_METADATA_S3_PREFIX"]
+
     with create_session() as session:
         s3_folder_name = datetime.today().strftime('%Y-%m-%d')
         oldest_date = pendulum.today('UTC').add(days=-MAX_AGE_IN_DAYS)
@@ -45,8 +46,8 @@ def export_db_fn():
                 for row in all_rows:
                     extract_file_writer.writerow(vars(row))
 
-                S3_KEY = S3_BUCKET_PREFIX + '/export/' + name + '/dt=' + s3_folder_name + '/' + name + '.csv'
-                s3_client.put_object(Bucket=S3_BUCKET, Key=S3_KEY, Body=extract_file.getvalue())
+                S3_KEY = s3_bucket_prefix + '/export/' + name + '/dt=' + s3_folder_name + '/' + name + '.csv'
+                s3_client.put_object(Bucket=s3_bucket, Key=S3_KEY, Body=extract_file.getvalue())
 
 
 with DAG(
