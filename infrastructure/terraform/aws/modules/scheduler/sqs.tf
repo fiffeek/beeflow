@@ -10,6 +10,7 @@ resource "aws_sqs_queue" "scheduler_sqs" {
   tags                       = module.sqs_label.tags
   visibility_timeout_seconds = 90
   message_retention_seconds  = 300
+  receive_wait_time_seconds  = 20
 
   fifo_queue                  = true
   content_based_deduplication = true

@@ -10,4 +10,5 @@ resource "aws_sqs_queue" "executor_sqs" {
   tags                       = module.sqs_label.tags
   visibility_timeout_seconds = 300
   message_retention_seconds  = 1000
+  receive_wait_time_seconds  = 20
 }

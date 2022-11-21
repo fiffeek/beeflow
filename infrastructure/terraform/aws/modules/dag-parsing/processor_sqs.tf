@@ -10,6 +10,7 @@ resource "aws_sqs_queue" "dag_parsing_processor_funnel" {
   tags                       = module.processor_sqs_label.tags
   visibility_timeout_seconds = 310
   message_retention_seconds  = 1000
+  receive_wait_time_seconds  = 20
 
   fifo_queue                  = true
   content_based_deduplication = true
