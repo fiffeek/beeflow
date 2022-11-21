@@ -10,3 +10,4 @@ psycopg2-binary==2.9.3
 aws-lambda-powertools[parser]==2.2.0
 dependency-injector==4.39.1
 backoff==2.2.1
+boto3==1.26.8
