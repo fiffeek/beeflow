@@ -18,6 +18,16 @@ variable "lambda_executor" {
   description = "Name of the lambda executor ECR repository."
 }
 
+variable "lambda_executor_catcher" {
+  type        = string
+  description = "Name of the lambda executor catcher ECR repository."
+}
+
+variable "lambda_worker" {
+  type        = string
+  description = "Name of the lambda worker ECR repository."
+}
+
 variable "dag_schedule_updater" {
   type        = string
   description = "Name of the dag schedule updater ECR repository."

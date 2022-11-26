@@ -7,11 +7,11 @@ from airflow.operators.bash import BashOperator
 LAMBDA_QUEUE = "lambda"
 
 with DAG(
-        dag_id='beeflow_parallel_tasks',
-        schedule_interval='*/5 * * * *',
-        start_date=pendulum.datetime(2021, 1, 1, tz="UTC"),
-        catchup=False,
-        dagrun_timeout=datetime.timedelta(minutes=60),
+    dag_id='beeflow_parallel_tasks',
+    schedule_interval='*/5 * * * *',
+    start_date=pendulum.datetime(2021, 1, 1, tz="UTC"),
+    catchup=False,
+    dagrun_timeout=datetime.timedelta(minutes=60),
 ) as dag:
     # [START howto_operator_bash]
     run_this = BashOperator(

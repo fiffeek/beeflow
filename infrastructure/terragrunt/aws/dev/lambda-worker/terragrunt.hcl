@@ -15,21 +15,21 @@ dependency "buckets" {
   config_path = "../buckets"
 }
 
+dependency "testing_buckets" {
+  config_path = "../testing-buckets"
+}
+
 dependency "cloudwatch_logs" {
   config_path = "../cloudwatch-logs"
 }
 
-dependency "lambda_worker" {
-  config_path = "../lambda-worker"
-}
-
 terraform {
-  source = "${get_path_to_repo_root()}//infrastructure/terraform/aws/modules/lambda-executor"
+  source = "${get_path_to_repo_root()}//infrastructure/terraform/aws/modules/lambda-worker"
 }
 
 inputs = {
-  name                                     = "lambda_executor"
-  repository_url                           = "${include.root.locals.ecr_region_path}/lambda_executor"
+  name                                     = "lambda_worker"
+  repository_url                           = "${include.root.locals.ecr_region_path}/lambda_worker"
   image_tag                                = "latest"
   appconfig_application_name               = dependency.airflow_appconfig.outputs.application_name
   appconfig_application_configuration_name = dependency.airflow_appconfig.outputs.application_configuration_name
@@ -41,12 +41,9 @@ inputs = {
     arn  = dependency.buckets.outputs.dags_code_bucket_arn,
     id   = dependency.buckets.outputs.dags_code_bucket_id
   }
-  catcher_lambda = {
-    image_tag      = "latest"
-    repository_url = "${include.root.locals.ecr_region_path}/lambda_executor_catcher"
-  }
-  lambda_worker_arn                     = dependency.lambda_worker.outputs.worker_lambda_arn
-  lambda_code_bucket_name               = dependency.buckets.outputs.lambda_code_bucket_name
-  lambda_executor_package_absolute_path = "${get_repo_root()}/dist/src.python.beeflow.lambdas.lambda_executor/package.zip"
-  lambda_executor_package_filename      = "src.python.beeflow.lambdas.lambda_executor.zip"
+  task_timeout = 300
+  additional_environment_variables = include.root.locals.enable_resources_for_testing ? {
+    BEEFLOW__EXTRACT_METADATA_S3_BUCKET = dependency.testing_buckets.outputs.metadata_dumps_bucket_name,
+    BEEFLOW__EXTRACT_METADATA_S3_PREFIX = "serverless"
+  } : {}
 }

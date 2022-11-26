@@ -1,4 +1,3 @@
-import json
 import os
 from typing import Any, Dict, Optional
 
@@ -42,7 +41,7 @@ def mark_task_as_failed(event: TaskInstanceQueued):
 @logger.inject_lambda_context
 def handler(event: Dict[str, Any], context: LambdaContext) -> Dict[str, Any]:
     DagsDownloader().download_dags()
-    serialized_event = event[os.environ[ConfigConstants.SERIALIZED_INPUT_FIELD_NAME_ENV_VAR]]
-    parsed_event: TaskInstanceQueued = parse(event=json.loads(serialized_event), model=TaskInstanceQueued)
+    event = event[os.environ[ConfigConstants.INPUT_LAMBDA_FIELD_NAME_ENV_VAR]]
+    parsed_event: TaskInstanceQueued = parse(event=event, model=TaskInstanceQueued)
     mark_task_as_failed(event=parsed_event)
     return {}

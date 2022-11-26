@@ -22,6 +22,18 @@ resource "aws_ecr_repository" "lambda_executor" {
   tags                 = module.this.tags
 }
 
+resource "aws_ecr_repository" "lambda_worker" {
+  name                 = var.lambda_worker
+  image_tag_mutability = "MUTABLE"
+  tags                 = module.this.tags
+}
+
+resource "aws_ecr_repository" "lambda_executor_catcher" {
+  name                 = var.lambda_executor_catcher
+  image_tag_mutability = "MUTABLE"
+  tags                 = module.this.tags
+}
+
 resource "aws_ecr_repository" "dag_schedule_updater" {
   name                 = var.dag_schedule_updater
   image_tag_mutability = "MUTABLE"

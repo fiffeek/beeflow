@@ -10,7 +10,7 @@ from aws_lambda_powertools import Logger
 from aws_lambda_powertools.utilities.parser import envelopes, event_parser, parse
 from aws_lambda_powertools.utilities.parser.models import EventBridgeModel
 from aws_lambda_powertools.utilities.typing import LambdaContext
-from beeflow.packages.config.config import Configuration
+from beeflow.packages.config.constants.constants import ConfigConstants
 from beeflow.packages.dags_downloader.dags_downloader import DagsDownloader
 from beeflow.packages.events.beeflow_event import BeeflowEvent
 from beeflow.packages.events.dag_created import DAGCreatedEvent
@@ -72,7 +72,7 @@ def upsert_new_cron_schedule(dag_id: str) -> BeeflowEvent:
 
     dag = get_dag_by_id(dag_id)
     rule_name = dag.dag_id
-    target = os.environ[Configuration.DAG_SCHEDULE_RULES_TARGET_ARN_ENV_VAR]
+    target = os.environ[ConfigConstants.DAG_SCHEDULE_RULES_TARGET_ARN_ENV_VAR]
 
     logger.info(f"Putting a new event bridge rule for cron triggering {dag_id}")
     eventbridge_client.put_rule(
@@ -98,7 +98,7 @@ def upsert_new_cron_schedule(dag_id: str) -> BeeflowEvent:
                 },
                 'SqsParameters': {
                     'MessageGroupId': os.environ[
-                        Configuration.DAG_SCHEDULE_RULES_TARGET_MESSAGE_GROUP_ID_ENV_VAR
+                        ConfigConstants.DAG_SCHEDULE_RULES_TARGET_MESSAGE_GROUP_ID_ENV_VAR
                     ]
                 },
             }

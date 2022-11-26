@@ -12,6 +12,8 @@ schedule_after_task_execution = False
 
 [core]
 load_examples = false
+parallelism = 200
+max_active_tasks_per_dag = 100
 
 [operators]
 default_queue = lambda

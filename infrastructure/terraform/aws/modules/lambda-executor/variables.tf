@@ -23,16 +23,6 @@ variable "airflow_home" {
   description = "Airflow home directory."
 }
 
-variable "repository_url" {
-  type        = string
-  description = "The URL of the ECR repository."
-}
-
-variable "image_tag" {
-  type        = string
-  description = "The tag of the image to deploy."
-}
-
 variable "dags_code_bucket" {
   type = object({
     name = string
@@ -47,7 +37,40 @@ variable "airflow_cloudwatch_logs_group_arn" {
   description = "The ARN for the Airflow logs in cloudwatch group"
 }
 
-variable "additional_environment_variables" {
-  type        = map(string)
-  description = "Additional environment variables for the executor lambda"
+variable "lambda_worker_arn" {
+  type        = string
+  description = "The ARN for the Airflow's lambda worker"
+}
+
+variable "lambda_executor_package_absolute_path" {
+  type        = string
+  description = "Absolute path to the Lambda Executor lambda package"
+}
+
+variable "lambda_executor_package_filename" {
+  type        = string
+  description = "Filename of the Lambda Executor lambda package"
+}
+
+variable "pants_lambda_entrypoint" {
+  type        = string
+  description = "Lambda entrypoint for pants generated packaged."
+}
+
+variable "pants_lambda_python_version" {
+  type        = string
+  description = "The version of python that Pants built the package with."
+}
+
+variable "lambda_code_bucket_name" {
+  type        = string
+  description = "Name of the lambda code bucket."
+}
+
+variable "catcher_lambda" {
+  type = object({
+    repository_url = string
+    image_tag      = string
+  })
+  description = "Repository and tag for the lambda executor catcher lambda"
 }

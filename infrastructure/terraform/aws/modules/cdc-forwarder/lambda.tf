@@ -30,7 +30,7 @@ module "cdc_forwarder_lambda" {
       "EVENTBRIDGE_BUS_NAME" : var.beeflow_main_event_bus_name
     }
     memory_size                    = 128
-    reserved_concurrent_executions = 20
+    reserved_concurrent_executions = 50
   }
   subnet_ids = var.subnet_ids
   vpc_sg     = var.vpc_sg

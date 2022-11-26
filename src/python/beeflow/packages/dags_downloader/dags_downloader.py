@@ -3,7 +3,7 @@ import os
 import boto3
 from airflow import settings
 from aws_lambda_powertools import Logger
-from beeflow.packages.config.config import Configuration
+from beeflow.packages.config.constants.constants import ConfigConstants
 
 s3 = boto3.resource('s3')
 logger = Logger()
@@ -11,7 +11,7 @@ logger = Logger()
 
 class DagsDownloader:
     def __init__(self):
-        self.bucket_name = os.environ[Configuration.DAGS_BUCKET_ENV_VAR]
+        self.bucket_name = os.environ[ConfigConstants.DAGS_BUCKET_ENV_VAR]
         self.bucket = s3.Bucket(self.bucket_name)
         self.downloaded_dag_files = 0
 
