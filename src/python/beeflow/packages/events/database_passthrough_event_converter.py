@@ -70,6 +70,7 @@ class DatabasePassthroughEventConverter:
                 pool=self.metadata["pool"],
                 queue=self.metadata["queue"],
                 try_number=self.metadata["try_number"],
+                queued_dttm=self.metadata["queued_dttm"],
             )
         if self.metadata["state"] == "failed":
             return TaskInstanceFailed(

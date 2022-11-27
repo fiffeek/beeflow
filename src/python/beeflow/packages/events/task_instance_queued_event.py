@@ -11,3 +11,4 @@ class TaskInstanceQueued(BeeflowEvent):
     try_number: int
     pool: str
     queue: str
+    queued_dttm: str
