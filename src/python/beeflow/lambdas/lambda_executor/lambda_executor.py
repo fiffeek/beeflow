@@ -9,16 +9,11 @@ from aws_lambda_powertools.utilities.parser.models import EventBridgeModel
 from aws_lambda_powertools.utilities.typing import LambdaContext
 from beeflow.packages.config.constants.constants import ConfigConstants
 from beeflow.packages.events.task_instance_queued_event import TaskInstanceQueued
+from beeflow.packages.sfn.name import StepFunctionsNameCreator
 
 logger = Logger()
 
 sfn_client = boto3.client('stepfunctions')
-
-
-def get_name(event: TaskInstanceQueued) -> str:
-    name = f"{event.dag_id}-{event.run_id}-{event.task_id}"
-    name = ''.join(ch for ch in name if ch.isalnum() or ch == '-' or ch == '_')
-    return name[0:79]
 
 
 def prepare_input(event: TaskInstanceQueued) -> str:
@@ -30,7 +25,7 @@ def trigger_step_functions(event: TaskInstanceQueued) -> None:
     state_machine_arn = os.environ[ConfigConstants.LAMBDA_EXECUTOR_STATE_MACHINE_ENV_VAR]
     response = sfn_client.start_execution(
         stateMachineArn=state_machine_arn,
-        name=get_name(event),
+        name=StepFunctionsNameCreator.from_ti_queued_event(event),
         input=prepare_input(event),
     )
     logger.info(f"Scheduled the worker for lambda {response}")
