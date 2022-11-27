@@ -21,10 +21,10 @@ with DAG(
     )
     # [END howto_operator_bash]
 
-    for i in range(15):
+    for i in range(13):
         task = BashOperator(
             task_id='runme_' + str(i),
-            bash_command='echo "{{ task_instance_key_str }}" && sleep 120',
+            bash_command='echo "{{ task_instance_key_str }}" && sleep 10',
             queue=LAMBDA_QUEUE,
         )
         task >> run_this
