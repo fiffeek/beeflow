@@ -1,6 +1,6 @@
 data "aws_iam_policy_document" "dumps_bucket_access" {
   statement {
-    sid = "ReadWriteTestingBucketLambdaExecutor"
+    sid = "ReadWriteTestingBucketLambdaWorker"
     actions = [
       "s3:Get*",
       "s3:List*",

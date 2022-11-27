@@ -4,20 +4,20 @@ include "root" {
 }
 
 terraform {
-  source = "${get_path_to_repo_root()}//infrastructure/terraform/aws/modules/testing/lambda-executor-iam"
+  source = "${get_path_to_repo_root()}//infrastructure/terraform/aws/modules/testing/lambda-worker-iam"
 }
 
 dependency "testing_buckets" {
   config_path = "../testing-buckets"
 }
 
-dependency "lambda_executor" {
-  config_path = "../lambda-executor"
+dependency "lambda_worker" {
+  config_path = "../lambda-worker"
 }
 
 inputs = {
-  name                      = "testing-lambda-executor-iam"
-  lambda_executor_role_name = dependency.lambda_executor.outputs.lambda_role_name
+  name                      = "testing-lambda-worker-iam"
+  lambda_executor_role_name = dependency.lambda_worker.outputs.worker_role_name
   metadata_dumps_bucket = {
     id  = dependency.testing_buckets.outputs.metadata_dumps_bucket_id,
     arn = dependency.testing_buckets.outputs.metadata_dumps_bucket_arn,
