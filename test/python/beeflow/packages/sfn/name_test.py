@@ -13,5 +13,7 @@ def test_crate_sanitized_name():
         queue="lambda",
         queued_dttm="132",
     )
-    assert StepFunctionsNameCreator.from_ti_queued_event(event) \
-           == "d054340c095e27385ad378752434750b34e706359b8578e2f00bf4e8d99b9e4c"
+    assert (
+        StepFunctionsNameCreator.from_ti_queued_event(event)
+        == "d054340c095e27385ad378752434750b34e706359b8578e2f00bf4e8d99b9e4c"
+    )

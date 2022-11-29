@@ -1,6 +1,6 @@
 python_tests(
     name = "tests",
     dependencies = [
-        "//:reqs#boto3"
-    ]
+        "//:reqs#boto3",
+    ],
 )

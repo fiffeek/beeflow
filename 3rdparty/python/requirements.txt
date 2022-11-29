@@ -11,3 +11,7 @@ aws-lambda-powertools[parser]==2.2.0
 dependency-injector==4.39.1
 backoff==2.2.1
 boto3==1.26.8
+boto3-stubs[essential]==1.26.8
+boto3-stubs[s3]==1.26.8
+moto[s3]==4.0.10
+pytest==7.0.1
