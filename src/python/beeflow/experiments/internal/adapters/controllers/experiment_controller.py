@@ -50,6 +50,7 @@ class ExperimentController:
         self.__collect_metrics(experiment_configuration, progress, task_id)
         self.__stop_dags(experiment_configuration)
         self.__export_metrics()
+        self.__delete_dags(experiment_configuration)
         self.__clean_up()
 
     def __stop_dags(self, configuration):
@@ -105,9 +106,14 @@ class ExperimentController:
         time.sleep(self.configuration.export_wait_time_seconds)
 
         self.dags_manager.stop_dag(dag_id=self.configuration.export_dag_id)
+        self.dags_manager.delete_dag(dag_id=self.configuration.export_dag_id)
         logging.info("Metrics successfully exported")
 
     def __clean_up(self):
         logging.info("Cleaning up data after experimentation")
         self.bucket_manager.clear_dags()
         time.sleep(self.configuration.dags_deletion_time_seconds)
+
+    def __delete_dags(self, configuration):
+        for dag_id in configuration.dag_ids:
+            self.dags_manager.delete_dag(dag_id=dag_id)

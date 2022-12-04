@@ -37,6 +37,13 @@ class BeeflowDagsManager(IDagsManager):
         if not self.__invocation_ok(response):
             raise Exception(f"Cannot mark {dag_id} as active")
 
+    def delete_dag(self, dag_id: str) -> None:
+        payload = json.dumps({"args": ["dags", "delete", "-y", dag_id]})
+        response = self.__invoke_cli(payload)
+
+        if not self.__invocation_ok(response):
+            raise Exception(f"Cannot delete {dag_id}: {response}")
+
     def stop_dag(self, dag_id: str) -> None:
         payload = json.dumps({"args": ["dags", "pause", dag_id]})
         response = self.__invoke_cli(payload)

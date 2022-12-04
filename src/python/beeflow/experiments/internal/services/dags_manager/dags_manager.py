@@ -15,5 +15,9 @@ class IDagsManager(abc.ABC):
         pass
 
     @abc.abstractmethod
+    def delete_dag(self, dag_id: str) -> None:
+        pass
+
+    @abc.abstractmethod
     def export_metrics(self, export_dag_id: str) -> None:
         pass
