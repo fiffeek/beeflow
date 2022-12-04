@@ -25,5 +25,7 @@ inputs = {
     name           = dependency.testing_buckets.outputs.metadata_dumps_bucket_name,
     offload_prefix = "mwaa",
   }
+  user_names_to_allow_cli_access = [
+  "fmikina"]
   enabled = include.root.locals.enable_resources_for_testing
 }

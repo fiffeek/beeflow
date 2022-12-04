@@ -10,7 +10,7 @@
       "core": {
         "controller_id": "mwaa",
         "dags_deletion_time_seconds": 180,
-        "dags_deployment_wait_seconds": 180,
+        "dags_deployment_wait_seconds": 400,
         "dags_start_wait_time_seconds": 300,
         "dags_bucket": {
           "name": "beeflow-dev-mwaa-s3",

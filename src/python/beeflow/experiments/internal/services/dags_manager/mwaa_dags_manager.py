@@ -70,16 +70,22 @@ class MWAADagsManager(IDagsManager):
 
     @staticmethod
     def __is_response_ok(response: MWAACLIResponse) -> bool:
-        return response.status_code == HTTPStatus.OK
+        return response.status_code == HTTPStatus.OK and "airflow.exceptions.AirflowException" not in response.stderr
 
     def __execute_cli(self, action: str) -> MWAACLIResponse:
         response = self.mwaa_client.create_cli_token(Name=self.mwaa_environment_name)
         hostname = f"https://{response['WebServerHostname']}/aws_mwaa/cli"
         mwaa_response = requests.post(
             hostname,
-            headers={'Authorization': response["CliToken"], 'Content-Type': 'text/plain'},
+            headers={'Authorization': f'Bearer {response["CliToken"]}', 'Content-Type': 'text/plain'},
             data=action,
         )
+        if mwaa_response.status_code != HTTPStatus.OK:
+            return MWAACLIResponse(
+                stdout="",
+                stderr="",
+                status_code=mwaa_response.status_code,
+            )
         stdout = (
             base64.b64decode(mwaa_response.json()['stdout']).decode('utf8')
             if "stdout" in mwaa_response.json()

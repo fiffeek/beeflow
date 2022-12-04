@@ -31,3 +31,33 @@ resource "aws_iam_role_policy_attachment" "testing_bucket_access" {
   policy_arn = aws_iam_policy.dumps_bucket_access[0].arn
   count      = module.this.enabled ? 1 : 0
 }
+
+data "aws_iam_policy_document" "allow_cli_calls" {
+  statement {
+    actions = [
+      "airflow:CreateCliToken",
+    ]
+    resources = [
+      "*"
+    ]
+  }
+}
+
+module "allow_cli_calls" {
+  source     = "cloudposse/label/null"
+  version    = "0.25.0"
+  attributes = ["cli", "airflow"]
+  context    = module.this.context
+}
+
+resource "aws_iam_policy" "allow_cli_calls" {
+  name   = module.allow_cli_calls.id
+  policy = data.aws_iam_policy_document.allow_cli_calls.json
+  count  = module.this.enabled ? 1 : 0
+}
+
+resource "aws_iam_user_policy_attachment" "allow_cli_calls" {
+  for_each   = toset(var.user_names_to_allow_cli_access)
+  user       = each.key
+  policy_arn = aws_iam_policy.allow_cli_calls[0].arn
+}
