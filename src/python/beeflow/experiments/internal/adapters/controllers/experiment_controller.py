@@ -105,7 +105,7 @@ class ExperimentController:
             timeout_seconds=self.configuration.dags_deployment_wait_seconds,
         )
         self.dags_manager.start_dag(dag_id=self.configuration.export_dag_id)
-        self.dags_manager.export_metrics(export_dag_id=self.configuration.export_dag_id)
+        self.dags_manager.trigger_dag(dag_id=self.configuration.export_dag_id)
         time.sleep(self.configuration.export_wait_time_seconds)
 
         self.dags_manager.stop_dag(dag_id=self.configuration.export_dag_id)

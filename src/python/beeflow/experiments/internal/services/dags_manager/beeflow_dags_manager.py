@@ -51,8 +51,8 @@ class BeeflowDagsManager(IDagsManager):
         if not self.__invocation_ok(response):
             raise Exception(f"Cannot mark {dag_id} as active")
 
-    def export_metrics(self, export_dag_id: str) -> None:
-        payload = json.dumps({"args": ["dags", "trigger", export_dag_id]})
+    def trigger_dag(self, dag_id: str) -> None:
+        payload = json.dumps({"args": ["dags", "trigger", dag_id]})
         response = self.__invoke_cli(payload)
 
         if not self.__invocation_ok(response):

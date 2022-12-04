@@ -14,6 +14,7 @@ from beeflow.experiments.internal.infrastructure.config.config import (
 )
 from beeflow.experiments.internal.services.bucket_manager.bucket_manager import BucketManager
 from beeflow.experiments.internal.services.dags_manager.beeflow_dags_manager import BeeflowDagsManager
+from beeflow.experiments.internal.services.dags_manager.mwaa_dags_manager import MWAADagsManager
 from rich.progress import Progress
 
 
@@ -65,6 +66,13 @@ class ExperimentRunner:
             function_name = controller.type_specific["cli_lambda"]["name"]
             lambda_client = boto3.client('lambda')
             dags_manager = BeeflowDagsManager(function_name=function_name, lambda_client=lambda_client)
+
+        if controller.controller_type == ControllerType.MWAA:
+            mwaa_environment_name = controller.type_specific["mwaa"]["environment_name"]
+            mwaa_client = boto3.client('mwaa')
+            dags_manager = MWAADagsManager(
+                mwaa_environment_name=mwaa_environment_name, mwaa_client=mwaa_client
+            )
 
         if dags_manager is None:
             raise ValueError(f"Unknown controller type {controller.controller_type}")

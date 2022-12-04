@@ -8,6 +8,7 @@ from dataclasses_json import dataclass_json
 
 class ControllerType(Enum):
     BEEFLOW = "beeflow"
+    MWAA = "mwaa"
 
 
 @dataclass_json

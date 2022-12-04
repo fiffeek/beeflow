@@ -13,12 +13,14 @@
 //     "aws-lambda-powertools[parser]==2.2.0",
 //     "backoff==2.2.1",
 //     "boto3-stubs[essential]==1.26.8",
+//     "boto3-stubs[mwaa]==1.26.8",
 //     "boto3-stubs[s3]==1.26.8",
 //     "boto3==1.26.8",
 //     "cryptography==36.0.2",
 //     "dataclasses-json==0.5.7",
 //     "dependency-injector==4.39.1",
 //     "moto[s3]==4.0.10",
+//     "mypy-boto3-mwaa==1.26.0.post1",
 //     "psycopg2-binary==2.9.3",
 //     "pytest==7.0.1",
 //     "rich==12.6.0"
@@ -4597,6 +4599,26 @@
           "artifacts": [
             {
               "algorithm": "sha256",
+              "hash": "221b9d7e06b02112bb91c8ee5f7ee8d03ccb07c2520422106ccc8e526ee4267c",
+              "url": "https://files.pythonhosted.org/packages/b2/7d/76f8ceae2d295bb45a36babf0f5f97f8d6b72d5ba1afeae2d2f75e0d4bd1/mypy_boto3_mwaa-1.26.0.post1-py3-none-any.whl"
+            },
+            {
+              "algorithm": "sha256",
+              "hash": "e7b83b4206254f38c5b30a6bcae5bd7c82f51291d49f00a7b0a8148b1263b0e3",
+              "url": "https://files.pythonhosted.org/packages/84/70/192ccedcce170e525c33ed7a9b55fbbf65e627836396c7576730be975250/mypy-boto3-mwaa-1.26.0.post1.tar.gz"
+            }
+          ],
+          "project_name": "mypy-boto3-mwaa",
+          "requires_dists": [
+            "typing-extensions>=4.1.0"
+          ],
+          "requires_python": ">=3.7",
+          "version": "1.26.post1"
+        },
+        {
+          "artifacts": [
+            {
+              "algorithm": "sha256",
               "hash": "f590069b3bafd77e0b91c8f2ab427c06013ace5f40015f9664fb96cbdc402f30",
               "url": "https://files.pythonhosted.org/packages/17/9e/abb96bb25b9524603f13f54085e1ee5094ffebe26881ca2e7f4ade6c95b8/mypy_boto3_rds-1.26.17-py3-none-any.whl"
             },
@@ -6822,12 +6844,14 @@
     "aws-lambda-powertools[parser]==2.2.0",
     "backoff==2.2.1",
     "boto3-stubs[essential]==1.26.8",
+    "boto3-stubs[mwaa]==1.26.8",
     "boto3-stubs[s3]==1.26.8",
     "boto3==1.26.8",
     "cryptography==36.0.2",
     "dataclasses-json==0.5.7",
     "dependency-injector==4.39.1",
     "moto[s3]==4.0.10",
+    "mypy-boto3-mwaa==1.26.0.post1",
     "psycopg2-binary==2.9.3",
     "pytest==7.0.1",
     "rich==12.6.0"
