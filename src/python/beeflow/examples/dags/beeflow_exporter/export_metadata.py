@@ -53,4 +53,4 @@ def export_db_fn():
 with DAG(
     dag_id='db_export_dag', schedule_interval=None, catchup=False, start_date=datetime(2022, 2, 18)
 ) as dag:
-    export_db = PythonOperator(task_id='export_db', python_callable=export_db_fn, queue="lambda")
+    export_db = PythonOperator(task_id='export_db', python_callable=export_db_fn)

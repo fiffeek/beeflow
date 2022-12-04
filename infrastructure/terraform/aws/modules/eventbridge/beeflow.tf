@@ -52,6 +52,18 @@ module "beeflow_events" {
       })
       enabled = true
     }
+    task-queued-default = {
+      description = "Capture task queued event with queue = default"
+      event_pattern = jsonencode({
+        "detail" : {
+          "event_type" : [
+          "task_instance_queued"],
+          "queue" : [
+          "default"]
+        }
+      })
+      enabled = true
+    }
     task-queued-batch = {
       description = "Capture task queued event for the batch executor"
       event_pattern = jsonencode({
@@ -163,6 +175,12 @@ module "beeflow_events" {
     task-queued-lambda = [
       {
         name = "send-task-queued-events-to-lambda-executor"
+        arn  = var.lambda_executor_sqs.arn
+      },
+    ]
+    task-queued-default = [
+      {
+        name = "send-task-queued--default-events-to-lambda-executor"
         arn  = var.lambda_executor_sqs.arn
       },
     ]
