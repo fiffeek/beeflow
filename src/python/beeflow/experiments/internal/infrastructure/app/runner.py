@@ -77,5 +77,7 @@ class ExperimentRunner:
                 dags_deletion_time_seconds=controller.core.dags_deletion_time_seconds,
                 dags_deployment_wait_seconds=controller.core.dags_deployment_wait_seconds,
                 dags_start_wait_time_seconds=controller.core.dags_start_wait_time_seconds,
+                export_dag_id=controller.core.export_dag_config.dag_id,
+                export_dag_folder_path=controller.core.export_dag_config.dags_local_path,
             ),
         )

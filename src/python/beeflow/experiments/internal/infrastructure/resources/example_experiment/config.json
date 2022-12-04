@@ -16,6 +16,10 @@
         "dags_bucket": {
           "name": "beeflow-dev-dags-code-bucket",
           "region": "us-east-2"
+        },
+        "export_dag_config": {
+          "dags_local_path": "src/python/beeflow/examples/dags/beeflow_exporter",
+          "dag_id": "db_export_dag"
         }
       }
     }

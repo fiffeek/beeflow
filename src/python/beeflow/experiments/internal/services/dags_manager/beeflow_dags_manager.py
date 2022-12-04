@@ -41,8 +41,12 @@ class BeeflowDagsManager(IDagsManager):
         if response["StatusCode"] != HTTPStatus.OK:
             raise Exception(f"Cannot mark {dag_id} as active")
 
-    def export_metrics(self) -> None:
-        pass
+    def export_metrics(self, export_dag_id: str) -> None:
+        payload = json.dumps({"args": ["dags", "test", "-c", "{}", export_dag_id]})
+        response = self.__invoke_cli(payload)
+
+        if response["StatusCode"] != HTTPStatus.OK:
+            raise Exception(f"Cannot export experiment results")
 
     def __invoke_cli(self, payload: str) -> InvocationResponseTypeDef:
         return self.lambda_client.invoke(

@@ -15,5 +15,5 @@ class IDagsManager(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def export_metrics(self) -> None:
+    def export_metrics(self, export_dag_id: str) -> None:
         pass

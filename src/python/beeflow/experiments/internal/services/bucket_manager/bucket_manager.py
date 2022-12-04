@@ -12,7 +12,7 @@ class IBucketManager(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def publish_experiment(self, dags_path: str) -> [str]:
+    def publish_dags(self, dags_path: str) -> [str]:
         pass
 
 
@@ -23,7 +23,7 @@ class BucketManager(IBucketManager):
     def clear_dags(self) -> None:
         self.bucket.objects.all().delete()
 
-    def publish_experiment(self, dags_path: str) -> [str]:
+    def publish_dags(self, dags_path: str) -> [str]:
         if not os.path.isdir(dags_path):
             raise ValueError(f"Dag's path {dags_path} is not a valid directory")
 
