@@ -60,9 +60,11 @@ class ExperimentController:
     def __collect_metrics(configuration, progress: Progress, task_id: TaskID):
         logging.info(f"Collecting metrics for {configuration.metrics_collection_time_seconds} seconds")
         progress.start_task(task_id)
+
         for _ in range(configuration.metrics_collection_time_seconds):
             time.sleep(1)
             progress.update(task_id, advance=1)
+
         progress.stop_task(task_id)
         progress.remove_task(task_id)
         logging.info("Metrics collected")
@@ -81,6 +83,7 @@ class ExperimentController:
             f" sleep for {self.configuration.dags_deletion_time_seconds}"
         )
         time.sleep(self.configuration.dags_deletion_time_seconds)
+
         self.bucket_manager.publish_dags(configuration.dags_local_path)
         logging.info("Dags published")
 
@@ -100,6 +103,7 @@ class ExperimentController:
         self.dags_manager.start_dag(dag_id=self.configuration.export_dag_id)
         self.dags_manager.export_metrics(export_dag_id=self.configuration.export_dag_id)
         time.sleep(self.configuration.export_wait_time_seconds)
+
         self.dags_manager.stop_dag(dag_id=self.configuration.export_dag_id)
         logging.info("Metrics successfully exported")
 
