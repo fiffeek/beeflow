@@ -9,7 +9,7 @@ from rich.progress import Progress, TaskID, track
 
 @dataclass
 class ExperimentConfiguration:
-    dags_absolute_path: str
+    dags_local_path: str
     dag_ids: List[str]
     metrics_collection_time_seconds: int
     experiment_id: str
@@ -66,7 +66,7 @@ class ExperimentController:
     def __create_dags(self, configuration):
         self.bucket_manager.clear_dags()
         time.sleep(self.configuration.dags_deletion_time_seconds)
-        self.bucket_manager.publish_experiment(configuration.dags_absolute_path)
+        self.bucket_manager.publish_experiment(configuration.dags_local_path)
         for dag_id in configuration.dag_ids:
             self.dags_manager.wait_until_dag_exists(
                 dag_id=dag_id, timeout_seconds=self.configuration.dags_deployment_wait_seconds

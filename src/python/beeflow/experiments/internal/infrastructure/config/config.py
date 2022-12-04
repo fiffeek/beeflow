@@ -37,7 +37,7 @@ class ApplicationControllerConfiguration:
 @dataclass_json
 @dataclass
 class ApplicationExperimentConfiguration:
-    dags_absolute_local_path: str
+    dags_local_path: str
     dag_ids: List[str]
     metrics_collection_time_seconds: int
     experiment_id: str

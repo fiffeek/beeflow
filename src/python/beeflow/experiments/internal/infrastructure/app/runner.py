@@ -27,7 +27,7 @@ class ExperimentRunner:
             logging.info(f"Attempting to run {experiment.experiment_id}")
             self.__run_experiment(
                 experiment=ExperimentConfiguration(
-                    dags_absolute_path=experiment.dags_absolute_local_path,
+                    dags_local_path=experiment.dags_local_path,
                     experiment_id=experiment.experiment_id,
                     metrics_collection_time_seconds=experiment.metrics_collection_time_seconds,
                     dag_ids=experiment.dag_ids,

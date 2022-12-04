@@ -16,7 +16,10 @@ args = parser.parse_args()
 
 def run(config_path: str) -> None:
     logging.basicConfig(
-        encoding='utf-8', level=logging.INFO, format='[%(asctime)s] [%(filename)s:%(lineno)d]: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p'
+        encoding='utf-8',
+        level=logging.INFO,
+        format='[%(asctime)s] [%(filename)s:%(lineno)d]: %(message)s',
+        datefmt='%m/%d/%Y %I:%M:%S %p',
     )
     config = ExperimentConfiguration(config_path=config_path).config
     app = ExperimentRunner(config=config)

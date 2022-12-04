@@ -20,5 +20,14 @@
       }
     }
   ],
-  "experiments": []
+  "experiments": [
+    {
+      "dags_local_path": "src/python/beeflow/examples/dags/experiment1",
+      "dag_ids": [
+        "beeflow_parallel_tasks_runner"
+      ],
+      "metrics_collection_time_seconds": 1200,
+      "experiment_id": "parallel_3_tasks"
+    }
+  ]
 }
