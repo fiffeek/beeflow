@@ -17,7 +17,7 @@ class BeeflowDagsManager(IDagsManager):
         def dag_exists() -> bool:
             payload = json.dumps({"args": ["dags", "list-jobs", "-d", dag_id]})
             response = self.__invoke_cli(payload)
-            return response["StatusCode"] == HTTPStatus.OK
+            return self.__invocation_ok(response)
 
         t_end = time.time() + timeout_seconds
         while time.time() < t_end:
@@ -33,21 +33,21 @@ class BeeflowDagsManager(IDagsManager):
         payload = json.dumps({"args": ["dags", "unpause", dag_id]})
         response = self.__invoke_cli(payload)
 
-        if response["StatusCode"] != HTTPStatus.OK:
+        if not self.__invocation_ok(response):
             raise Exception(f"Cannot mark {dag_id} as active")
 
     def stop_dag(self, dag_id: str) -> None:
         payload = json.dumps({"args": ["dags", "pause", dag_id]})
         response = self.__invoke_cli(payload)
 
-        if response["StatusCode"] != HTTPStatus.OK:
+        if not self.__invocation_ok(response):
             raise Exception(f"Cannot mark {dag_id} as active")
 
     def export_metrics(self, export_dag_id: str) -> None:
         payload = json.dumps({"args": ["dags", "test", "-c", "{}", export_dag_id]})
         response = self.__invoke_cli(payload)
 
-        if response["StatusCode"] != HTTPStatus.OK:
+        if not self.__invocation_ok(response):
             raise Exception(f"Cannot export experiment results")
 
     def __invoke_cli(self, payload: str) -> InvocationResponseTypeDef:
@@ -57,3 +57,7 @@ class BeeflowDagsManager(IDagsManager):
             LogType="None",
             Payload=payload,
         )
+
+    @staticmethod
+    def __invocation_ok(response: InvocationResponseTypeDef) -> bool:
+        return "FunctionError" not in response and response["StatusCode"] == HTTPStatus.OK
