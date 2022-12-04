@@ -15,6 +15,7 @@ boto3-stubs[essential]==1.26.8
 boto3-stubs[s3]==1.26.8
 boto3-stubs[mwaa]==1.26.8
 mypy-boto3-mwaa==1.26.0.post1
+requests==2.28.1
 moto[s3]==4.0.10
 pytest==7.0.1
 rich==12.6.0

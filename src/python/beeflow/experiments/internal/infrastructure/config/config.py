@@ -16,7 +16,7 @@ class ControllerType(Enum):
 class ApplicationControllerCoreDagsBucketConfiguration:
     name: str
     region: str
-    dags_path_prefix: Optional[str]
+    dags_path_prefix: Optional[str] = None
 
 
 @dataclass_json

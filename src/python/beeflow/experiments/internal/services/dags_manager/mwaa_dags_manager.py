@@ -42,7 +42,9 @@ class MWAADagsManager(IDagsManager):
         payload = f"dags unpause {dag_id}"
         response = self.__execute_cli(payload)
         if not self.__is_response_ok(response):
-            raise ValueError(f"Can't start dag {dag_id}, stdout: {response.stdout}, stderr: {response.stderr}")
+            raise ValueError(
+                f"Can't start dag {dag_id}, stdout: {response.stdout}, stderr: {response.stderr}"
+            )
 
     def stop_dag(self, dag_id: str) -> None:
         payload = f"dags pause {dag_id}"
@@ -54,13 +56,17 @@ class MWAADagsManager(IDagsManager):
         payload = f"dags delete -y {dag_id}"
         response = self.__execute_cli(payload)
         if not self.__is_response_ok(response):
-            raise ValueError(f"Can't delete dag {dag_id}, stdout: {response.stdout}, stderr: {response.stderr}")
+            raise ValueError(
+                f"Can't delete dag {dag_id}, stdout: {response.stdout}, stderr: {response.stderr}"
+            )
 
     def trigger_dag(self, dag_id: str) -> None:
         payload = f"dags trigger {dag_id}"
         response = self.__execute_cli(payload)
         if not self.__is_response_ok(response):
-            raise ValueError(f"Can't trigger dag {dag_id}, stdout: {response.stdout}, stderr: {response.stderr}")
+            raise ValueError(
+                f"Can't trigger dag {dag_id}, stdout: {response.stdout}, stderr: {response.stderr}"
+            )
 
     @staticmethod
     def __is_response_ok(response: MWAACLIResponse) -> bool:
