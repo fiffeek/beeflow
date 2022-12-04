@@ -59,7 +59,9 @@ class ExperimentRunner:
     @staticmethod
     def __get_controller(controller: ApplicationControllerConfiguration) -> ExperimentController:
         s3_dags_bucket = boto3.resource('s3').Bucket(name=controller.core.dags_bucket.name)
-        bucket_manager = BucketManager(bucket=s3_dags_bucket)
+        bucket_manager = BucketManager(
+            bucket=s3_dags_bucket, s3_dags_path=controller.core.dags_bucket.dags_path_prefix
+        )
         dags_manager = None
 
         if controller.controller_type == ControllerType.BEEFLOW:

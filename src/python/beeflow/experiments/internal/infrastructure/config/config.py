@@ -1,7 +1,7 @@
 import os
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from dataclasses_json import dataclass_json
 
@@ -16,6 +16,7 @@ class ControllerType(Enum):
 class ApplicationControllerCoreDagsBucketConfiguration:
     name: str
     region: str
+    dags_path_prefix: Optional[str]
 
 
 @dataclass_json

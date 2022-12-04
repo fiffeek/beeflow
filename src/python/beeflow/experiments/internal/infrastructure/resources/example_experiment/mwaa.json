@@ -13,8 +13,9 @@
         "dags_deployment_wait_seconds": 180,
         "dags_start_wait_time_seconds": 300,
         "dags_bucket": {
-          "name": "beeflow-dev-dags-code-bucket-mwaa",
-          "region": "us-east-2"
+          "name": "beeflow-dev-mwaa-s3",
+          "region": "us-east-2",
+          "dags_path_prefix": "dags"
         },
         "export_dag_config": {
           "dags_local_path": "src/python/beeflow/examples/dags/beeflow_exporter",

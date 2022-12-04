@@ -1,5 +1,8 @@
 import base64
+import logging
+import time
 from dataclasses import dataclass
+from http import HTTPStatus
 
 import requests
 from beeflow.experiments.internal.services.dags_manager.dags_manager import IDagsManager
@@ -18,28 +21,50 @@ class MWAADagsManager(IDagsManager):
         self.mwaa_client = mwaa_client
         self.mwaa_environment_name = mwaa_environment_name
 
-    def wait_until_dag_exists(self, dag_id: str, timeout_seconds: int) -> None:
-        pass
+    def wait_until_dag_exists(self, dag_id: str, timeout_seconds: int = 300) -> None:
+        def dag_exists() -> bool:
+            payload = f"dags list-jobs -d {dag_id}"
+            response = self.__execute_cli(payload)
+            return self.__is_response_ok(response)
+
+        t_end = time.time() + timeout_seconds
+        while time.time() < t_end:
+            if dag_exists():
+                logging.info(f"DAG {dag_id} already exists")
+                break
+            logging.info(f"DAG {dag_id} does not exist yet")
+            time.sleep(15)
+
+        if not dag_exists():
+            raise Exception(f"DAG {dag_id} does not exist and {timeout_seconds} elapsed")
 
     def start_dag(self, dag_id: str) -> None:
         payload = f"dags unpause {dag_id}"
         response = self.__execute_cli(payload)
+        if not self.__is_response_ok(response):
+            raise ValueError(f"Can't start dag {dag_id}, stdout: {response.stdout}, stderr: {response.stderr}")
 
     def stop_dag(self, dag_id: str) -> None:
         payload = f"dags pause {dag_id}"
         response = self.__execute_cli(payload)
+        if not self.__is_response_ok(response):
+            raise ValueError(f"Can't stop dag {dag_id}, stdout: {response.stdout}, stderr: {response.stderr}")
 
     def delete_dag(self, dag_id: str) -> None:
         payload = f"dags delete -y {dag_id}"
         response = self.__execute_cli(payload)
+        if not self.__is_response_ok(response):
+            raise ValueError(f"Can't delete dag {dag_id}, stdout: {response.stdout}, stderr: {response.stderr}")
 
     def trigger_dag(self, dag_id: str) -> None:
         payload = f"dags trigger {dag_id}"
         response = self.__execute_cli(payload)
+        if not self.__is_response_ok(response):
+            raise ValueError(f"Can't trigger dag {dag_id}, stdout: {response.stdout}, stderr: {response.stderr}")
 
     @staticmethod
     def __is_response_ok(response: MWAACLIResponse) -> bool:
-        pass
+        return response.status_code == HTTPStatus.OK
 
     def __execute_cli(self, action: str) -> MWAACLIResponse:
         response = self.mwaa_client.create_cli_token(Name=self.mwaa_environment_name)
