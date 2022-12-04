@@ -60,6 +60,7 @@ class ExperimentController:
     @staticmethod
     def __collect_metrics(configuration, progress: Progress, task_id: TaskID):
         logging.info(f"Collecting metrics for {configuration.metrics_collection_time_seconds} seconds")
+        progress.update(task_id, visible=True)
         progress.start_task(task_id)
 
         for _ in range(configuration.metrics_collection_time_seconds):
@@ -104,7 +105,9 @@ class ExperimentController:
             dag_id=self.configuration.export_dag_id,
             timeout_seconds=self.configuration.dags_deployment_wait_seconds,
         )
+        logging.info(f"Starting DAG {self.configuration.export_dag_id}")
         self.dags_manager.start_dag(dag_id=self.configuration.export_dag_id)
+        logging.info(f"Triggering DAG {self.configuration.export_dag_id}")
         self.dags_manager.trigger_dag(dag_id=self.configuration.export_dag_id)
         time.sleep(self.configuration.export_wait_time_seconds)
 
