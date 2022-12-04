@@ -58,6 +58,7 @@ class ExperimentController:
     @staticmethod
     def __collect_metrics(configuration, progress: Progress, task_id: TaskID):
         logging.info(f"Collecting metrics for {configuration.metrics_collection_time_seconds} seconds")
+        progress.start_task(task_id)
         for _ in range(configuration.metrics_collection_time_seconds):
             time.sleep(1)
             progress.update(task_id, advance=1)

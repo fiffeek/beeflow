@@ -42,6 +42,7 @@ class ExperimentRunner:
                 task_id = progress.add_task(
                     f"Executing experiment {experiment.experiment_id} on {controller.controller_id}...",
                     total=experiment.metrics_collection_time_seconds,
+                    start=False,
                 )
                 thread = threading.Thread(
                     target=controller.run_experiment, args=(experiment, progress, task_id)

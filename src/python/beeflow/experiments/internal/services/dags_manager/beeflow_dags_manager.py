@@ -1,4 +1,5 @@
 import json
+import logging
 import time
 from http import HTTPStatus
 
@@ -22,6 +23,7 @@ class BeeflowDagsManager(IDagsManager):
         while time.time() < t_end:
             if dag_exists():
                 break
+            logging.info(f"DAG {dag_id} does not exist yet")
             time.sleep(15)
 
         if not dag_exists():
