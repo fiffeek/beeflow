@@ -22,6 +22,7 @@ class ApplicationControllerCoreDagsBucketConfiguration:
 class ApplicationControllerExportDagConfiguration:
     dags_local_path: str
     dag_id: str
+    export_wait_time_seconds: int
 
 
 @dataclass_json

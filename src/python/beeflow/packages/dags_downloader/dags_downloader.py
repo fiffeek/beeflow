@@ -17,6 +17,7 @@ class DagsDownloader:
 
     def download_dags(self):
         logger.info(f"Downloading DAG files locally to {self.bucket_name}.")
+        # Try remove folder!
         for s3_object in self.bucket.objects.all():
             path, filename = os.path.split(s3_object.key)
             local_path = os.path.join(settings.DAGS_FOLDER, path)

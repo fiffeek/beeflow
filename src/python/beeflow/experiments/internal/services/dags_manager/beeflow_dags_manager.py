@@ -22,6 +22,7 @@ class BeeflowDagsManager(IDagsManager):
         t_end = time.time() + timeout_seconds
         while time.time() < t_end:
             if dag_exists():
+                logging.info(f"DAG {dag_id} already exists")
                 break
             logging.info(f"DAG {dag_id} does not exist yet")
             time.sleep(15)
@@ -44,11 +45,11 @@ class BeeflowDagsManager(IDagsManager):
             raise Exception(f"Cannot mark {dag_id} as active")
 
     def export_metrics(self, export_dag_id: str) -> None:
-        payload = json.dumps({"args": ["dags", "test", "-c", "{}", export_dag_id]})
+        payload = json.dumps({"args": ["dags", "trigger", export_dag_id]})
         response = self.__invoke_cli(payload)
 
         if not self.__invocation_ok(response):
-            raise Exception(f"Cannot export experiment results")
+            raise Exception(f"Cannot export experiment results: {response}")
 
     def __invoke_cli(self, payload: str) -> InvocationResponseTypeDef:
         return self.lambda_client.invoke(

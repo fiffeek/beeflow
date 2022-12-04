@@ -24,6 +24,7 @@ class ExperimentControllerConfiguration:
     controller_id: str
     export_dag_id: str
     export_dag_folder_path: str
+    export_wait_time_seconds: int
 
 
 class ExperimentController:
@@ -63,6 +64,7 @@ class ExperimentController:
             time.sleep(1)
             progress.update(task_id, advance=1)
         progress.stop_task(task_id)
+        progress.remove_task(task_id)
         logging.info("Metrics collected")
 
     def __start_dags(self, configuration: ExperimentConfiguration):
@@ -97,6 +99,7 @@ class ExperimentController:
         )
         self.dags_manager.start_dag(dag_id=self.configuration.export_dag_id)
         self.dags_manager.export_metrics(export_dag_id=self.configuration.export_dag_id)
+        time.sleep(self.configuration.export_wait_time_seconds)
         self.dags_manager.stop_dag(dag_id=self.configuration.export_dag_id)
         logging.info("Metrics successfully exported")
 

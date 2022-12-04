@@ -19,7 +19,8 @@
         },
         "export_dag_config": {
           "dags_local_path": "src/python/beeflow/examples/dags/beeflow_exporter",
-          "dag_id": "db_export_dag"
+          "dag_id": "db_export_dag",
+          "export_wait_time_seconds": 300
         }
       }
     }
