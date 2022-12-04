@@ -2,11 +2,12 @@ import json
 import time
 from http import HTTPStatus
 
+from beeflow.experiments.internal.services.dags_manager.dags_manager import IDagsManager
 from mypy_boto3_lambda import LambdaClient
 from mypy_boto3_lambda.type_defs import InvocationResponseTypeDef
 
 
-class BeeflowDagsManager:
+class BeeflowDagsManager(IDagsManager):
     def __init__(self, lambda_client: LambdaClient, function_name: str):
         self.lambda_client = lambda_client
         self.function_name = function_name
@@ -39,6 +40,9 @@ class BeeflowDagsManager:
 
         if response["StatusCode"] != HTTPStatus.OK:
             raise Exception(f"Cannot mark {dag_id} as active")
+
+    def export_metrics(self) -> None:
+        pass
 
     def __invoke_cli(self, payload: str) -> InvocationResponseTypeDef:
         return self.lambda_client.invoke(

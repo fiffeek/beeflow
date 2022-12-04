@@ -1,4 +1,4 @@
-from beeflow.experiments.dags.bucket_manager import BucketManager
+from beeflow.experiments.internal.services.bucket_manager.bucket_manager import BucketManager
 
 
 def test_clear_objects(s3_bucket):
