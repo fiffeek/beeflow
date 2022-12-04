@@ -4,7 +4,7 @@ from datetime import datetime
 from io import StringIO
 
 import pendulum
-from airflow import DAG, settings
+from airflow import DAG
 from airflow.models import DagRun, TaskFail, TaskInstance
 from airflow.operators.python import PythonOperator
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
@@ -20,8 +20,10 @@ OBJECTS_TO_EXPORT = [
 
 
 def export_db_fn():
-    s3_bucket = os.environ["BEEFLOW__EXTRACT_METADATA_S3_BUCKET"]
-    s3_bucket_prefix = os.environ["BEEFLOW__EXTRACT_METADATA_S3_PREFIX"]
+    s3_bucket = os.environ.get("BEEFLOW__EXTRACT_METADATA_S3_BUCKET") or \
+                os.environ.get("AIRFLOW__CORE__EXTRACT_METADATA_S3_BUCKET_NAME")
+    s3_bucket_prefix = os.environ.get("BEEFLOW__EXTRACT_METADATA_S3_PREFIX") or \
+                       os.environ.get("AIRFLOW__CORE__EXTRACT_METADATA_S3_BUCKET_PREFIX")
 
     with create_session() as session:
         s3_folder_name = datetime.today().strftime('%Y-%m-%d_%H-%M')
@@ -51,6 +53,6 @@ def export_db_fn():
 
 
 with DAG(
-    dag_id='db_export_dag', schedule_interval=None, catchup=False, start_date=datetime(2022, 2, 18)
+        dag_id='db_export_dag', schedule_interval=None, catchup=False, start_date=datetime(2022, 2, 18)
 ) as dag:
     export_db = PythonOperator(task_id='export_db', python_callable=export_db_fn)

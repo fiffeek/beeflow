@@ -13,4 +13,8 @@ module "mwaa" {
   webserver_access_mode = "PUBLIC_ONLY"
   region                = data.aws_region.current.name
   context               = module.this.context
+  airflow_configuration_options = {
+    "core.extract_metadata_s3_bucket_name" : var.metadata_dumps_bucket.name,
+    "core.extract_metadata_s3_bucket_prefix" : var.metadata_dumps_bucket.offload_prefix,
+  }
 }
