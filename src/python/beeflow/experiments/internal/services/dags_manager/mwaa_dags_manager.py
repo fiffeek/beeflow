@@ -17,11 +17,17 @@ class MWAACLIResponse:
 
 
 class MWAADagsManager(IDagsManager):
-    def __init__(self, mwaa_environment_name: str, mwaa_client: MWAAClient):
+    def __init__(
+        self, mwaa_environment_name: str, mwaa_client: MWAAClient, additional_wait_time_for_dags: int = 180
+    ):
         self.mwaa_client = mwaa_client
         self.mwaa_environment_name = mwaa_environment_name
 
     def wait_until_dag_exists(self, dag_id: str, timeout_seconds: int = 300) -> None:
+        logging.info(
+            f"Additional wait for DAGs to pop up in Airflow for {self.additional_wait_time_for_dags}"
+        )
+
         def dag_exists() -> bool:
             payload = f"dags list-jobs -d {dag_id}"
             response = self.__execute_cli(payload)
@@ -35,6 +41,7 @@ class MWAADagsManager(IDagsManager):
             logging.info(f"DAG {dag_id} does not exist yet")
             time.sleep(15)
 
+        # TODO: Add wait here for MWAA
         if not dag_exists():
             raise Exception(f"DAG {dag_id} does not exist and {timeout_seconds} elapsed")
 
@@ -70,7 +77,10 @@ class MWAADagsManager(IDagsManager):
 
     @staticmethod
     def __is_response_ok(response: MWAACLIResponse) -> bool:
-        return response.status_code == HTTPStatus.OK and "airflow.exceptions.AirflowException" not in response.stderr
+        return (
+            response.status_code == HTTPStatus.OK
+            and "airflow.exceptions.AirflowException" not in response.stderr
+        )
 
     def __execute_cli(self, action: str) -> MWAACLIResponse:
         response = self.mwaa_client.create_cli_token(Name=self.mwaa_environment_name)

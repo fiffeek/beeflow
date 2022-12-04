@@ -5,6 +5,7 @@ from typing import List
 
 from beeflow.experiments.internal.services.bucket_manager.bucket_manager import IBucketManager
 from beeflow.experiments.internal.services.dags_manager.dags_manager import IDagsManager
+from beeflow.packages.progress.task_bar import sleep
 from rich.progress import Progress, TaskID
 
 
@@ -45,13 +46,13 @@ class ExperimentController:
     def run_experiment(
         self, experiment_configuration: ExperimentConfiguration, progress: Progress, task_id: TaskID
     ) -> None:
-        self.__create_dags(experiment_configuration)
-        self.__start_dags(experiment_configuration)
+        self.__create_dags(experiment_configuration, progress)
+        self.__start_dags(experiment_configuration, progress)
         self.__collect_metrics(experiment_configuration, progress, task_id)
         self.__stop_dags(experiment_configuration)
-        self.__export_metrics()
+        self.__export_metrics(progress)
         self.__delete_dags(experiment_configuration)
-        self.__clean_up()
+        self.__clean_up(progress)
 
     def __stop_dags(self, configuration):
         for dag_id in configuration.dag_ids:
@@ -60,34 +61,37 @@ class ExperimentController:
     @staticmethod
     def __collect_metrics(configuration, progress: Progress, task_id: TaskID):
         logging.info(f"Collecting metrics for {configuration.metrics_collection_time_seconds} seconds")
+
         progress.update(task_id, visible=True)
         progress.start_task(task_id)
 
-        for _ in range(configuration.metrics_collection_time_seconds):
-            time.sleep(1)
-            progress.update(task_id, advance=1)
+        sleep(seconds=configuration.metrics_collection_time_seconds, progress=progress, task_id=task_id)
 
         progress.stop_task(task_id)
         progress.remove_task(task_id)
+
         logging.info("Metrics collected")
 
-    def __start_dags(self, configuration: ExperimentConfiguration):
+    def __start_dags(self, configuration: ExperimentConfiguration, progress: Progress):
         for dag_id in configuration.dag_ids:
             self.dags_manager.start_dag(dag_id=dag_id)
             logging.info(f"Started DAG {dag_id}")
-        logging.info(f"Waiting for {self.configuration.dags_start_wait_time_seconds}")
-        time.sleep(self.configuration.dags_start_wait_time_seconds)
+        sleep(
+            seconds=self.configuration.dags_start_wait_time_seconds,
+            progress=progress,
+            task_description="Waiting for DAGs to start up",
+        )
 
-    def __create_dags(self, configuration: ExperimentConfiguration):
+    def __create_dags(self, configuration: ExperimentConfiguration, progress: Progress):
         logging.info("Attempting to remove DAGs in case previous experiment had left overs")
         self.__try_delete_dags(configuration)
 
         self.bucket_manager.clear_dags()
-        logging.info(
-            f"Cleaning Previous DAGs in case bucket is not clean,"
-            f" sleep for {self.configuration.dags_deletion_time_seconds}"
+        sleep(
+            seconds=self.configuration.dags_deletion_time_seconds,
+            progress=progress,
+            task_description="Cleaning Previous DAGs in case bucket is not clean",
         )
-        time.sleep(self.configuration.dags_deletion_time_seconds)
 
         self.bucket_manager.publish_dags(configuration.dags_local_path)
         logging.info("Dags published")
@@ -98,7 +102,7 @@ class ExperimentController:
                 dag_id=dag_id, timeout_seconds=self.configuration.dags_deployment_wait_seconds
             )
 
-    def __export_metrics(self):
+    def __export_metrics(self, progress: Progress):
         logging.info("Attempting to publish collected metrics")
         self.bucket_manager.publish_dags(self.configuration.export_dag_folder_path)
         self.dags_manager.wait_until_dag_exists(
@@ -109,16 +113,24 @@ class ExperimentController:
         self.dags_manager.start_dag(dag_id=self.configuration.export_dag_id)
         logging.info(f"Triggering DAG {self.configuration.export_dag_id}")
         self.dags_manager.trigger_dag(dag_id=self.configuration.export_dag_id)
-        time.sleep(self.configuration.export_wait_time_seconds)
+        sleep(
+            seconds=self.configuration.export_wait_time_seconds,
+            progress=progress,
+            task_description="Waiting for export to finish",
+        )
 
         self.dags_manager.stop_dag(dag_id=self.configuration.export_dag_id)
         self.dags_manager.delete_dag(dag_id=self.configuration.export_dag_id)
         logging.info("Metrics successfully exported")
 
-    def __clean_up(self):
+    def __clean_up(self, progress: Progress):
         logging.info("Cleaning up data after experimentation")
         self.bucket_manager.clear_dags()
-        time.sleep(self.configuration.dags_deletion_time_seconds)
+        sleep(
+            seconds=self.configuration.dags_deletion_time_seconds,
+            progress=progress,
+            task_description="Cleaning up data after experimentation",
+        )
 
     def __delete_dags(self, configuration):
         for dag_id in configuration.dag_ids:
