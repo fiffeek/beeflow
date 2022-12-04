@@ -5,7 +5,7 @@ from typing import List
 
 from beeflow.experiments.internal.services.bucket_manager.bucket_manager import IBucketManager
 from beeflow.experiments.internal.services.dags_manager.dags_manager import IDagsManager
-from rich.progress import Progress, TaskID, track
+from rich.progress import Progress, TaskID
 
 
 @dataclass
@@ -78,6 +78,9 @@ class ExperimentController:
         time.sleep(self.configuration.dags_start_wait_time_seconds)
 
     def __create_dags(self, configuration: ExperimentConfiguration):
+        logging.info("Attempting to remove DAGs in case previous experiment had left overs")
+        self.__try_delete_dags(configuration)
+
         self.bucket_manager.clear_dags()
         logging.info(
             f"Cleaning Previous DAGs in case bucket is not clean,"
@@ -117,3 +120,10 @@ class ExperimentController:
     def __delete_dags(self, configuration):
         for dag_id in configuration.dag_ids:
             self.dags_manager.delete_dag(dag_id=dag_id)
+
+    def __try_delete_dags(self, configuration):
+        for dag_id in configuration.dag_ids:
+            try:
+                self.dags_manager.delete_dag(dag_id=dag_id)
+            except:
+                logging.warning(f"Swallowing errors on dags deletion for {dag_id}")
