@@ -1,0 +1,34 @@
+name: Pants
+
+on: [push]
+
+jobs:
+  build:
+    name: Perform CI Checks
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        python-version: [3.9]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set environment
+      run: |
+        cat .dev_env >> $GITHUB_ENV
+    - uses: pantsbuild/actions/init-pants@v2
+      with:
+        pants-python-version: ${{ matrix.python-version }}
+        gha-cache-key: cache0-py${{ matrix.python-version }}
+        named-caches-hash: ${{ hashFiles('python-default.lock') }}
+        cache-lmdb-store: 'true'
+    - name: Lint
+      run: | 
+        ./pants lint ::
+    - name: Test
+      run: |
+        ./pants test ::
+    - name: Upload pants log
+      uses: actions/upload-artifact@v3
+      with:
+        name: pants-log
+        path: .pants.d/pants.log
+      if: always()

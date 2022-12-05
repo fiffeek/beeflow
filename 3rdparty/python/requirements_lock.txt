@@ -24,7 +24,8 @@
 //     "psycopg2-binary==2.9.3",
 //     "pytest==7.0.1",
 //     "requests==2.28.1",
-//     "rich==12.6.0"
+//     "rich==12.6.0",
+//     "types-requests==2.28.1"
 //   ],
 //   "manylinux": "manylinux2014",
 //   "requirement_constraints": [],
@@ -2477,13 +2478,13 @@
           "artifacts": [
             {
               "algorithm": "sha256",
-              "hash": "d3029e81f0112a74e5c83c6eebcdcf8d221e996f062d5e2b715963976ae4895f",
-              "url": "https://files.pythonhosted.org/packages/2f/b0/9531a5e9aeb3defcc57fc400724c32d94ebdc7e7b7da0a25eae82c187ad7/botocore-1.29.22-py3-none-any.whl"
+              "hash": "5ad03b4bedb5587fc75c7ecd29bf3477929791748cb533c8c57ab5289da84ac3",
+              "url": "https://files.pythonhosted.org/packages/19/eb/1068bdad2424f509b5700ace7d8adb3b97595618000ec9bc1c3bd4224c98/botocore-1.29.23-py3-none-any.whl"
             },
             {
               "algorithm": "sha256",
-              "hash": "ce637e3537388200775d80c5a3170df4810ddf7afbd7883db5673279b2584f68",
-              "url": "https://files.pythonhosted.org/packages/9f/4b/3fa75a66e5b21cf49793fd96b9fd5d91b5e1758258849bbd0800ef872f39/botocore-1.29.22.tar.gz"
+              "hash": "216400fa6736a335f5b5c643655cc7d69d0bf996eb4d21069373aa5aa84b5c10",
+              "url": "https://files.pythonhosted.org/packages/5d/cd/b178e8c52548adbc72824762bbb6b5d0a366d4fe63125e7724985f593ff8/botocore-1.29.23.tar.gz"
             }
           ],
           "project_name": "botocore",
@@ -2494,19 +2495,19 @@
             "urllib3<1.27,>=1.25.4"
           ],
           "requires_python": ">=3.7",
-          "version": "1.29.22"
+          "version": "1.29.23"
         },
         {
           "artifacts": [
             {
               "algorithm": "sha256",
-              "hash": "efb4df87ec0c3d9b13e57f585af4e3905136e470cf8ecfbd9d38684359873c5f",
-              "url": "https://files.pythonhosted.org/packages/b5/ff/a26dc585fe25bbd1847a4189807e2915da8c2a5ceb4190adb23e0eec403d/botocore_stubs-1.29.22-py3-none-any.whl"
+              "hash": "48dfe0df3a293f6366f554fa2fd71f370a56baf1e3ca725b3340b5ee2a864c56",
+              "url": "https://files.pythonhosted.org/packages/1f/35/7d6d716f3f868b3312e1ffaa74f9d64b4d8ea5bfe659bfdfca83799d35ce/botocore_stubs-1.29.23-py3-none-any.whl"
             },
             {
               "algorithm": "sha256",
-              "hash": "92b4f56e7c607361ec5cc4c6e7e4774ca2f2f1ed367450db2753deab5666dcf2",
-              "url": "https://files.pythonhosted.org/packages/4c/02/7540ddf4d7bd8db7bb30614caf59201c6ebd0dbe0f1a31f3d4f273809b55/botocore_stubs-1.29.22.tar.gz"
+              "hash": "6973721c80d9195937f4403a735d611b5e1f6368d1f2c36c96693203a29b543f",
+              "url": "https://files.pythonhosted.org/packages/e9/43/c146d4a3c7118a54134c3f0015ba8c041f555966725db9727123ad356a4a/botocore_stubs-1.29.23.tar.gz"
             }
           ],
           "project_name": "botocore-stubs",
@@ -2514,7 +2515,7 @@
             "types-awscrt"
           ],
           "requires_python": "<4.0,>=3.7",
-          "version": "1.29.22"
+          "version": "1.29.23"
         },
         {
           "artifacts": [
@@ -4560,13 +4561,13 @@
           "artifacts": [
             {
               "algorithm": "sha256",
-              "hash": "f4d5c886968c4cc88ab634c0e005000b5453f75caf06ddc74f7c52298f512cbe",
-              "url": "https://files.pythonhosted.org/packages/7a/ef/7d62b39de327d62e06dbba989a9839cebabfe8276d07592408063e8f49a9/mypy_boto3_ec2-1.26.19-py3-none-any.whl"
+              "hash": "1d56015301cd8160e803fcf7947cc13cec5fd12fc8bc6ca8f9528d150528557c",
+              "url": "https://files.pythonhosted.org/packages/28/3e/ea68cc0aff00d098c0e2c22fbd892bd517fd4c819ea71c766ce7904301b4/mypy_boto3_ec2-1.26.23-py3-none-any.whl"
             },
             {
               "algorithm": "sha256",
-              "hash": "b40315f43ce258f63746df084ce3f4720a783616f3f3db6ebe0072d70e2299d4",
-              "url": "https://files.pythonhosted.org/packages/c5/1e/2cc6c6c5b146d93fdf000177a4f444f01c31e0f9446f2493b04ed2dd4c30/mypy-boto3-ec2-1.26.19.tar.gz"
+              "hash": "cdc4d46e26f12828afa92f1e42a616a7cf3c97600e2367f3eb481ae02853daaf",
+              "url": "https://files.pythonhosted.org/packages/78/b0/8199966dd6eb29202b65be5019463be68616c7ea19573bcb2b5e76b72558/mypy-boto3-ec2-1.26.23.tar.gz"
             }
           ],
           "project_name": "mypy-boto3-ec2",
@@ -4574,7 +4575,7 @@
             "typing-extensions>=4.1.0"
           ],
           "requires_python": ">=3.7",
-          "version": "1.26.19"
+          "version": "1.26.23"
         },
         {
           "artifacts": [
@@ -4620,13 +4621,13 @@
           "artifacts": [
             {
               "algorithm": "sha256",
-              "hash": "f590069b3bafd77e0b91c8f2ab427c06013ace5f40015f9664fb96cbdc402f30",
-              "url": "https://files.pythonhosted.org/packages/17/9e/abb96bb25b9524603f13f54085e1ee5094ffebe26881ca2e7f4ade6c95b8/mypy_boto3_rds-1.26.17-py3-none-any.whl"
+              "hash": "d72cfae6ba90e487be2c20582ae8988088ca7f81028302c59675e8531cea2fd8",
+              "url": "https://files.pythonhosted.org/packages/b1/2f/9e184ba0c933ea7e87f22a984580ba640284adec48e34496e66e79807f1f/mypy_boto3_rds-1.26.23-py3-none-any.whl"
             },
             {
               "algorithm": "sha256",
-              "hash": "61cd3128dc9e6d8540f56333f8d6a483202d9a3058469bda527225e74dce775f",
-              "url": "https://files.pythonhosted.org/packages/9d/6c/7ed16f41b0e53a73804ac296b576640d50c6fd7460d09cdffbb437bb71a7/mypy-boto3-rds-1.26.17.tar.gz"
+              "hash": "69459ede5bf9ad900282730433c2715b19c66363cf9cb25aaa5881fc40f9bded",
+              "url": "https://files.pythonhosted.org/packages/38/d8/bd22129ff834e437914542d1fe6e9ae0fd396460ed9a2333ca5b645d182f/mypy-boto3-rds-1.26.23.tar.gz"
             }
           ],
           "project_name": "mypy-boto3-rds",
@@ -4634,7 +4635,7 @@
             "typing-extensions>=4.1.0"
           ],
           "requires_python": ">=3.7",
-          "version": "1.26.17"
+          "version": "1.26.23"
         },
         {
           "artifacts": [
@@ -6493,6 +6494,26 @@
           "artifacts": [
             {
               "algorithm": "sha256",
+              "hash": "b097692e124001f0ed5e4490245bb090f5e8e929819972f9ace84f9c3e146e8c",
+              "url": "https://files.pythonhosted.org/packages/e5/63/aff77442bca75c76ff35aa2a2a6f2daef5852e49a84379457022b764fb46/types_requests-2.28.1-py3-none-any.whl"
+            },
+            {
+              "algorithm": "sha256",
+              "hash": "acd8ed78509d27bdf04cddcc05f7066dfde4d30dd7dba67b808cdb1141d62ffe",
+              "url": "https://files.pythonhosted.org/packages/77/9e/19df5d6a6a646f7c7d8b8564664a36d777c905dd88a0c9a6521b868ec9b4/types-requests-2.28.1.tar.gz"
+            }
+          ],
+          "project_name": "types-requests",
+          "requires_dists": [
+            "types-urllib3<1.27"
+          ],
+          "requires_python": null,
+          "version": "2.28.1"
+        },
+        {
+          "artifacts": [
+            {
+              "algorithm": "sha256",
               "hash": "cfcbee11c16d60af3feb3dbffea3a85b32129235b562912dece310a45ae83a2c",
               "url": "https://files.pythonhosted.org/packages/f9/9c/8003bedc8b176bdfb4fbbea75d77e2b213550014115d809955c601ca225d/types_s3transfer-0.6.0.post5-py3-none-any.whl"
             },
@@ -6526,6 +6547,24 @@
           "requires_dists": [],
           "requires_python": null,
           "version": "0.10.8.1"
+        },
+        {
+          "artifacts": [
+            {
+              "algorithm": "sha256",
+              "hash": "ed6b9e8a8be488796f72306889a06a3fc3cb1aa99af02ab8afb50144d7317e49",
+              "url": "https://files.pythonhosted.org/packages/ab/35/7b813668050bfe0820ad84df0ba668adb6abb41ca2bb0f16ad4deabca279/types_urllib3-1.26.25.4-py3-none-any.whl"
+            },
+            {
+              "algorithm": "sha256",
+              "hash": "eec5556428eec862b1ac578fb69aab3877995a99ffec9e5a12cf7fbd0cc9daee",
+              "url": "https://files.pythonhosted.org/packages/37/67/c0751b0f672b0822b11ece210b211bdd1e08d6e21aa62e6d297b054127d7/types-urllib3-1.26.25.4.tar.gz"
+            }
+          ],
+          "project_name": "types-urllib3",
+          "requires_dists": [],
+          "requires_python": null,
+          "version": "1.26.25.4"
         },
         {
           "artifacts": [
@@ -6856,7 +6895,8 @@
     "psycopg2-binary==2.9.3",
     "pytest==7.0.1",
     "requests==2.28.1",
-    "rich==12.6.0"
+    "rich==12.6.0",
+    "types-requests==2.28.1"
   ],
   "requires_python": [
     ">=3.9"

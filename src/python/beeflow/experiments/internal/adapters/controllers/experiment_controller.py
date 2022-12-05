@@ -1,5 +1,4 @@
 import logging
-import time
 from dataclasses import dataclass
 from typing import List
 
@@ -140,5 +139,5 @@ class ExperimentController:
         for dag_id in configuration.dag_ids:
             try:
                 self.dags_manager.delete_dag(dag_id=dag_id)
-            except:
+            except Exception:
                 logging.warning(f"Swallowing errors on dags deletion for {dag_id}")

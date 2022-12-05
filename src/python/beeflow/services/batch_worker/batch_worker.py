@@ -2,7 +2,7 @@ import argparse
 import logging
 from typing import Any, Dict, Optional
 
-from airflow import DAG, AirflowException
+from airflow import DAG, AirflowException  # type: ignore[attr-defined]
 from airflow.cli.commands.task_command import _capture_task_logs, _get_ti
 from airflow.jobs.local_task_job import LocalTaskJob
 from airflow.utils.cli import process_subdir

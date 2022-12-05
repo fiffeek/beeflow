@@ -1,13 +1,9 @@
 python_sources(
-    overrides = {
-        "scheduler_job.py": {
-            "skip_flake8": True,
-            "skip_isort": True,
-            "skip_black": True,
-            "skip_docformatter": True,
-            "skip_mypy": True,
-        },
-    },
+    skip_black = True,
+    skip_docformatter = True,
+    skip_flake8 = True,
+    skip_isort = True,
+    skip_mypy = True,
 )
 
 python_awslambda(

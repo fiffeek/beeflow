@@ -1,5 +1,6 @@
 import logging
 import threading
+from typing import Optional
 
 import boto3
 from beeflow.experiments.internal.adapters.controllers.experiment_controller import (
@@ -14,6 +15,7 @@ from beeflow.experiments.internal.infrastructure.config.config import (
 )
 from beeflow.experiments.internal.services.bucket_manager.bucket_manager import BucketManager
 from beeflow.experiments.internal.services.dags_manager.beeflow_dags_manager import BeeflowDagsManager
+from beeflow.experiments.internal.services.dags_manager.dags_manager import IDagsManager
 from beeflow.experiments.internal.services.dags_manager.mwaa_dags_manager import MWAADagsManager
 from rich.progress import Progress
 
@@ -63,7 +65,7 @@ class ExperimentRunner:
         bucket_manager = BucketManager(
             bucket=s3_dags_bucket, s3_dags_path=controller.core.dags_bucket.dags_path_prefix
         )
-        dags_manager = None
+        dags_manager: Optional[IDagsManager] = None
 
         if controller.controller_type == ControllerType.BEEFLOW:
             function_name = controller.type_specific["cli_lambda"]["name"]

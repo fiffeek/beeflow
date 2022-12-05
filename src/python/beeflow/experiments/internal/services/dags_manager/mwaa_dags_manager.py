@@ -22,6 +22,7 @@ class MWAADagsManager(IDagsManager):
     ):
         self.mwaa_client = mwaa_client
         self.mwaa_environment_name = mwaa_environment_name
+        self.additional_wait_time_for_dags = additional_wait_time_for_dags
 
     def wait_until_dag_exists(self, dag_id: str, timeout_seconds: int = 300) -> None:
         logging.info(

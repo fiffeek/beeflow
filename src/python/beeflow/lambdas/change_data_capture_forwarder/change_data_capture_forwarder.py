@@ -51,7 +51,7 @@ def push_to_event_bridge(event: CDCInput):
     return response
 
 
-@event_parser(model=CDCInput)
+@event_parser(model=CDCInput)  # type: ignore[arg-type]
 @logger.inject_lambda_context
 def handler(event: CDCInput, context: LambdaContext) -> Dict[str, Any]:
     response = push_to_event_bridge(event)

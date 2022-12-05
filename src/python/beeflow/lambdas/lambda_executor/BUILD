@@ -6,8 +6,3 @@ python_awslambda(
     handler = "lambda_executor.py:handler",
     runtime = "python3.9",
 )
-
-docker_image(
-    name = "docker",
-    dependencies = [":package"],
-)

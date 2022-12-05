@@ -17,3 +17,26 @@ exclude = '''
   | src/python/beeflow/packages/database/migrations/versions
 )/
 '''
+
+[tool.mypy]
+namespace_packages = true
+explicit_package_bases = true
+mypy_path = "src/python:test/python"
+
+no_implicit_optional = true
+implicit_reexport = false
+strict_equality = true
+
+warn_unused_configs = true
+warn_unused_ignores = true
+warn_return_any = true
+warn_redundant_casts = true
+warn_unreachable = true
+
+pretty = true
+show_column_numbers = true
+show_error_context = true
+show_error_codes = true
+show_traceback = true
+
+exclude = "test"

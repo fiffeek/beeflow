@@ -14,7 +14,6 @@ from beeflow.packages.events.trigger_dags_processing_command import TriggerDAGsP
 from beeflow.packages.utils.list import flatten
 
 logger = Logger()
-sqs = boto3.client('sqs')
 
 
 def prepare_event() -> TriggerDAGsProcessingCommand:
@@ -26,6 +25,7 @@ def prepare_event() -> TriggerDAGsProcessingCommand:
 
 
 def trigger_processing():
+    sqs = boto3.client('sqs')
     processor_queue_url = os.environ[ConfigConstants.DAG_PARSING_PROCESSOR_QUEUE_URL_ENV_VAR]
     response = sqs.send_message(
         QueueUrl=processor_queue_url,

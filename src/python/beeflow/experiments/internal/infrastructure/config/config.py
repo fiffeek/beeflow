@@ -65,7 +65,7 @@ class ApplicationConfiguration:
 class ExperimentConfiguration:
     def __init__(self, config_path: str):
         with open(config_path) as config_file:
-            self.config = ApplicationConfiguration.from_json(config_file.read())
+            self.config = ApplicationConfiguration.from_json(config_file.read())  # type: ignore[attr-defined]
         self.__validate_configuration()
 
     def __validate_configuration(self) -> None:
@@ -78,7 +78,8 @@ class ExperimentConfiguration:
     def __validate_experiment(experiment: ApplicationExperimentConfiguration) -> None:
         if not os.path.isdir(experiment.dags_local_path):
             raise ValueError(
-                f"Dag's path {experiment.dags_local_path} is not a valid directory for {experiment.experiment_id}"
+                f"Dag's path {experiment.dags_local_path} is not "
+                f"a valid directory for {experiment.experiment_id}"
             )
 
     @staticmethod

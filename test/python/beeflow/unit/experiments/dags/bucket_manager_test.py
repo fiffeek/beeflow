@@ -18,7 +18,7 @@ def test_move_file_with_content(s3_bucket, tmp_path):
     f1.touch()
     f1.write_text("content")
 
-    bm.publish_experiment(str(f1.parent.absolute()))
+    bm.publish_dags(str(f1.parent.absolute()))
 
     objs = [obj for obj in s3_bucket.objects.all()]
     assert len(objs) == 1
@@ -35,7 +35,7 @@ def test_move_multiple_files(s3_bucket, tmp_path):
     f2 = tmp_path / "experiment_dir/dag_file2.py"
     f2.touch()
 
-    bm.publish_experiment(str(f1.parent.absolute()))
+    bm.publish_dags(str(f1.parent.absolute()))
 
     objs = [obj.key for obj in s3_bucket.objects.all()]
     assert sorted(objs) == sorted(["dag_file.py", "dag_file2.py"])

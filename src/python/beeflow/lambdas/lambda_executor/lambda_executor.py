@@ -35,7 +35,7 @@ def trigger_step_functions(event: TaskInstanceQueued) -> None:
 @event_parser(model=EventBridgeModel, envelope=envelopes.SqsEnvelope)
 def handler(events: List[EventBridgeModel], context: LambdaContext) -> Dict[str, Any]:
     for event in events:
-        parsed_event: TaskInstanceQueued = parse(event=event.detail, model=TaskInstanceQueued)
+        parsed_event = parse(event=event.detail, model=TaskInstanceQueued)  # type: ignore[arg-type]
         logger.info(f"Triggering SFN for {parsed_event.task_id} from {parsed_event.dag_id}")
         trigger_step_functions(event=parsed_event)
     return {}

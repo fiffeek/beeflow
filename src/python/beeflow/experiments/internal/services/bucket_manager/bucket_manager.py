@@ -2,7 +2,7 @@ import abc
 import os
 from os import listdir
 from os.path import isfile, join
-from typing import Optional
+from typing import List, Optional
 
 from mypy_boto3_s3.service_resource import Bucket
 
@@ -13,12 +13,12 @@ class IBucketManager(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def publish_dags(self, dags_path: str) -> [str]:
+    def publish_dags(self, dags_path: str) -> List[str]:
         pass
 
 
 class BucketManager(IBucketManager):
-    def __init__(self, bucket: Bucket, s3_dags_path: Optional[str]):
+    def __init__(self, bucket: Bucket, s3_dags_path: Optional[str] = None):
         self.bucket = bucket
         self.s3_dags_path = s3_dags_path
 
@@ -28,7 +28,7 @@ class BucketManager(IBucketManager):
             return
         self.bucket.objects.filter(Prefix=f"{self.s3_dags_path}").delete()
 
-    def publish_dags(self, dags_path: str) -> [str]:
+    def publish_dags(self, dags_path: str) -> List[str]:
         if not os.path.isdir(dags_path):
             raise ValueError(f"Dag's path {dags_path} is not a valid directory")
 

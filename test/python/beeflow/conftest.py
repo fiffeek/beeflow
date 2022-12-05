@@ -4,7 +4,7 @@ import string
 
 import boto3
 import pytest
-from moto import mock_s3
+from moto import mock_s3  # type: ignore[import]
 
 pytest.aws_region = 'us-east-1'
 
