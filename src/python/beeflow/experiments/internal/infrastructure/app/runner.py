@@ -94,5 +94,6 @@ class ExperimentRunner:
                 export_dag_id=controller.core.export_dag_config.dag_id,
                 export_dag_folder_path=controller.core.export_dag_config.dags_local_path,
                 export_wait_time_seconds=controller.core.export_dag_config.export_wait_time_seconds,
+                dags_creation_cooldown_seconds=controller.core.dags_creation_cooldown_seconds,
             ),
         )

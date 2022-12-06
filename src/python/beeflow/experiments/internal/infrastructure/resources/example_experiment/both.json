@@ -36,6 +36,7 @@
         "dags_deletion_time_seconds": 60,
         "dags_deployment_wait_seconds": 400,
         "dags_start_wait_time_seconds": 300,
+        "dags_creation_cooldown_seconds": 360,
         "dags_bucket": {
           "name": "beeflow-dev-mwaa-s3",
           "region": "us-east-2",

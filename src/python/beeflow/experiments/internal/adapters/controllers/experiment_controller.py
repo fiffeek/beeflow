@@ -20,6 +20,7 @@ class ExperimentConfiguration:
 class ExperimentControllerConfiguration:
     dags_deletion_time_seconds: int
     dags_deployment_wait_seconds: int
+    dags_creation_cooldown_seconds: int
     dags_start_wait_time_seconds: int
     controller_id: str
     export_dag_id: str
@@ -94,6 +95,11 @@ class ExperimentController:
 
         self.bucket_manager.publish_dags(configuration.dags_local_path)
         logging.info("Dags published")
+        sleep(
+            seconds=self.configuration.dags_creation_cooldown_seconds,
+            progress=progress,
+            task_description=f"[{self.controller_id}] Waiting cooldown period after dags file creation",
+        )
 
         for dag_id in configuration.dag_ids:
             logging.info(f"Waiting for DAG {dag_id} to become available in Airflow")
@@ -103,13 +109,21 @@ class ExperimentController:
 
     def __export_metrics(self, progress: Progress):
         logging.info("Attempting to publish collected metrics")
+
         self.bucket_manager.publish_dags(self.configuration.export_dag_folder_path)
+        sleep(
+            seconds=self.configuration.dags_creation_cooldown_seconds,
+            progress=progress,
+            task_description=f"[{self.controller_id}] Waiting cooldown period after dags file creation",
+        )
         self.dags_manager.wait_until_dag_exists(
             dag_id=self.configuration.export_dag_id,
             timeout_seconds=self.configuration.dags_deployment_wait_seconds,
         )
+
         logging.info(f"Starting DAG {self.configuration.export_dag_id}")
         self.dags_manager.start_dag(dag_id=self.configuration.export_dag_id)
+
         logging.info(f"Triggering DAG {self.configuration.export_dag_id}")
         self.dags_manager.trigger_dag(dag_id=self.configuration.export_dag_id)
         sleep(

@@ -44,9 +44,7 @@ class MWAADagsManager(IDagsManager):
         if not dag_exists():
             raise Exception(f"DAG {dag_id} does not exist and {timeout_seconds} elapsed")
 
-    @backoff.on_exception(backoff.expo,
-                          ValueError,
-                          max_time=300)
+    @backoff.on_exception(backoff.expo, ValueError, max_time=300)
     def start_dag(self, dag_id: str) -> None:
         payload = f"dags unpause {dag_id}"
         response = self.__execute_cli(payload)

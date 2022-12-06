@@ -36,6 +36,7 @@ class ApplicationControllerCoreConfiguration:
     controller_id: str
     dags_bucket: ApplicationControllerCoreDagsBucketConfiguration
     export_dag_config: ApplicationControllerExportDagConfiguration
+    dags_creation_cooldown_seconds: int = 0
 
 
 @dataclass_json

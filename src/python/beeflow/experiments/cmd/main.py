@@ -3,6 +3,7 @@ import logging
 
 from beeflow.experiments.internal.infrastructure.app.runner import ExperimentRunner
 from beeflow.experiments.internal.infrastructure.config.config import ExperimentConfiguration
+from rich.logging import RichHandler
 
 parser = argparse.ArgumentParser(
     prog='ExperimentRunner',
@@ -15,12 +16,7 @@ args = parser.parse_args()
 
 
 def run(config_path: str) -> None:
-    logging.basicConfig(
-        encoding='utf-8',
-        level=logging.INFO,
-        format='[%(asctime)s] [%(filename)s:%(lineno)d]: %(message)s',
-        datefmt='%m/%d/%Y %I:%M:%S %p',
-    )
+    logging.basicConfig(level="INFO", handlers=[RichHandler(level="INFO")])
     config = ExperimentConfiguration(config_path=config_path).config
     app = ExperimentRunner(config=config)
     app.run()
