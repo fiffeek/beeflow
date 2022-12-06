@@ -40,12 +40,13 @@ class MWAADagsManager(IDagsManager):
             logging.info(f"DAG {dag_id} does not exist yet")
             time.sleep(15)
 
-        # TODO: Add wait here for MWAA
         if not dag_exists():
             raise Exception(f"DAG {dag_id} does not exist and {timeout_seconds} elapsed")
 
     @backoff.on_exception(backoff.expo, ValueError, max_time=300)
     def start_dag(self, dag_id: str) -> None:
+        self.__assert_dag_exists(dag_id)
+
         payload = f"dags unpause {dag_id}"
         response = self.__execute_cli(payload)
         if not self.__is_response_ok(response) or not self.__dag_exists(dag_id, response):
@@ -74,6 +75,11 @@ class MWAADagsManager(IDagsManager):
             raise ValueError(
                 f"Can't trigger dag {dag_id}, stdout: {response.stdout}, stderr: {response.stderr}"
             )
+
+    def __assert_dag_exists(self, dag_id: str) -> None:
+        response = self.__execute_cli("dags list -o plain")
+        if not self.__is_response_ok(response) or dag_id not in response.stdout:
+            raise ValueError(f"Dag {dag_id} does not exist")
 
     @staticmethod
     def __dag_exists(dag_id: str, response: MWAACLIResponse) -> bool:
