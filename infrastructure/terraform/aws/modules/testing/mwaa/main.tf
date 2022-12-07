@@ -9,7 +9,7 @@ module "mwaa" {
   dag_s3_path           = "dags"
   environment_class     = "mw1.small"
   min_workers           = 1
-  max_workers           = 1
+  max_workers           = var.max_workers
   webserver_access_mode = "PUBLIC_ONLY"
   region                = data.aws_region.current.name
   context               = module.this.context

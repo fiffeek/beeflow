@@ -22,3 +22,8 @@ variable "user_names_to_allow_cli_access" {
   type        = list(string)
   description = "List of user names to allow Airflow CLI access to."
 }
+
+variable "max_workers" {
+  type        = number
+  description = "The maximum number of workers for MWAA."
+}

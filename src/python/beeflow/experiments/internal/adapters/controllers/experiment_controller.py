@@ -79,7 +79,7 @@ class ExperimentController:
         sleep(
             seconds=self.configuration.dags_start_wait_time_seconds,
             progress=progress,
-            task_description=f"[{self.controller_id}] Waiting for DAGs to start up",
+            task_description=f"{self.controller_id}: Waiting for DAGs to start up",
         )
 
     def __create_dags(self, configuration: ExperimentConfiguration, progress: Progress):
@@ -90,7 +90,7 @@ class ExperimentController:
         sleep(
             seconds=self.configuration.dags_deletion_time_seconds,
             progress=progress,
-            task_description=f"[{self.controller_id}] Cleaning Previous DAGs in case bucket is not clean",
+            task_description=f"{self.controller_id}: Cleaning Previous DAGs in case bucket is not clean",
         )
 
         self.bucket_manager.publish_dags(configuration.dags_local_path)
@@ -98,7 +98,7 @@ class ExperimentController:
         sleep(
             seconds=self.configuration.dags_creation_cooldown_seconds,
             progress=progress,
-            task_description=f"[{self.controller_id}] Waiting cooldown period after dags file creation",
+            task_description=f"{self.controller_id}: Waiting cooldown period after dags file creation",
         )
 
         for dag_id in configuration.dag_ids:
@@ -114,7 +114,7 @@ class ExperimentController:
         sleep(
             seconds=self.configuration.dags_creation_cooldown_seconds,
             progress=progress,
-            task_description=f"[{self.controller_id}] Waiting cooldown period after dags file creation",
+            task_description=f"{self.controller_id}: Waiting cooldown period after dags file creation",
         )
         self.dags_manager.wait_until_dag_exists(
             dag_id=self.configuration.export_dag_id,
@@ -129,7 +129,7 @@ class ExperimentController:
         sleep(
             seconds=self.configuration.export_wait_time_seconds,
             progress=progress,
-            task_description=f"[{self.controller_id}] Waiting for export to finish",
+            task_description=f"{self.controller_id}: Waiting for export to finish",
         )
 
         self.dags_manager.stop_dag(dag_id=self.configuration.export_dag_id)
@@ -142,7 +142,7 @@ class ExperimentController:
         sleep(
             seconds=self.configuration.dags_deletion_time_seconds,
             progress=progress,
-            task_description=f"[{self.controller_id}] Cleaning up data after experimentation",
+            task_description=f"{self.controller_id}: Cleaning up data after experimentation",
         )
 
     def __delete_dags(self, configuration):
