@@ -18,6 +18,7 @@ backend_packages.add = [
   "pants.backend.shell",
   "pants.backend.shell.lint.shfmt",
 ]
+build_file_prelude_globs = ["pants-plugins/macros.py"]
 
 [anonymous-telemetry]
 enabled = false
@@ -26,12 +27,17 @@ enabled = false
 root_patterns = [
   '/src/python',
   '/test/python',
+  '/notebooks',
+  '/pants-plugins',
 ]
 
 [python]
 interpreter_constraints = [">=3.9"]
 enable_resolves = true
-resolves = { python-default = "3rdparty/python/requirements_lock.txt"}
+
+[python.resolves]
+python-default = "3rdparty/python/requirements_lock.txt"
+python-jupyter = "3rdparty/python/jupyter_lab.txt"
 
 [python-bootstrap]
 search_path = ["<PATH>", "<PYENV>"]

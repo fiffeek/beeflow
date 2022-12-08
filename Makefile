@@ -7,23 +7,11 @@ update-lock-files:
 clear-cache:
 	sudo rm -rf .terragrunt-cache-aws
 
-trousers:
+all:
 	./pants tailor
 	./pants fmt ::
 	./pants lint ::
 	./pants check ::
 
-dags/examples/push:
-	aws s3 cp src/python/beeflow/examples/dags s3://beeflow-dev-dags-code-bucket
-
-jump-host:
-	sudo chmod 400 "beeflow-dev-jump-host-ssh" && sudo ssh -i "beeflow-dev-jump-host-ssh" ec2-user@ec2-3-133-9-120.us-east-2.compute.amazonaws.com
-
-jump-host-db-tunnel:
-	sudo ssh -i "beeflow-dev-jump-host-ssh" -N -L 8090:beeflow-dev-metadata-database.citrkj3bhdyr.us-east-2.rds.amazonaws.com:5432 ec2-user@ec2-3-133-9-120.us-east-2.compute.amazonaws.com -v
-
-dags/experiment1/push:
-	aws s3 cp src/python/beeflow/examples/dags/experiment1/ s3://beeflow-dev-dags-code-bucket --recursive
-
-dags/clear:
-	aws s3 rm s3://beeflow-dev-dags-code-bucket --recursive
+lab:
+	./pants run //notebooks/lab.py:python-jupyter_main -- --notebook-dir notebooks
