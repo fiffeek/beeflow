@@ -40,6 +40,16 @@ module "beeflow_events" {
       })
       enabled = true
     }
+    task-scheduled = {
+      description = "Capture task scheduled event"
+      event_pattern = jsonencode({
+        "detail" : {
+          "event_type" : [
+          "task_instance_scheduled"]
+        }
+      })
+      enabled = true
+    }
     task-queued-lambda = {
       description = "Capture task queued event for the lambda executor"
       event_pattern = jsonencode({
@@ -188,6 +198,13 @@ module "beeflow_events" {
       {
         name = "send-task-queued-events-to-batch-executor"
         arn  = var.batch_executor_sqs.arn
+      },
+    ]
+    task-scheduled = [
+      {
+        name             = "send-task-scheduled-events-to-scheduler"
+        arn              = var.scheduler_sqs.arn
+        message_group_id = var.scheduler_sqs.message_group_id
       },
     ]
     task-failed = [
