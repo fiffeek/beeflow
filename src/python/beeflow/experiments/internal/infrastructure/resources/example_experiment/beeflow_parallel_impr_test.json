@@ -27,12 +27,12 @@
   ],
   "experiments": [
     {
-      "dags_local_path": "src/python/beeflow/examples/dags/parallelisation_experiments/10s/10tasks",
+      "dags_local_path": "src/python/beeflow/examples/dags/parallelisation_experiments/10s/40tasks",
       "dag_ids": [
-        "10s_10t"
+        "10s_40t"
       ],
-      "metrics_collection_time_seconds": 3600,
-      "experiment_id": "parallel_10s_10t"
+      "metrics_collection_time_seconds": 1800,
+      "experiment_id": "parallel_10s_40t"
     }
   ]
 }
