@@ -55,7 +55,18 @@ module "database_migration_service" {
     }
   }
 
-  replication_tasks   = {}
+  replication_tasks = {
+    cdc = {
+      replication_task_id       = module.this.id
+      migration_type            = "cdc"
+      replication_task_settings = jsonencode(local.task_settings)
+      table_mappings            = jsonencode(local.table_mappings)
+
+      source_endpoint_key = "source"
+      target_endpoint_key = "destination"
+      tags                = { Task = "PostgreSQL-to-Kinesis" }
+    }
+  }
   event_subscriptions = {}
 
   tags = module.this.tags
