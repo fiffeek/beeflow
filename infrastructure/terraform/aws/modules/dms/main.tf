@@ -19,7 +19,8 @@ module "database_migration_service" {
   repl_instance_publicly_accessible          = false
   repl_instance_class                        = var.replication_instance_tier
   repl_instance_id                           = module.this.id
-  repl_instance_vpc_security_group_ids       = [var.vpc_sg]
+  repl_instance_vpc_security_group_ids = [
+  var.vpc_sg]
 
   endpoints = {
     source = {
@@ -33,7 +34,24 @@ module "database_migration_service" {
       port                        = var.metadata_db_spec.port
       server_name                 = split(":", var.metadata_db_spec.endpoint)[0]
       ssl_mode                    = "none"
-      tags                        = { EndpointType = "source" }
+      tags = {
+        EndpointType = "source"
+      }
+    }
+    destination = {
+      endpoint_id   = module.kinesis.id
+      endpoint_type = "target"
+      engine_name   = "kinesis"
+
+      kinesis_settings = {
+        service_access_role_arn        = aws_iam_role.kinesis.arn
+        stream_arn                     = aws_kinesis_stream.cdc_stream[0].arn
+        partition_include_schema_table = true
+        include_partition_value        = true
+      }
+      tags = {
+        EndpointType = "destination"
+      }
     }
   }
 
