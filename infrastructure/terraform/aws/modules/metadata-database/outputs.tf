@@ -13,3 +13,8 @@ output "database_password" {
   value       = module.random_password.secret
   sensitive   = true
 }
+
+output "database_engine" {
+  description = "The name of the engine for the database"
+  value       = local.engine
+}

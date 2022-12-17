@@ -1,5 +1,9 @@
 # Encapsulated in a module for later rework with Aurora and RDS proxy
 
+locals {
+  engine = "postgres"
+}
+
 module "metadata_database" {
   source  = "cloudposse/rds/aws"
   version = "0.38.4"
@@ -12,7 +16,7 @@ module "metadata_database" {
   multi_az            = false
   storage_type        = "gp2"
   allocated_storage   = 20
-  engine              = "postgres"
+  engine              = local.engine
   engine_version      = "13.7"
   instance_class      = "db.t3.micro"
   db_parameter_group  = "postgres13"
