@@ -42,7 +42,7 @@ locals {
           "table-name" : "task_instance"
         }
       },
-            {
+      {
         "rule-type" : "object-mapping",
         "rule-id" : "5",
         "rule-name" : "DefaultMapToKinesis-dag_run",
@@ -52,7 +52,7 @@ locals {
           "table-name" : "dag_run"
         }
       },
-            {
+      {
         "rule-type" : "object-mapping",
         "rule-id" : "6",
         "rule-name" : "DefaultMapToKinesis-dag",

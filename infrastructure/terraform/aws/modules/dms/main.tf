@@ -61,6 +61,7 @@ module "database_migration_service" {
       migration_type            = "cdc"
       replication_task_settings = jsonencode(local.task_settings)
       table_mappings            = jsonencode(local.table_mappings)
+      start_replication_task    = true
 
       source_endpoint_key = "source"
       target_endpoint_key = "destination"
