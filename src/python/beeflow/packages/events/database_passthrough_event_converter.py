@@ -31,6 +31,8 @@ class DatabasePassthroughEventConverter:
     def __is_task_instance_event(self) -> bool:
         if self.table_name_hint == "task_instance":
             return True
+        if self.table_name_hint is not None:
+            return False
         required_fields = [
             "task_id",
             "dag_id",
@@ -51,6 +53,8 @@ class DatabasePassthroughEventConverter:
     def __is_dag_event(self) -> bool:
         if self.table_name_hint == "dag":
             return True
+        if self.table_name_hint is not None:
+            return False
         required_fields = ["dag_id", "is_paused", "is_active"]
         for field in required_fields:
             if field not in self.metadata:
@@ -61,6 +65,8 @@ class DatabasePassthroughEventConverter:
     def __is_dag_run_event(self) -> bool:
         if self.table_name_hint == "dag_run":
             return True
+        if self.table_name_hint is not None:
+            return False
         required_fields = ["dag_id", "dag_hash", "run_id", "run_type", "queued_at", "execution_date"]
         for field in required_fields:
             if field not in self.metadata:

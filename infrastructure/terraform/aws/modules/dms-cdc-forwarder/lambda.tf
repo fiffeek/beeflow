@@ -30,7 +30,7 @@ module "cdc_forwarder_lambda" {
     additional_environment_variables = {
       "EVENTBRIDGE_BUS_NAME" : var.beeflow_main_event_bus_name
     }
-    memory_size                    = 128
+    memory_size                    = 256
     reserved_concurrent_executions = 45
   }
   subnet_ids = var.subnet_ids
@@ -96,4 +96,5 @@ resource "aws_lambda_event_source_mapping" "kinesis" {
   "ReportBatchItemFailures"]
   maximum_retry_attempts = 5
   parallelization_factor = 3
+  batch_size             = 10
 }
