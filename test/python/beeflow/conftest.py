@@ -9,7 +9,7 @@ from moto import mock_s3  # type: ignore[import]
 pytest.aws_region = 'us-east-1'
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope='function', autouse=True)
 def aws_credentials():
     os.environ['AWS_ACCESS_KEY_ID'] = 'testing'
     os.environ['AWS_SECRET_ACCESS_ID'] = 'testing'
