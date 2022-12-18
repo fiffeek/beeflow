@@ -46,6 +46,11 @@ apply_dms:
 apply_dms-cdc-forwarder:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/dms-cdc-forwarder && terragrunt apply"
 
+destroy_dms:
+	echo "Disables CDC to reduce costs for testing!"
+	docker-compose run --rm terragrunt_aws bash -c "cd dev/dms-cdc-forwarder && terragrunt destroy"
+	docker-compose run --rm terragrunt_aws bash -c "cd dev/dms && terragrunt destroy"
+
 apply_eventbridge:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/eventbridge && terragrunt apply"
 
