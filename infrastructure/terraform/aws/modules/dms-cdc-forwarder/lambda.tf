@@ -95,4 +95,5 @@ resource "aws_lambda_event_source_mapping" "kinesis" {
   function_response_types = [
   "ReportBatchItemFailures"]
   maximum_retry_attempts = 5
+  parallelization_factor = 3
 }

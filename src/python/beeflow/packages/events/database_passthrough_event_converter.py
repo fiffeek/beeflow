@@ -1,3 +1,5 @@
+from typing import Optional
+
 from aws_lambda_powertools import Logger
 from beeflow.packages.events.beeflow_event import BeeflowEvent
 from beeflow.packages.events.cdc_input import CDCInput
@@ -21,16 +23,18 @@ logger = Logger()
 
 
 class DatabasePassthroughEventConverter:
-    def __init__(self, event: CDCInput):
+    def __init__(self, event: CDCInput, table_name_hint: Optional[str] = None):
         self.event = event
         self.metadata = self.event.metadata
+        self.table_name_hint = table_name_hint
 
     def __is_task_instance_event(self) -> bool:
+        if self.table_name_hint == "task_instance":
+            return True
         required_fields = [
             "task_id",
             "dag_id",
             "run_id",
-            "state",
             "operator",
             "max_tries",
             "queue",
@@ -45,6 +49,8 @@ class DatabasePassthroughEventConverter:
         return True
 
     def __is_dag_event(self) -> bool:
+        if self.table_name_hint == "dag":
+            return True
         required_fields = ["dag_id", "is_paused", "is_active"]
         for field in required_fields:
             if field not in self.metadata:
@@ -53,7 +59,9 @@ class DatabasePassthroughEventConverter:
         return True
 
     def __is_dag_run_event(self) -> bool:
-        required_fields = ["dag_id", "dag_hash", "state", "run_id", "run_type", "queued_at", "execution_date"]
+        if self.table_name_hint == "dag_run":
+            return True
+        required_fields = ["dag_id", "dag_hash", "run_id", "run_type", "queued_at", "execution_date"]
         for field in required_fields:
             if field not in self.metadata:
                 logger.info(f"Event cannot be identified as DAG run event as {field} is missing")
@@ -61,6 +69,12 @@ class DatabasePassthroughEventConverter:
         return True
 
     def __convert_to_task_instance_event(self) -> BeeflowEvent:
+        if "state" not in self.metadata or self.metadata["state"] is None:
+            return TaskInstanceUnknown(
+                dag_id=self.metadata["dag_id"],
+                run_id=self.metadata["run_id"],
+                task_id=self.metadata["task_id"],
+            )
         if self.metadata["state"] == "queued":
             return TaskInstanceQueued(
                 dag_id=self.metadata["dag_id"],
@@ -116,12 +130,6 @@ class DatabasePassthroughEventConverter:
             )
         if self.metadata["state"] == "shutdown":
             return TaskInstanceShutdown(
-                dag_id=self.metadata["dag_id"],
-                run_id=self.metadata["run_id"],
-                task_id=self.metadata["task_id"],
-            )
-        if "state" not in self.metadata or self.metadata["state"] is None:
-            return TaskInstanceUnknown(
                 dag_id=self.metadata["dag_id"],
                 run_id=self.metadata["run_id"],
                 task_id=self.metadata["task_id"],
