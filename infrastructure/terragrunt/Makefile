@@ -43,6 +43,9 @@ apply_cdc-forwarder:
 apply_dms:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/dms && terragrunt apply"
 
+apply_dms-cdc-forwarder:
+	docker-compose run --rm terragrunt_aws bash -c "cd dev/dms-cdc-forwarder && terragrunt apply"
+
 apply_eventbridge:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/eventbridge && terragrunt apply"
 

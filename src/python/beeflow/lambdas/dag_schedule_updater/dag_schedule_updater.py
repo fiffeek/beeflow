@@ -42,6 +42,7 @@ def from_airflow_schedule_to_aws_cron(airflow_schedule: ScheduleInterval) -> str
             f" got {airflow_schedule} instead"
         )
     airflow_cron = airflow_schedule.replace('"', '')
+    airflow_cron = airflow_cron.replace('\\', '')
     parts = airflow_cron.split(' ')
     if len(parts) < 5:
         raise ValueError(f"Invalid Airflow cron format, got {airflow_schedule}, expected sample: '0 0 * * *'")

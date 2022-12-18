@@ -120,7 +120,7 @@ class DatabasePassthroughEventConverter:
                 run_id=self.metadata["run_id"],
                 task_id=self.metadata["task_id"],
             )
-        if self.metadata["state"] is None:
+        if "state" not in self.metadata or self.metadata["state"] is None:
             return TaskInstanceUnknown(
                 dag_id=self.metadata["dag_id"],
                 run_id=self.metadata["run_id"],
