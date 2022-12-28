@@ -40,6 +40,10 @@ apply_webserver:
 apply_cdc-forwarder:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/cdc-forwarder && terragrunt apply"
 
+apply_dms-forwarder:
+	docker-compose run --rm terragrunt_aws bash -c "cd dev/dms && terragrunt apply"
+	docker-compose run --rm terragrunt_aws bash -c "cd dev/dms-cdc-forwarder && terragrunt apply"
+
 apply_dms:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/dms && terragrunt apply"
 
