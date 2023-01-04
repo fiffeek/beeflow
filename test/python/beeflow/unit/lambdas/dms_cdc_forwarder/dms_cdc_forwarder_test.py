@@ -62,6 +62,40 @@ input = KinesisStreamEvent(
                 "kinesis": {
                     "kinesisSchemaVersion": "1.0",
                     "partitionKey": "1",
+                    "sequenceNumber": "49590338271490256608559692538361571095921575989136588897",
+                    "data": b64encode(
+                        bytes(
+                            json.dumps(
+                                {
+                                    "data": {"id": 2636},
+                                    "metadata": {
+                                        "timestamp": "2022-12-24T12:49:52.607759Z",
+                                        "record-type": "data",
+                                        "operation": "delete",
+                                        "partition-key-type": "schema-table",
+                                        "schema-name": "public",
+                                        "table-name": "dag_run",
+                                        "transaction-id": 372172,
+                                    },
+                                }
+                            ),
+                            'utf-8',
+                        )
+                    ),
+                    "approximateArrivalTimestamp": 1545084650.988,
+                },
+                "eventSource": "aws:kinesis",
+                "eventVersion": "1.0",
+                "eventID": "shardId-000000000006:49590338271490256608559692538361571095921575989136588897",
+                "eventName": "aws:kinesis:record",
+                "invokeIdentityArn": "arn:aws:iam::123456789012:role/lambda-role",
+                "awsRegion": "us-east-2",
+                "eventSourceARN": "arn:aws:kinesis:us-east-2:123456789012:stream/lambda-stream",
+            },
+            {
+                "kinesis": {
+                    "kinesisSchemaVersion": "1.0",
+                    "partitionKey": "1",
                     "sequenceNumber": "49590338271490256608559692540925702759324208523137515618",
                     "data": b64encode(
                         bytes(

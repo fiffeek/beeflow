@@ -48,6 +48,10 @@ def to_event_bridge_event(event: KinesisStreamRecord) -> Optional[EventbridgeInp
         logger.warning("Event does not contain `data` field")
         return None
 
+    if "metadata" in data and "operation" in data["metadata"] and data["metadata"]["operation"] == "delete":
+        logger.warning("Skipping delete rows from CDC")
+        return None
+
     # Data about a specific transaction log item
     cdc_input = prepare_input(event=data["data"])
     return EventbridgeInput(
