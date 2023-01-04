@@ -27,3 +27,14 @@ variable "max_workers" {
   type        = number
   description = "The maximum number of workers for MWAA."
 }
+
+variable "min_workers" {
+  type        = number
+  description = "The minimum number of workers for MWAA."
+}
+
+variable "celery_worker_autoscale" {
+  type        = string
+  description = "Max,min tasks per worker for MWAA."
+  default     = "5,5"
+}

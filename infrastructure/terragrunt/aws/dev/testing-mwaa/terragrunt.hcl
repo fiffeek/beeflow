@@ -16,10 +16,12 @@ terraform {
 }
 
 inputs = {
-  name               = "mwaa"
-  vpc_id             = dependency.vpc.outputs.vpc_id
-  private_subnet_ids = dependency.vpc.outputs.private_subnet_ids
-  max_workers        = 10
+  name                    = "mwaa"
+  vpc_id                  = dependency.vpc.outputs.vpc_id
+  private_subnet_ids      = dependency.vpc.outputs.private_subnet_ids
+  min_workers             = 10
+  max_workers             = 10
+  celery_worker_autoscale = "20,20"
   metadata_dumps_bucket = {
     id             = dependency.testing_buckets.outputs.metadata_dumps_bucket_id,
     arn            = dependency.testing_buckets.outputs.metadata_dumps_bucket_arn,
