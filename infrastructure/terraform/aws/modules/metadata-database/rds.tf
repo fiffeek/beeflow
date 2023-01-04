@@ -42,6 +42,11 @@ module "metadata_database" {
       name         = "shared_preload_libraries"
       value        = "pg_stat_statements,pglogical"
       apply_method = "pending-reboot"
+    },
+    {
+      name         = "max_connections"
+      value        = var.max_connections
+      apply_method = "pending-reboot"
     }
   ]
 

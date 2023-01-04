@@ -27,3 +27,8 @@ variable "subnet_ids" {
   type        = list(string)
   description = "IDs of the created private subnets"
 }
+
+variable "max_connections" {
+  type        = string
+  description = "Maximum number of connections to the database"
+}
