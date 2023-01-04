@@ -52,6 +52,22 @@
   ],
   "experiments": [
     {
+      "dags_local_path": "src/python/beeflow/examples/dags/parallelisation_experiments/10s/100tasks",
+      "dag_ids": [
+        "10s_100t"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "parallel_10s_100t"
+    },
+    {
+      "dags_local_path": "src/python/beeflow/examples/dags/parallelisation_experiments/10s/200tasks",
+      "dag_ids": [
+        "10s_200t"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "parallel_10s_200t"
+    },
+    {
       "dags_local_path": "src/python/beeflow/examples/dags/parallelisation_experiments/10s/5tasks",
       "dag_ids": [
         "10s_5t"
@@ -82,22 +98,6 @@
       ],
       "metrics_collection_time_seconds": 3600,
       "experiment_id": "parallel_10s_50t"
-    },
-    {
-      "dags_local_path": "src/python/beeflow/examples/dags/parallelisation_experiments/10s/100tasks",
-      "dag_ids": [
-        "10s_100t"
-      ],
-      "metrics_collection_time_seconds": 3600,
-      "experiment_id": "parallel_10s_100t"
-    },
-    {
-      "dags_local_path": "src/python/beeflow/examples/dags/parallelisation_experiments/10s/200tasks",
-      "dag_ids": [
-        "10s_200t"
-      ],
-      "metrics_collection_time_seconds": 3600,
-      "experiment_id": "parallel_10s_200t"
     }
   ]
 }
