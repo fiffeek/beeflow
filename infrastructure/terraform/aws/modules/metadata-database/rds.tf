@@ -18,7 +18,7 @@ module "metadata_database" {
   allocated_storage   = 20
   engine              = local.engine
   engine_version      = "13.7"
-  instance_class      = "db.t3.micro"
+  instance_class      = var.instance_class
   db_parameter_group  = "postgres13"
   publicly_accessible = false
   vpc_id              = var.vpc_id

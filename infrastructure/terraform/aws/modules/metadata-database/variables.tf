@@ -32,3 +32,8 @@ variable "max_connections" {
   type        = string
   description = "Maximum number of connections to the database"
 }
+
+variable "instance_class" {
+  type        = string
+  description = "The instance class of the RDS database"
+}

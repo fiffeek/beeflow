@@ -31,6 +31,8 @@ module "lambda" {
       AIRFLOW_CONN_AWS_DEFAULT    = "aws://"
       BEEFLOW__ENVIRONMENT        = module.this.environment,
       PYTHONUNBUFFERED            = "1"
+      AWS_RETRY_MODE              = "standard"
+      AWS_MAX_ATTEMPTS            = "10"
     })
   }
 

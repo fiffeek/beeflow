@@ -34,6 +34,12 @@ module "lambda_executor_wrapper" {
         "MARK_TASK_AS_FAILED" : {
           "Type" : "Task",
           "Resource" : module.catcher_lambda.arn,
+          "Retry" : [{
+            "ErrorEquals" : ["States.ALL"],
+            "IntervalSeconds" : 3,
+            "MaxAttempts" : 5,
+            "BackoffRate" : 1
+          }]
           "End" : true
         }
       }
