@@ -1,9 +1,12 @@
 import logging
+import os
+import pathlib
 from typing import Any, Dict, Optional
 
 from airflow import DAG, AirflowException  # type: ignore[attr-defined]
 from airflow.cli.commands.task_command import _capture_task_logs, _get_ti
 from airflow.jobs.local_task_job import LocalTaskJob
+from airflow.providers.amazon.aws.log.s3_task_handler import S3TaskHandler
 from airflow.utils.cli import process_subdir
 from aws_lambda_powertools import Logger
 from aws_lambda_powertools.utilities.parser import event_parser
@@ -12,6 +15,31 @@ from beeflow.packages.dags_downloader.dags_downloader import DagsDownloader
 from beeflow.packages.events.task_instance_queued_event import TaskInstanceQueued
 
 logger = Logger()
+
+
+def flush_logs(handlers):
+    for h in reversed(handlers):
+        try:
+            logger.info("Acquiring lock for a handler")
+            h.acquire()
+            logger.info("Flushing the handler")
+            h.flush()
+            logger.info("Flushed the logger")
+
+            if isinstance(h, S3TaskHandler):
+                logger.info("Checking if local logs exist for S3TaskHandler")
+                local_loc = os.path.join(h.local_base, h.log_relative_path)
+                remote_loc = os.path.join(h.remote_base, h.log_relative_path)
+                if os.path.exists(local_loc):
+                    logger.info("Logs exist, pushing to s3")
+                    log = pathlib.Path(local_loc).read_text()
+                    h.s3_write(log, remote_loc)
+                    logger.info("Pushed logs to S3")
+
+        except (OSError, ValueError):
+            pass
+        finally:
+            h.release()
 
 
 def _run_task_by_local_task_job(pool, task_instance):
@@ -23,7 +51,8 @@ def _run_task_by_local_task_job(pool, task_instance):
     try:
         run_job.run()
     finally:
-        logging.shutdown()
+        logger.info("Closing task instance logger and flushing logs")
+        flush_logs(task_instance.log.handlers)
 
 
 def get_dag(subdir: Optional[str], dag_id: str) -> "DAG":
