@@ -26,4 +26,23 @@ variable "database_endpoint" {
 variable "airflow_cloudwatch_logs_group_arn" {
   type        = string
   description = "The ARN for the Airflow logs in cloudwatch group"
+  default     = ""
+}
+
+variable "logging_type" {
+  type        = string
+  description = "Either `s3` or `cloudwatch` permitted"
+  default     = "s3"
+}
+
+variable "airflow_logs_bucket_name" {
+  type        = string
+  description = "The name of the airflow logs bucket"
+  default     = ""
+}
+
+variable "airflow_logs_bucket_key" {
+  type        = string
+  description = "The key of the Airflow logs bucket"
+  default     = ""
 }

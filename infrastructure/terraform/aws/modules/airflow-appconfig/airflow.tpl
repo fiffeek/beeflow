@@ -4,7 +4,13 @@ sql_alchemy_conn = postgresql+psycopg2://${database_user}:${database_password}@$
 [logging]
 colored_console_log = false
 remote_logging = True
+%{ if logging_type == "s3" }
+remote_base_log_folder = s3://${airflow_logs_bucket_name}/${airflow_logs_bucket_key}
+encrypt_s3_logs = False
+%{ endif }
+%{ if logging_type == "cloudwatch" }
 remote_base_log_folder = cloudwatch://${airflow_cloudwatch_logs_group_arn}
+%{ endif }
 remote_log_conn_id = aws_default
 
 [scheduler]

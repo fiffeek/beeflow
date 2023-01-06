@@ -7,6 +7,9 @@ data "template_file" "airflow_cfg" {
     database_port                     = var.database_port
     database_name                     = var.database_name
     airflow_cloudwatch_logs_group_arn = var.airflow_cloudwatch_logs_group_arn
+    logging_type                      = var.logging_type
+    airflow_logs_bucket_name          = var.airflow_logs_bucket_name
+    airflow_logs_bucket_key           = var.airflow_logs_bucket_key
   }
 }
 
