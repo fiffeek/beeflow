@@ -15,6 +15,7 @@ module "cdc_forwarder_lambda" {
   is_lambda_dockerized                     = false
   is_lambda_packaged                       = true
   airflow_cloudwatch_logs_group_arn        = var.airflow_cloudwatch_logs_group_arn
+  airflow_logs_bucket_arn                  = var.airflow_logs_bucket_arn
 
   lambda_packaged_spec = {
     lambda_code_bucket_name     = var.lambda_code_bucket_name

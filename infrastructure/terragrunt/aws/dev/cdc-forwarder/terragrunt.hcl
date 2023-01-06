@@ -32,4 +32,5 @@ inputs = {
   subnet_ids                               = dependency.vpc.outputs.private_subnet_ids
   lambda_code_bucket_name                  = dependency.buckets.outputs.lambda_code_bucket_name
   airflow_cloudwatch_logs_group_arn        = dependency.cloudwatch_logs.outputs.airflow_events_arn
+  airflow_logs_bucket_arn                  = dependency.buckets.outputs.airflow_logs_bucket_arn
 }

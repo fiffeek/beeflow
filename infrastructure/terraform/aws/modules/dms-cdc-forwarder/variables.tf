@@ -67,3 +67,8 @@ variable "kinesis_stream_arn" {
   type        = string
   description = "The ARN for the Kinesis stream to hook the lambda to"
 }
+
+variable "airflow_logs_bucket_arn" {
+  type        = string
+  description = "The ARN of the airflow logs bucket"
+}

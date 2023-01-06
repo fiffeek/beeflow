@@ -15,6 +15,7 @@ module "dag_parsing_processor_lambda" {
   is_lambda_dockerized                     = true
   is_lambda_packaged                       = false
   airflow_cloudwatch_logs_group_arn        = var.airflow_cloudwatch_logs_group_arn
+  airflow_logs_bucket_arn                  = var.airflow_logs_bucket_arn
 
   lambda_dockerized_spec = {
     repository_url = var.dag_parsing_processor_repository_url
