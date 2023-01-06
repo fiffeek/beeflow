@@ -64,3 +64,8 @@ variable "catcher_lambda" {
   })
   description = "Repository and tag for the batch executor catcher lambda"
 }
+
+variable "airflow_logs_bucket_arn" {
+  type        = string
+  description = "The ARN of the airflow logs bucket"
+}

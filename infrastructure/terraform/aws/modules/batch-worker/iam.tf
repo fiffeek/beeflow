@@ -143,3 +143,42 @@ resource "aws_iam_role_policy_attachment" "readonly_dags_access" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = aws_iam_policy.readonly_dags_access.arn
 }
+
+module "airflow_s3_logs" {
+  source  = "cloudposse/label/null"
+  version = "0.25.0"
+  name    = module.this.name
+  attributes = [
+  "s3", "logs"]
+  context = module.this
+}
+
+resource "aws_iam_policy" "airflow_s3_logs" {
+  name        = module.airflow_s3_logs.id
+  path        = "/"
+  description = "Access to S3 for Airflow logs storage."
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "s3:Get*",
+          "s3:List*",
+          "s3:Put*",
+          "s3:Delete*",
+        ]
+        Effect = "Allow"
+        Resource = [
+          var.airflow_logs_bucket_arn,
+          "${var.airflow_logs_bucket_arn}/*"
+        ]
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "airflow_s3_logs" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = aws_iam_policy.airflow_s3_logs.arn
+}

@@ -36,6 +36,7 @@ inputs = {
   vpc_sg                                   = dependency.vpc.outputs.vpc_default_security_group_id
   subnet_ids                               = dependency.vpc.outputs.private_subnet_ids
   airflow_cloudwatch_logs_group_arn        = dependency.cloudwatch_logs.outputs.airflow_events_arn
+  airflow_logs_bucket_arn                  = dependency.buckets.outputs.airflow_logs_bucket_arn
   job_queue_name                           = dependency.batch_worker.outputs.job_queue_name
   job_definition_name                      = dependency.batch_worker.outputs.job_definition_name
   dags_code_bucket = {

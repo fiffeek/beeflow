@@ -56,3 +56,8 @@ variable "dags_code_bucket" {
   })
   description = "The name of the DAGs bucket."
 }
+
+variable "airflow_logs_bucket_arn" {
+  type        = string
+  description = "The ARN of the airflow logs bucket"
+}
