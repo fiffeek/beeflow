@@ -27,3 +27,8 @@ output "airflow_logs_bucket_key" {
   value       = local.airflow_logs_key
   description = "The key in the bucket  for storing Airflow logs."
 }
+
+output "airflow_logs_bucket_arn" {
+  value       = aws_s3_bucket.airflow_logs_bucket.arn
+  description = "The ARN of a bucket storing Airflow logs."
+}

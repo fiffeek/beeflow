@@ -47,6 +47,11 @@ variable "airflow_cloudwatch_logs_group_arn" {
   description = "The ARN for the Airflow logs in cloudwatch group"
 }
 
+variable "airflow_logs_bucket_arn" {
+  type        = string
+  description = "The ARN of the airflow logs bucket"
+}
+
 variable "additional_environment_variables" {
   type        = map(string)
   description = "Additional environment variables for the executor lambda"

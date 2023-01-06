@@ -15,8 +15,8 @@ locals {
 }
 
 resource "aws_s3_bucket_object" "logs_folder" {
-    bucket = module.airflow_logs_bucket.id
-    acl    = "private"
-    key    = "${local.airflow_logs_key}/"
-    source = "/dev/null"
+  bucket = module.airflow_logs_bucket.id
+  acl    = "private"
+  key    = "${local.airflow_logs_key}/"
+  source = "/dev/null"
 }
