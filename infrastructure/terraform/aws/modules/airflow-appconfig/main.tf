@@ -13,6 +13,13 @@ data "template_file" "airflow_cfg" {
   }
 }
 
+resource "aws_s3_bucket_object" "airflow_config_s3" {
+  bucket         = var.configuration_bucket_name
+  key            = var.configuration_bucket_airflow_config_key
+  content_base64 = base64encode(data.template_file.airflow_cfg.rendered)
+  etag           = base64encode(data.template_file.airflow_cfg.rendered)
+}
+
 module "airflow_appconfig" {
   count = module.this.enabled ? 1 : 0
 

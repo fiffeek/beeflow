@@ -28,15 +28,16 @@ terraform {
 }
 
 inputs = {
-  name                                     = "lambda_worker"
-  repository_url                           = "${include.root.locals.ecr_region_path}/lambda_worker"
-  image_tag                                = "latest"
-  appconfig_application_name               = dependency.airflow_appconfig.outputs.application_name
-  appconfig_application_configuration_name = dependency.airflow_appconfig.outputs.application_configuration_name
-  vpc_sg                                   = dependency.vpc.outputs.vpc_default_security_group_id
-  subnet_ids                               = dependency.vpc.outputs.private_subnet_ids
-  airflow_cloudwatch_logs_group_arn        = dependency.cloudwatch_logs.outputs.airflow_events_arn
-  airflow_logs_bucket_arn                  = dependency.buckets.outputs.airflow_logs_bucket_arn
+  name                                    = "lambda_worker"
+  repository_url                          = "${include.root.locals.ecr_region_path}/lambda_worker"
+  image_tag                               = "latest"
+  configuration_bucket_name               = dependency.airflow_appconfig.outputs.airflow_configuration_bucket_name
+  configuration_bucket_arn                = dependency.buckets.outputs.configuration_bucket_arn
+  configuration_bucket_airflow_config_key = dependency.airflow_appconfig.outputs.configuration_bucket_airflow_config_key
+  vpc_sg                                  = dependency.vpc.outputs.vpc_default_security_group_id
+  subnet_ids                              = dependency.vpc.outputs.private_subnet_ids
+  airflow_cloudwatch_logs_group_arn       = dependency.cloudwatch_logs.outputs.airflow_events_arn
+  airflow_logs_bucket_arn                 = dependency.buckets.outputs.airflow_logs_bucket_arn
   dags_code_bucket = {
     name = dependency.buckets.outputs.dags_code_bucket_name,
     arn  = dependency.buckets.outputs.dags_code_bucket_arn,

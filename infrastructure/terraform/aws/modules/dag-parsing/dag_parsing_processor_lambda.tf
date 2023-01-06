@@ -9,13 +9,14 @@ module "dag_parsing_processor_lambda_label" {
 module "dag_parsing_processor_lambda" {
   source = "../airflow-private-lambda"
 
-  airflow_home                             = var.airflow_home
-  appconfig_application_configuration_name = var.appconfig_application_configuration_name
-  appconfig_application_name               = var.appconfig_application_name
-  is_lambda_dockerized                     = true
-  is_lambda_packaged                       = false
-  airflow_cloudwatch_logs_group_arn        = var.airflow_cloudwatch_logs_group_arn
-  airflow_logs_bucket_arn                  = var.airflow_logs_bucket_arn
+  airflow_home                            = var.airflow_home
+  configuration_bucket_name               = var.configuration_bucket_name
+  configuration_bucket_airflow_config_key = var.configuration_bucket_airflow_config_key
+  configuration_bucket_arn                = var.configuration_bucket_arn
+  is_lambda_dockerized                    = true
+  is_lambda_packaged                      = false
+  airflow_cloudwatch_logs_group_arn       = var.airflow_cloudwatch_logs_group_arn
+  airflow_logs_bucket_arn                 = var.airflow_logs_bucket_arn
 
   lambda_dockerized_spec = {
     repository_url = var.dag_parsing_processor_repository_url

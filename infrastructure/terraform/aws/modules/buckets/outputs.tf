@@ -32,3 +32,13 @@ output "airflow_logs_bucket_arn" {
   value       = aws_s3_bucket.airflow_logs_bucket.arn
   description = "The ARN of a bucket storing Airflow logs."
 }
+
+output "configuration_bucket_name" {
+  value       = aws_s3_bucket.configuration_bucket.bucket
+  description = "The name of a bucket storing configuration code."
+}
+
+output "configuration_bucket_arn" {
+  value       = aws_s3_bucket.configuration_bucket.arn
+  description = "The ARN of a bucket storing configuration code."
+}

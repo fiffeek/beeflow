@@ -46,14 +46,19 @@ variable "subnet_ids" {
   description = "List of subnet IDs associated with the Lambda function."
 }
 
-variable "appconfig_application_name" {
+variable "configuration_bucket_name" {
   type        = string
-  description = "The name of the AppConfig Application."
+  description = "The name of the bucket with the Airflow configuration files"
 }
 
-variable "appconfig_application_configuration_name" {
+variable "configuration_bucket_arn" {
   type        = string
-  description = "The name of the AppConfig Application Configuration."
+  description = "The ARN of the bucket with the Airflow configuration files"
+}
+
+variable "configuration_bucket_airflow_config_key" {
+  type        = string
+  description = "The key of the Airflow configuration in the Airflow configuration bucket"
 }
 
 variable "airflow_home" {

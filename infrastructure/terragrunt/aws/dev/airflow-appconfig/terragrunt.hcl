@@ -19,11 +19,13 @@ terraform {
 }
 
 inputs = {
-  name                              = "airflow-appconfig"
-  database_endpoint                 = dependency.metadata_database.outputs.instance_endpoint
-  database_password                 = dependency.metadata_database.outputs.database_password
-  airflow_cloudwatch_logs_group_arn = dependency.cloudwatch_logs.outputs.airflow_events_arn
-  airflow_logs_bucket_name          = dependency.buckets.outputs.airflow_logs_bucket_name
-  airflow_logs_bucket_key           = dependency.buckets.outputs.airflow_logs_bucket_key
-  logging_type                      = "s3"
+  name                                    = "airflow-appconfig"
+  database_endpoint                       = dependency.metadata_database.outputs.instance_endpoint
+  database_password                       = dependency.metadata_database.outputs.database_password
+  airflow_cloudwatch_logs_group_arn       = dependency.cloudwatch_logs.outputs.airflow_events_arn
+  airflow_logs_bucket_name                = dependency.buckets.outputs.airflow_logs_bucket_name
+  airflow_logs_bucket_key                 = dependency.buckets.outputs.airflow_logs_bucket_key
+  configuration_bucket_name               = dependency.buckets.outputs.configuration_bucket_name
+  configuration_bucket_airflow_config_key = "airflow.cfg"
+  logging_type                            = "s3"
 }

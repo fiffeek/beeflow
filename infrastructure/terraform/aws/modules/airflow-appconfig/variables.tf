@@ -46,3 +46,13 @@ variable "airflow_logs_bucket_key" {
   description = "The key of the Airflow logs bucket"
   default     = ""
 }
+
+variable "configuration_bucket_name" {
+  type        = string
+  description = "The name of the bucket with the Airflow configuration files"
+}
+
+variable "configuration_bucket_airflow_config_key" {
+  type        = string
+  description = "The key of the Airflow configuration in the Airflow configuration bucket"
+}
