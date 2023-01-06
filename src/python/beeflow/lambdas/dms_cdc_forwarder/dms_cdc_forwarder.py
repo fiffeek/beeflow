@@ -66,6 +66,10 @@ def handle_records(event: KinesisStreamEvent, busname: str, events_client) -> Di
     transformed = [to_event_bridge_event(record) for record in event.records]
     filtered = [record for record in transformed if record is not None]
 
+    if len(filtered) == 0:
+        logger.warning("There are no events to push after filtering")
+        return {"batchItemFailures": []}
+
     response = events_client.put_events(
         Entries=[
             {
