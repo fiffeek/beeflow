@@ -39,7 +39,7 @@ from airflow.utils.helpers import partition
 from airflow.utils.module_loading import import_string
 from airflow.utils.timezone import parse as parsedate
 
-from beeflow.packages.cli.commands import dag_command, user_command
+from beeflow.packages.cli.commands import dag_command, user_command, pool_command
 
 BUILD_DOCS = "BUILDING_AIRFLOW_DOCS" in os.environ
 
@@ -1302,37 +1302,37 @@ POOLS_COMMANDS = (
     ActionCommand(
         name='list',
         help='List pools',
-        func=lazy_load_command('airflow.cli.commands.pool_command.pool_list'),
+        func=pool_command.pool_list,
         args=(ARG_OUTPUT, ARG_VERBOSE),
     ),
     ActionCommand(
         name='get',
         help='Get pool size',
-        func=lazy_load_command('airflow.cli.commands.pool_command.pool_get'),
+        func=pool_command.pool_get,
         args=(ARG_POOL_NAME, ARG_OUTPUT, ARG_VERBOSE),
     ),
     ActionCommand(
         name='set',
         help='Configure pool',
-        func=lazy_load_command('airflow.cli.commands.pool_command.pool_set'),
+        func=pool_command.pool_set,
         args=(ARG_POOL_NAME, ARG_POOL_SLOTS, ARG_POOL_DESCRIPTION, ARG_OUTPUT, ARG_VERBOSE),
     ),
     ActionCommand(
         name='delete',
         help='Delete pool',
-        func=lazy_load_command('airflow.cli.commands.pool_command.pool_delete'),
+        func=pool_command.pool_delete,
         args=(ARG_POOL_NAME, ARG_OUTPUT, ARG_VERBOSE),
     ),
     ActionCommand(
         name='import',
         help='Import pools',
-        func=lazy_load_command('airflow.cli.commands.pool_command.pool_import'),
+        func=pool_command.pool_import,
         args=(ARG_POOL_IMPORT, ARG_VERBOSE),
     ),
     ActionCommand(
         name='export',
         help='Export all pools',
-        func=lazy_load_command('airflow.cli.commands.pool_command.pool_export'),
+        func=pool_command.pool_export,
         args=(ARG_POOL_EXPORT,),
     ),
 )
