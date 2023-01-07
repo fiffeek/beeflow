@@ -20,6 +20,7 @@ schedule_after_task_execution = False
 load_examples = false
 parallelism = 512
 max_active_tasks_per_dag = 512
+default_pool_task_slot_count = 256
 
 [operators]
 default_queue = lambda

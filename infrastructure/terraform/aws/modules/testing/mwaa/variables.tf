@@ -38,3 +38,9 @@ variable "celery_worker_autoscale" {
   description = "Max,min tasks per worker for MWAA."
   default     = "5,5"
 }
+
+variable "default_pool_size" {
+  type        = string
+  description = "The default pool size for MWAA"
+  default     = "256"
+}
