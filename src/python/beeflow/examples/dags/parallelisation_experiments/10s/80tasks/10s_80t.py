@@ -2,10 +2,10 @@ import pendulum
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 
-TASKS = 50
+TASKS = 80
 
 with DAG(
-    dag_id='10s_50t',
+    dag_id='10s_80t',
     schedule_interval='*/5 * * * *',
     start_date=pendulum.datetime(2021, 1, 1, tz="UTC"),
     catchup=False,
