@@ -25,8 +25,8 @@ from json import JSONDecodeError
 from airflow.api.client import get_current_api_client
 from airflow.cli.simple_table import AirflowConsole
 from airflow.exceptions import PoolNotFound
-from airflow.utils import cli as cli_utils
-from airflow.utils.cli import suppress_logs_and_warning
+from beeflow.packages.cli.utils import cli as cli_utils
+from beeflow.packages.cli.utils.cli import suppress_logs_and_warning
 
 
 def _show_pools(pools, output):
