@@ -52,6 +52,14 @@
   ],
   "experiments": [
     {
+      "dags_local_path": "src/python/beeflow/examples/dags/parallelisation_experiments/10s/50tasks",
+      "dag_ids": [
+        "10s_50t"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "parallel_10s_50t"
+    },
+    {
       "dags_local_path": "src/python/beeflow/examples/dags/parallelisation_experiments/10s/100tasks",
       "dag_ids": [
         "10s_100t"
@@ -90,14 +98,6 @@
       ],
       "metrics_collection_time_seconds": 3600,
       "experiment_id": "parallel_10s_20t"
-    },
-    {
-      "dags_local_path": "src/python/beeflow/examples/dags/parallelisation_experiments/10s/50tasks",
-      "dag_ids": [
-        "10s_50t"
-      ],
-      "metrics_collection_time_seconds": 3600,
-      "experiment_id": "parallel_10s_50t"
     }
   ]
 }

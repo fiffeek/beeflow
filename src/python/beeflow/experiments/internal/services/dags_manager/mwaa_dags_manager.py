@@ -43,6 +43,14 @@ class MWAADagsManager(IDagsManager):
         if not dag_exists():
             raise Exception(f"DAG {dag_id} does not exist and {timeout_seconds} elapsed")
 
+    def scale_default_pool(self, pool_size: int) -> None:
+        payload = f"pools set default_pool {pool_size} default"
+        response = self.__execute_cli(payload)
+        if not self.__is_response_ok(response):
+            raise ValueError(
+                f"Can't set default_pool size to {pool_size}, stdout: {response.stdout}, stderr: {response.stderr}"
+            )
+
     @backoff.on_exception(backoff.expo, ValueError, max_time=300)
     def start_dag(self, dag_id: str) -> None:
         self.__assert_dag_exists(dag_id)

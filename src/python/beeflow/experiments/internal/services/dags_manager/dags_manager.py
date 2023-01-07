@@ -21,3 +21,7 @@ class IDagsManager(abc.ABC):
     @abc.abstractmethod
     def trigger_dag(self, dag_id: str) -> None:
         pass
+
+    @abc.abstractmethod
+    def scale_default_pool(self, pool_size: int) -> None:
+        pass

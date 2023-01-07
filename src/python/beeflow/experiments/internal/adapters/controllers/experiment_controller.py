@@ -26,6 +26,7 @@ class ExperimentControllerConfiguration:
     export_dag_id: str
     export_dag_folder_path: str
     export_wait_time_seconds: int
+    default_pool_size: int
 
 
 class ExperimentController:
@@ -46,6 +47,7 @@ class ExperimentController:
     def run_experiment(
         self, experiment_configuration: ExperimentConfiguration, progress: Progress, task_id: TaskID
     ) -> None:
+        self.__prepare_environment()
         self.__create_dags(experiment_configuration, progress)
         self.__start_dags(experiment_configuration, progress)
         self.__collect_metrics(experiment_configuration, progress, task_id)
@@ -155,3 +157,6 @@ class ExperimentController:
                 self.dags_manager.delete_dag(dag_id=dag_id)
             except Exception:
                 logging.warning(f"Swallowing errors on dags deletion for {dag_id}")
+
+    def __prepare_environment(self):
+        self.dags_manager.scale_default_pool(self.configuration.default_pool_size)

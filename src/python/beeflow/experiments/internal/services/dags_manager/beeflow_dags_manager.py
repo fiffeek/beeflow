@@ -13,6 +13,13 @@ class BeeflowDagsManager(IDagsManager):
         self.lambda_client = lambda_client
         self.function_name = function_name
 
+    def scale_default_pool(self, pool_size: int) -> None:
+        payload = json.dumps({"args": ["pools", "set", "default_pool", f"{pool_size}", "default"]})
+        response = self.__invoke_cli(payload)
+
+        if not self.__invocation_ok(response):
+            raise Exception(f"Cannot scale default_pool to {pool_size}")
+
     def wait_until_dag_exists(self, dag_id: str, timeout_seconds: int = 300) -> None:
         def dag_exists() -> bool:
             payload = json.dumps({"args": ["dags", "list-jobs", "-d", dag_id]})

@@ -45,6 +45,7 @@ class ApplicationControllerConfiguration:
     core: ApplicationControllerCoreConfiguration
     controller_type: ControllerType
     type_specific: Dict[str, Any]
+    default_pool_size: int = 256
 
 
 @dataclass_json
