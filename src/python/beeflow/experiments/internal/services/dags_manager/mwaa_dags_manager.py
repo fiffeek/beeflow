@@ -48,7 +48,8 @@ class MWAADagsManager(IDagsManager):
         response = self.__execute_cli(payload)
         if not self.__is_response_ok(response):
             raise ValueError(
-                f"Can't set default_pool size to {pool_size}, stdout: {response.stdout}, stderr: {response.stderr}"
+                f"Can't set default_pool size to {pool_size}, "
+                f"stdout: {response.stdout}, stderr: {response.stderr}"
             )
 
     @backoff.on_exception(backoff.expo, ValueError, max_time=300)
