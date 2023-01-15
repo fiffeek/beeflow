@@ -5,9 +5,9 @@ module "mwaa" {
   version               = "0.4.8"
   vpc_id                = var.vpc_id
   subnet_ids            = var.private_subnet_ids
-  airflow_version       = "2.2.2"
+  airflow_version       = var.airflow_version
   dag_s3_path           = "dags"
-  environment_class     = "mw1.small"
+  environment_class     = var.environment_class
   min_workers           = var.min_workers
   max_workers           = var.max_workers
   webserver_access_mode = "PUBLIC_ONLY"

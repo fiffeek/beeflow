@@ -41,6 +41,18 @@ variable "celery_worker_autoscale" {
 
 variable "default_pool_size" {
   type        = string
-  description = "The default pool size for MWAA"
+  description = "The default pool size for MWAA."
   default     = "256"
+}
+
+variable "environment_class" {
+  type        = string
+  description = "The environment class for MWAA."
+  default     = "mw1.small"
+}
+
+variable "airflow_version" {
+  type        = string
+  description = "The version of Airflow in MWAA"
+  default     = "2.4.3"
 }

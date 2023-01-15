@@ -12,7 +12,7 @@ module "worker_lambda" {
     additional_environment_variables = merge({
       BEEFLOW__DAGS_BUCKET_NAME = var.dags_code_bucket.name
     }, var.additional_environment_variables)
-    memory_size                    = 512
+    memory_size                    = var.memory_size
     reserved_concurrent_executions = -1
   }
   subnet_ids = var.subnet_ids

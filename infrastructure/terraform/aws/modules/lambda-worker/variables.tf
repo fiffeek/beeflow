@@ -66,3 +66,8 @@ variable "task_timeout" {
   type        = number
   description = "The timeout for a single worker execution"
 }
+
+variable "memory_size" {
+  type        = number
+  description = "RAM for the lambda function"
+}

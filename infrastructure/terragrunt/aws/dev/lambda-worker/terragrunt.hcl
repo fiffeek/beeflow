@@ -44,6 +44,7 @@ inputs = {
     id   = dependency.buckets.outputs.dags_code_bucket_id
   }
   task_timeout = 300
+  memory_size  = 340
   additional_environment_variables = include.root.locals.enable_resources_for_testing ? {
     BEEFLOW__EXTRACT_METADATA_S3_BUCKET = dependency.testing_buckets.outputs.metadata_dumps_bucket_name,
     BEEFLOW__EXTRACT_METADATA_S3_PREFIX = "serverless"
