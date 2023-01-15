@@ -28,14 +28,29 @@ variable "airflow_home" {
   description = "Airflow home directory."
 }
 
-variable "repository_url" {
+variable "batch_executor_package_absolute_path" {
   type        = string
-  description = "The URL of the ECR repository."
+  description = "Absolute path to the Batch Executor lambda package"
 }
 
-variable "image_tag" {
+variable "batch_executor_package_filename" {
   type        = string
-  description = "The tag of the image to deploy."
+  description = "Filename of the Batch Executor lambda package"
+}
+
+variable "pants_lambda_entrypoint" {
+  type        = string
+  description = "Lambda entrypoint for pants generated packaged."
+}
+
+variable "pants_lambda_python_version" {
+  type        = string
+  description = "The version of python that Pants built the package with."
+}
+
+variable "lambda_code_bucket_name" {
+  type        = string
+  description = "Name of the lambda code bucket."
 }
 
 variable "dags_code_bucket" {

@@ -1,14 +1,14 @@
 locals {
   environment_variables = {
-    BEEFLOW__APP_CONFIG_NAME    = var.appconfig_application_configuration_name,
-    BEEFLOW__APPLICATION        = var.appconfig_application_name,
-    POWERTOOLS_SERVICE_NAME     = module.this.id,
-    POWERTOOLS_LOGGER_LOG_EVENT = "true"
-    AIRFLOW_HOME                = var.airflow_home,
-    AIRFLOW_CONN_AWS_DEFAULT    = "aws://"
-    BEEFLOW__ENVIRONMENT        = module.this.environment,
-    PYTHONUNBUFFERED            = "1"
-    BEEFLOW__DAGS_BUCKET_NAME   = var.dags_code_bucket.name
+    BEEFLOW__CONFIGURATION_BUCKET_NAME = var.configuration_bucket_name,
+    BEEFLOW__CONFIGURATION_BUCKET_KEY  = var.configuration_bucket_airflow_config_key,
+    POWERTOOLS_SERVICE_NAME            = module.this.id,
+    POWERTOOLS_LOGGER_LOG_EVENT        = "true"
+    AIRFLOW_HOME                       = var.airflow_home,
+    AIRFLOW_CONN_AWS_DEFAULT           = "aws://"
+    BEEFLOW__ENVIRONMENT               = module.this.environment,
+    PYTHONUNBUFFERED                   = "1"
+    BEEFLOW__DAGS_BUCKET_NAME          = var.dags_code_bucket.name
   }
   transformed_env_vars = [
     for key, value in local.environment_variables : {
@@ -41,7 +41,7 @@ module "worker" {
 
       compute_resources = {
         type      = "FARGATE"
-        max_vcpus = 1
+        max_vcpus = 32
 
         security_group_ids = [
         var.vpc_sg]

@@ -182,3 +182,42 @@ resource "aws_iam_role_policy_attachment" "airflow_s3_logs" {
   role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = aws_iam_policy.airflow_s3_logs.arn
 }
+
+module "airflow_config" {
+  source  = "cloudposse/label/null"
+  version = "0.25.0"
+  name    = module.this.name
+  attributes = [
+  "config"]
+  context = module.this
+}
+
+resource "aws_iam_policy" "airflow_config" {
+  name        = module.airflow_config.id
+  path        = "/"
+  description = "Access to S3 for Airflow config storage."
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "s3:Get*",
+          "s3:List*",
+          "s3:Put*",
+          "s3:Delete*",
+        ]
+        Effect = "Allow"
+        Resource = [
+          var.configuration_bucket_arn,
+          "${var.configuration_bucket_arn}/*"
+        ]
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "airflow_config" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = aws_iam_policy.airflow_config.arn
+}

@@ -33,16 +33,6 @@ variable "airflow_cloudwatch_logs_group_arn" {
   description = "The ARN for the Airflow logs in cloudwatch group"
 }
 
-variable "appconfig_application_name" {
-  type        = string
-  description = "The name of the AppConfig Application."
-}
-
-variable "appconfig_application_configuration_name" {
-  type        = string
-  description = "The name of the AppConfig Application Configuration."
-}
-
 variable "airflow_home" {
   type        = string
   description = "Airflow home directory."
@@ -60,4 +50,19 @@ variable "dags_code_bucket" {
 variable "airflow_logs_bucket_arn" {
   type        = string
   description = "The ARN of the airflow logs bucket"
+}
+
+variable "configuration_bucket_name" {
+  type        = string
+  description = "The name of the bucket with the Airflow configuration files"
+}
+
+variable "configuration_bucket_arn" {
+  type        = string
+  description = "The ARN of the bucket with the Airflow configuration files"
+}
+
+variable "configuration_bucket_airflow_config_key" {
+  type        = string
+  description = "The key of the Airflow configuration in the Airflow configuration bucket"
 }

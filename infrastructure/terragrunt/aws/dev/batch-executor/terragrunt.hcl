@@ -49,4 +49,7 @@ inputs = {
     repository_url = "${include.root.locals.ecr_region_path}/batch_executor_catcher",
     image_tag      = "latest"
   }
+  batch_executor_package_absolute_path = "${get_repo_root()}/dist/src.python.beeflow.lambdas.batch_executor/package.zip"
+  batch_executor_package_filename      = "src.python.beeflow.lambdas.batch_executor.zip"
+  lambda_code_bucket_name              = dependency.buckets.outputs.lambda_code_bucket_name
 }

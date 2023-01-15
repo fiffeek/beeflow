@@ -19,16 +19,16 @@ inputs = {
   name                    = "mwaa"
   vpc_id                  = dependency.vpc.outputs.vpc_id
   private_subnet_ids      = dependency.vpc.outputs.private_subnet_ids
-  min_workers             = 1
-  max_workers             = 20
-  celery_worker_autoscale = "10,10"
+  min_workers             = 25
+  max_workers             = 25
+  celery_worker_autoscale = "5,5"
   metadata_dumps_bucket = {
     id             = dependency.testing_buckets.outputs.metadata_dumps_bucket_id,
     arn            = dependency.testing_buckets.outputs.metadata_dumps_bucket_arn,
     name           = dependency.testing_buckets.outputs.metadata_dumps_bucket_name,
     offload_prefix = "mwaa",
   }
-  environment_class = "mw1.medium"
+  environment_class = "mw1.small"
   airflow_version   = "2.4.3"
   user_names_to_allow_cli_access = [
   "fmikina"]

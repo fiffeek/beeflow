@@ -14,17 +14,20 @@ module "executor_lambda" {
       BEEFLOW__BATCH_EXECUTOR_STATE_MACHINE__INPUT_FIELD_NAME = local.input_field_name
       BEEFLOW__BATCH_EXECUTOR_STATE_MACHINE__ARN              = module.batch_executor_wrapper.state_machine_arn
     }
-    memory_size                    = 512
+    memory_size                    = 256
     reserved_concurrent_executions = -1
   }
   subnet_ids = var.subnet_ids
   vpc_sg     = var.vpc_sg
 
-  is_lambda_dockerized = true
-  is_lambda_packaged   = false
-  lambda_dockerized_spec = {
-    repository_url = var.repository_url
-    image_tag      = var.image_tag
+  is_lambda_dockerized = false
+  is_lambda_packaged   = true
+  lambda_packaged_spec = {
+    lambda_code_bucket_name     = var.lambda_code_bucket_name
+    package_absolute_path       = var.batch_executor_package_absolute_path
+    package_filename            = var.batch_executor_package_filename
+    pants_lambda_entrypoint     = var.pants_lambda_entrypoint
+    pants_lambda_python_version = var.pants_lambda_python_version
   }
 
   context = module.this
