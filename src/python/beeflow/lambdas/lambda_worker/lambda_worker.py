@@ -1,22 +1,22 @@
 import logging
 import os
 import pathlib
+import time
 from typing import Any, Dict, Optional
 
 from airflow import DAG, AirflowException  # type: ignore[attr-defined]
-from airflow.cli.commands.task_command import _capture_task_logs, _get_ti
+from airflow.cli.commands.task_command import _capture_task_logs, _get_ti, _get_dag_run
+from airflow.executors.local_executor import LocalExecutor
 from airflow.jobs.local_task_job import LocalTaskJob
 from airflow.providers.amazon.aws.log.s3_task_handler import S3TaskHandler
 from airflow.utils.cli import process_subdir
 from aws_lambda_powertools import Logger
 from aws_lambda_powertools.utilities.parser import event_parser
 from aws_lambda_powertools.utilities.typing import LambdaContext
-from sqlalchemy import event
-from sqlalchemy.engine import Engine
-import time
-
 from beeflow.packages.dags_downloader.dags_downloader import DagsDownloader
 from beeflow.packages.events.task_instance_queued_event import TaskInstanceQueued
+from sqlalchemy import event
+from sqlalchemy.engine import Engine
 
 logger = Logger()
 
@@ -24,12 +24,10 @@ if os.environ.get("AIRFLOW__LOGGING__LOGGING_LEVEL") == "DEBUG":
     logging.getLogger("sqlalchemy.engine").setLevel(logging.DEBUG)
     logging.getLogger("sqlalchemy.pool").setLevel(logging.DEBUG)
 
-
     @event.listens_for(Engine, "before_cursor_execute")
     def before_cursor_execute(conn, cursor, statement, parameters, context, executemany):
         conn.info.setdefault("query_start_time", []).append(time.time())
         logging.getLogger("sqlalchemy.engine").debug("Start Query: %s", statement)
-
 
     @event.listens_for(Engine, "after_cursor_execute")
     def after_cursor_execute(conn, cursor, statement, parameters, context, executemany):
