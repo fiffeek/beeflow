@@ -11,11 +11,11 @@ terraform {
 }
 
 inputs = {
-  name            = "metadata-database"
-  vpc_id          = dependency.vpc.outputs.vpc_id
-  vpc_sg          = dependency.vpc.outputs.vpc_default_security_group_id
-  subnet_ids      = dependency.vpc.outputs.private_subnet_ids
-  max_connections = "140"
-  instance_class  = "db.t3.micro"
-  sql_proxy_enabled = false
+  name              = "metadata-database"
+  vpc_id            = dependency.vpc.outputs.vpc_id
+  vpc_sg            = dependency.vpc.outputs.vpc_default_security_group_id
+  subnet_ids        = dependency.vpc.outputs.private_subnet_ids
+  max_connections   = "170"
+  instance_class    = "db.t3.small"
+  sql_proxy_enabled = true
 }

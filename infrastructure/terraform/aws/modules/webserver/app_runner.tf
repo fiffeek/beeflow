@@ -20,7 +20,7 @@ locals {
     BEEFLOW__APPLICATION                          = var.appconfig_application_name,
     POWERTOOLS_SERVICE_NAME                       = module.this.id,
     POWERTOOLS_LOGGER_LOG_EVENT                   = "true"
-    AIRFLOW__WEBSERVER__WEB_SERVER_MASTER_TIMEOUT = "600"
+    AIRFLOW__WEBSERVER__WEB_SERVER_MASTER_TIMEOUT = "900"
     AIRFLOW_HOME                                  = var.airflow_home,
     AIRFLOW_CONN_AWS_DEFAULT                      = "aws://"
     BEEFLOW__ENVIRONMENT                          = module.this.environment,

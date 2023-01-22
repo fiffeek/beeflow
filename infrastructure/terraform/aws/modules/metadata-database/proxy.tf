@@ -40,9 +40,10 @@ module "rds_proxy" {
   vpc_security_group_ids = [var.vpc_sg]
   vpc_subnet_ids         = var.subnet_ids
 
-  debug_logging = false
-  engine_family = "POSTGRESQL"
-  max_connections_percent = 80
+  debug_logging                = false
+  engine_family                = "POSTGRESQL"
+  max_connections_percent      = 70
+  max_idle_connections_percent = 70
 
   context = module.this.context
 }
