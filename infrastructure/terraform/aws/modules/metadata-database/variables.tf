@@ -37,3 +37,8 @@ variable "instance_class" {
   type        = string
   description = "The instance class of the RDS database"
 }
+
+variable "sql_proxy_enabled" {
+  type        = bool
+  description = "A flag to enable or disable the sql rds proxy."
+}

@@ -18,5 +18,6 @@ module "mwaa" {
     "core.extract_metadata_s3_bucket_prefix" : var.metadata_dumps_bucket.offload_prefix,
     "core.default_pool_task_slot_count" : var.default_pool_size,
     "celery.worker_autoscale" : var.celery_worker_autoscale,
+    "metrics.statsd_allow_list" : "not",
   }
 }

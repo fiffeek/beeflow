@@ -64,7 +64,7 @@ resource "aws_apprunner_service" "webserver" {
     path                = "/health"
     protocol            = "HTTP"
     unhealthy_threshold = 20
-    timeout             = 10
+    timeout             = 20
   }
 
   instance_configuration {

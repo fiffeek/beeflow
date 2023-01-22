@@ -37,6 +37,9 @@ apply_testing-lambda-worker-iam:
 apply_webserver:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/webserver && terragrunt apply"
 
+destroy_webserver:
+	docker-compose run --rm terragrunt_aws bash -c "cd dev/webserver && terragrunt destroy"
+
 apply_cdc-forwarder:
 	docker-compose run --rm terragrunt_aws bash -c "cd dev/cdc-forwarder && terragrunt apply"
 

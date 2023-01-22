@@ -28,7 +28,7 @@ inputs = {
   metadata_db_spec = {
     username : local.database_vars.locals.database_user,
     password : dependency.metadata_database.outputs.database_password,
-    endpoint : dependency.metadata_database.outputs.instance_endpoint,
+    endpoint : dependency.metadata_database.outputs.replication_instance_endpoint,
     database : local.database_vars.locals.database_name,
     port : local.database_vars.locals.database_port,
     engine_name : dependency.metadata_database.outputs.database_engine,

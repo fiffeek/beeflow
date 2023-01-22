@@ -1,3 +1,4 @@
+import logging
 import os
 import pathlib
 from typing import Any, Dict, Optional
@@ -10,10 +11,30 @@ from airflow.utils.cli import process_subdir
 from aws_lambda_powertools import Logger
 from aws_lambda_powertools.utilities.parser import event_parser
 from aws_lambda_powertools.utilities.typing import LambdaContext
+from sqlalchemy import event
+from sqlalchemy.engine import Engine
+import time
+
 from beeflow.packages.dags_downloader.dags_downloader import DagsDownloader
 from beeflow.packages.events.task_instance_queued_event import TaskInstanceQueued
 
 logger = Logger()
+
+if os.environ.get("AIRFLOW__LOGGING__LOGGING_LEVEL") == "DEBUG":
+    logging.getLogger("sqlalchemy.engine").setLevel(logging.DEBUG)
+    logging.getLogger("sqlalchemy.pool").setLevel(logging.DEBUG)
+
+
+    @event.listens_for(Engine, "before_cursor_execute")
+    def before_cursor_execute(conn, cursor, statement, parameters, context, executemany):
+        conn.info.setdefault("query_start_time", []).append(time.time())
+        logging.getLogger("sqlalchemy.engine").debug("Start Query: %s", statement)
+
+
+    @event.listens_for(Engine, "after_cursor_execute")
+    def after_cursor_execute(conn, cursor, statement, parameters, context, executemany):
+        total = time.time() - conn.info["query_start_time"].pop(-1)
+        logging.getLogger("sqlalchemy.engine").debug("End Query: %s Total Time: %f", statement, total)
 
 
 def flush_logs(handlers):
