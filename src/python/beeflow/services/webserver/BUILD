@@ -7,6 +7,8 @@ pex_binary(
     name = "bin",
     dependencies = [":package"],
     entry_point = "webserver.py",
+    execution_mode = "venv",
+    layout = "loose",
 )
 
 docker_image(

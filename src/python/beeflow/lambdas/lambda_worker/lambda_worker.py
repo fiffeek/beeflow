@@ -5,8 +5,7 @@ import time
 from typing import Any, Dict, Optional
 
 from airflow import DAG, AirflowException  # type: ignore[attr-defined]
-from airflow.cli.commands.task_command import _capture_task_logs, _get_ti, _get_dag_run
-from airflow.executors.local_executor import LocalExecutor
+from airflow.cli.commands.task_command import _capture_task_logs, _get_ti
 from airflow.jobs.local_task_job import LocalTaskJob
 from airflow.providers.amazon.aws.log.s3_task_handler import S3TaskHandler
 from airflow.utils.cli import process_subdir

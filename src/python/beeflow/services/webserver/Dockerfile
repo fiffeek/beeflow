@@ -1,11 +1,12 @@
-FROM apache/airflow:2.3.2-python3.9
+FROM python:3.9
 
-ENTRYPOINT ["/bin/webserver"]
+WORKDIR /bin/webserver
+COPY src.python.beeflow.services.webserver/bin.pex .
 
-RUN pip install psycopg2-binary
-RUN pip install apache-airflow[amazon]==2.3.2
-RUN pip install apache-airflow[postgres]==2.3.2
-RUN pip install apache-airflow[virtualenv]==2.3.2
-RUN pip install cryptography==36.0.2
+# Workaround for PEX overriding attrs dependency globally
+RUN rm -rf .bootstrap/pex/vendor/_vendored/attrs/attr && mkdir -p .bootstrap/pex/vendor/_vendored/attrs/attr
+RUN cp -R .deps/attrs-22.2.0-py3-none-any.whl/attr .bootstrap/pex/vendor/_vendored/attrs
 
-COPY src.python.beeflow.services.webserver/bin.pex /bin/webserver
+WORKDIR /
+
+ENTRYPOINT ["python", "/bin/webserver/__main__.py"]

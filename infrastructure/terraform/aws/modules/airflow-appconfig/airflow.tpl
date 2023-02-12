@@ -15,6 +15,7 @@ remote_log_conn_id = aws_default
 
 [scheduler]
 schedule_after_task_execution = False
+standalone_dag_processor = True
 
 [core]
 load_examples = false

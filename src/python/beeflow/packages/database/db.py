@@ -15,6 +15,8 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+from __future__ import annotations
+
 import contextlib
 import enum
 import logging
@@ -24,53 +26,27 @@ import time
 import warnings
 from dataclasses import dataclass
 from tempfile import gettempdir
-from typing import TYPE_CHECKING, Callable, Generator, Iterable, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Callable, Generator, Iterable
 
 from sqlalchemy import Table, and_, column, exc, func, inspect, or_, select, table, text, tuple_
 from sqlalchemy.orm.session import Session
 
 import airflow
 from airflow import settings
-from airflow.compat.sqlalchemy import has_table
 from airflow.configuration import conf
 from airflow.exceptions import AirflowException
-from airflow.jobs.base_job import BaseJob  # noqa: F401
-from airflow.models import (  # noqa: F401
-    DAG,
-    XCOM_RETURN_KEY,
-    Base,
-    BaseOperator,
-    BaseOperatorLink,
-    Connection,
-    DagBag,
-    DagModel,
-    DagPickle,
-    DagRun,
-    DagTag,
-    Log,
-    Pool,
-    SkipMixin,
-    SlaMiss,
-    TaskFail,
-    TaskInstance,
-    TaskReschedule,
-    Variable,
-    XCom,
-)
-
-# We need to add this model manually to get reset working well
-from airflow.models.serialized_dag import SerializedDagModel  # noqa: F401
-from airflow.models.tasklog import LogTemplate
+from airflow.models import import_all_models
 from airflow.utils import helpers
 
 # TODO: remove create_session once we decide to break backward compatibility
 from airflow.utils.session import NEW_SESSION, create_session, provide_session  # noqa: F401
-from airflow.version import version
 
 if TYPE_CHECKING:
     from alembic.runtime.environment import EnvironmentContext
     from alembic.script import ScriptDirectory
     from sqlalchemy.orm import Query
+
+    from airflow.models.base import Base
 
 
 log = logging.getLogger(__name__)
@@ -93,6 +69,12 @@ REVISION_HEADS_MAP = {
     "2.3.0": "b1b348e02d07",
     "2.3.1": "1de7bc13c950",
     "2.3.2": "3c94c427fdf6",
+    "2.3.3": "f5fcbda3e651",
+    "2.3.4": "f5fcbda3e651",
+    "2.4.0": "ecb43d2a1842",
+    "2.4.1": "ecb43d2a1842",
+    "2.4.2": "b0d31815b5a6",
+    "2.4.3": "e07f49787c9d",
 }
 
 
@@ -103,7 +85,7 @@ def _format_airflow_moved_table_name(source_table, version, category):
 @provide_session
 def merge_conn(conn, session: Session = NEW_SESSION):
     """Add new Connection."""
-    if not session.query(Connection).filter(Connection.conn_id == conn.conn_id).first():
+    if not session.query(conn.__class__).filter_by(conn_id=conn.conn_id).first():
         session.add(conn)
         session.commit()
 
@@ -111,6 +93,8 @@ def merge_conn(conn, session: Session = NEW_SESSION):
 @provide_session
 def add_default_pool_if_not_exists(session: Session = NEW_SESSION):
     """Add default pool if it does not exist."""
+    from airflow.models.pool import Pool
+
     if not Pool.get_pool(Pool.DEFAULT_POOL_NAME, session=session):
         default_pool = Pool(
             pool=Pool.DEFAULT_POOL_NAME,
@@ -124,6 +108,8 @@ def add_default_pool_if_not_exists(session: Session = NEW_SESSION):
 @provide_session
 def create_default_connections(session: Session = NEW_SESSION):
     """Create default Airflow connections."""
+    from airflow.models.connection import Connection
+
     merge_conn(
         Connection(
             conn_id="airflow_db",
@@ -535,6 +521,16 @@ def create_default_connections(session: Session = NEW_SESSION):
     )
     merge_conn(
         Connection(
+            conn_id="salesforce_default",
+            conn_type="salesforce",
+            login="username",
+            password="password",
+            extra='{"security_token": "security_token"}',
+        ),
+        session,
+    )
+    merge_conn(
+        Connection(
             conn_id="segment_default",
             conn_type="segment",
             extra='{"write_key": "my-segment-write-key"}',
@@ -598,6 +594,14 @@ def create_default_connections(session: Session = NEW_SESSION):
     )
     merge_conn(
         Connection(
+            conn_id="tabular_default",
+            conn_type="tabular",
+            host="https://api.tabulardata.io/ws/v1",
+        ),
+        session,
+    )
+    merge_conn(
+        Connection(
             conn_id="trino_default",
             conn_type="trino",
             host="localhost",
@@ -642,19 +646,48 @@ def create_default_connections(session: Session = NEW_SESSION):
     )
 
 
-@provide_session
-def initdb(session: Session = NEW_SESSION):
-    """Initialize Airflow database."""
-    upgradedb(session=session)
+def _create_db_from_orm(session):
+    from alembic import command
+    from flask import Flask
+    from flask_sqlalchemy import SQLAlchemy
 
-    if conf.getboolean('database', 'LOAD_DEFAULT_CONNECTIONS'):
-        create_default_connections(session=session)
+    from airflow.models.base import Base
+    from airflow.www.fab_security.sqla.models import Model
+    from airflow.www.session import AirflowDatabaseSessionInterface
+
+    def _create_flask_session_tbl():
+        flask_app = Flask(__name__)
+        flask_app.config['SQLALCHEMY_DATABASE_URI'] = conf.get('database', 'SQL_ALCHEMY_CONN')
+        flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+        db = SQLAlchemy(flask_app)
+        AirflowDatabaseSessionInterface(app=flask_app, db=db, table='session', key_prefix='')
+        db.create_all()
 
     with create_global_lock(session=session, lock=DBLocks.MIGRATIONS):
-
-        from flask_appbuilder.models.sqla import Base
-
         Base.metadata.create_all(settings.engine)
+        Model.metadata.create_all(settings.engine)
+        _create_flask_session_tbl()
+        # stamp the migration head
+        config = _get_alembic_config()
+        command.stamp(config, "head")
+
+
+@provide_session
+def initdb(session: Session = NEW_SESSION, load_connections: bool = True):
+    """Initialize Airflow database."""
+    import_all_models()
+
+    db_exists = _get_current_revision(session)
+    if db_exists:
+        upgradedb(session=session)
+    else:
+        _create_db_from_orm(session=session)
+    # Load default connections
+    if conf.getboolean('database', 'LOAD_DEFAULT_CONNECTIONS') and load_connections:
+        create_default_connections(session=session)
+    # Add default pool & sync log_template
+    add_default_pool_if_not_exists()
+    synchronize_log_template()
 
 
 def _get_alembic_config():
@@ -668,7 +701,7 @@ def _get_alembic_config():
     return config
 
 
-def _get_script_object(config=None) -> "ScriptDirectory":
+def _get_script_object(config=None) -> ScriptDirectory:
     from alembic.script import ScriptDirectory
 
     if not config:
@@ -711,7 +744,7 @@ def check_migrations(timeout):
 
 
 @contextlib.contextmanager
-def _configured_alembic_environment() -> Generator["EnvironmentContext", None, None]:
+def _configured_alembic_environment() -> Generator[EnvironmentContext, None, None]:
     from alembic.runtime.environment import EnvironmentContext
 
     config = _get_alembic_config()
@@ -759,6 +792,8 @@ def check_and_run_migrations():
                     db_command()
                     print(f"DB {verb} done")
                 except Exception as error:
+                    from airflow.version import version
+
                     print(error)
                     print(
                         "You still have unapplied migrations. "
@@ -770,6 +805,8 @@ def check_and_run_migrations():
         except AirflowException:
             pass
     elif source_heads != db_heads:
+        from airflow.version import version
+
         print(
             f"ERROR: You need to {verb} the database. Please run `airflow db {command_name}`. "
             f"Make sure the command is run using Airflow version {version}.",
@@ -779,12 +816,24 @@ def check_and_run_migrations():
 
 
 @provide_session
+def reserialize_dags(*, session: Session = NEW_SESSION) -> None:
+    from airflow.models.dagbag import DagBag
+    from airflow.models.serialized_dag import SerializedDagModel
+
+    session.query(SerializedDagModel).delete(synchronize_session=False)
+    dagbag = DagBag(collect_dags=False)
+    dagbag.collect_dags(only_if_updated=False)
+    dagbag.sync_to_db(session=session)
+
+
+@provide_session
 def synchronize_log_template(*, session: Session = NEW_SESSION) -> None:
     """Synchronize log template configs with table.
 
     This checks if the last row fully matches the current config values, and
     insert a new row if not.
     """
+    from airflow.models.tasklog import LogTemplate
 
     def log_template_exists():
         metadata = reflect_tables([LogTemplate], session)
@@ -797,6 +846,21 @@ def synchronize_log_template(*, session: Session = NEW_SESSION) -> None:
 
     filename = conf.get("logging", "log_filename_template")
     elasticsearch_id = conf.get("elasticsearch", "log_id_template")
+
+    # First check if we have an empty table. If so, and the default values exist,
+    # we will seed the table with the values from pre 2.3.0, so old logs will
+    # still be retrievable.
+    if not session.query(LogTemplate.id).first():
+        is_default_log_id = elasticsearch_id == conf.airflow_defaults.get("elasticsearch", "log_id_template")
+        is_default_filename = filename == conf.airflow_defaults.get("logging", "log_filename_template")
+        if is_default_log_id and is_default_filename:
+            session.add(
+                LogTemplate(
+                    filename="{{ ti.dag_id }}/{{ ti.task_id }}/{{ ts }}/{{ try_number }}.log",
+                    elasticsearch_id="{dag_id}-{task_id}-{execution_date}-{try_number}",
+                )
+            )
+            session.flush()
 
     # Before checking if the _current_ value exists, we need to check if the old config value we upgraded in
     # place exists!
@@ -839,6 +903,8 @@ def check_conn_id_duplicates(session: Session) -> Iterable[str]:
     :param session:  session of the sqlalchemy
     :rtype: str
     """
+    from airflow.models.connection import Connection
+
     dups = []
     try:
         dups = session.query(Connection.conn_id).group_by(Connection.conn_id).having(func.count() > 1).all()
@@ -854,50 +920,84 @@ def check_conn_id_duplicates(session: Session) -> Iterable[str]:
         )
 
 
-def reflect_tables(tables: List[Union[Base, str]], session):
+def check_username_duplicates(session: Session) -> Iterable[str]:
+    """
+    Check unique username in User & RegisterUser table
+
+    :param session:  session of the sqlalchemy
+    :rtype: str
+    """
+    from airflow.www.fab_security.sqla.models import RegisterUser, User
+
+    for model in [User, RegisterUser]:
+        dups = []
+        try:
+            dups = (
+                session.query(model.username)  # type: ignore[attr-defined]
+                .group_by(model.username)  # type: ignore[attr-defined]
+                .having(func.count() > 1)
+                .all()
+            )
+        except (exc.OperationalError, exc.ProgrammingError):
+            # fallback if tables hasn't been created yet
+            session.rollback()
+        if dups:
+            yield (
+                f'Seems you have mixed case usernames in {model.__table__.name} table.\n'  # type: ignore
+                'You have to rename or delete those mixed case usernames '
+                'before upgrading the database.\n'
+                f'usernames with mixed cases: {[dup.username for dup in dups]}'
+            )
+
+
+def reflect_tables(tables: list[Base | str] | None, session):
     """
     When running checks prior to upgrades, we use reflection to determine current state of the
     database.
     This function gets the current state of each table in the set of models provided and returns
     a SqlAlchemy metadata object containing them.
     """
-
     import sqlalchemy.schema
 
     metadata = sqlalchemy.schema.MetaData(session.bind)
 
-    for tbl in tables:
-        try:
-            table_name = tbl if isinstance(tbl, str) else tbl.__tablename__
-            metadata.reflect(only=[table_name], extend_existing=True, resolve_fks=False)
-        except exc.InvalidRequestError:
-            continue
+    if tables is None:
+        metadata.reflect(resolve_fks=False)
+    else:
+        for tbl in tables:
+            try:
+                table_name = tbl if isinstance(tbl, str) else tbl.__tablename__
+                metadata.reflect(only=[table_name], extend_existing=True, resolve_fks=False)
+            except exc.InvalidRequestError:
+                continue
     return metadata
 
 
-def check_task_fail_for_duplicates(session):
-    """Check that there are no duplicates in the task_fail table before creating FK"""
-    metadata = reflect_tables([TaskFail], session)
-    task_fail = metadata.tables.get(TaskFail.__tablename__)  # type: ignore
-    if task_fail is None:  # table not there
-        return
-    if "run_id" in task_fail.columns:  # upgrade already applied
-        return
-    yield from check_table_for_duplicates(
-        table_name=task_fail.name,
-        uniqueness=['dag_id', 'task_id', 'execution_date'],
-        session=session,
-        version='2.3',
-    )
-
-
 def check_table_for_duplicates(
-    *, session: Session, table_name: str, uniqueness: List[str], version: str
+    *, session: Session, table_name: str, uniqueness: list[str], version: str
 ) -> Iterable[str]:
     """
     Check table for duplicates, given a list of columns which define the uniqueness of the table.
 
-    Call from ``run_duplicates_checks``.
+    Usage example:
+
+    .. code-block:: python
+
+        def check_task_fail_for_duplicates(session):
+            from airflow.models.taskfail import TaskFail
+
+            metadata = reflect_tables([TaskFail], session)
+            task_fail = metadata.tables.get(TaskFail.__tablename__)  # type: ignore
+            if task_fail is None:  # table not there
+                return
+            if "run_id" in task_fail.columns:  # upgrade already applied
+                return
+            yield from check_table_for_duplicates(
+                table_name=task_fail.name,
+                uniqueness=['dag_id', 'task_id', 'execution_date'],
+                session=session,
+                version='2.3',
+            )
 
     :param table_name: table name to check
     :param uniqueness: uniqueness constraint to evaluate against
@@ -946,6 +1046,8 @@ def check_conn_type_null(session: Session) -> Iterable[str]:
     :param session:  session of the sqlalchemy
     :rtype: str
     """
+    from airflow.models.connection import Connection
+
     n_nulls = []
     try:
         n_nulls = session.query(Connection.conn_id).filter(Connection.conn_type.is_(None)).all()
@@ -975,6 +1077,8 @@ def _format_dangling_error(source_table, target_table, invalid_count, reason):
 
 
 def check_run_id_null(session: Session) -> Iterable[str]:
+    from airflow.models.dagrun import DagRun
+
     metadata = reflect_tables([DagRun], session)
 
     # We can't use the model here since it may differ from the db state due to
@@ -988,7 +1092,7 @@ def check_run_id_null(session: Session) -> Iterable[str]:
         dagrun_table.c.run_id.is_(None),
         dagrun_table.c.execution_date.is_(None),
     )
-    invalid_dagrun_count = session.query(dagrun_table.c.id).filter(invalid_dagrun_filter).count()
+    invalid_dagrun_count = session.query(func.count(dagrun_table.c.id)).filter(invalid_dagrun_filter).scalar()
     if invalid_dagrun_count > 0:
         dagrun_dangling_table_name = _format_airflow_moved_table_name(dagrun_table.name, '2.2', 'dangling')
         if dagrun_dangling_table_name in inspect(session.get_bind()).get_table_names():
@@ -1017,7 +1121,7 @@ def _create_table_as(
     *,
     session,
     dialect_name: str,
-    source_query: "Query",
+    source_query: Query,
     target_table_name: str,
     source_table_name: str,
 ):
@@ -1051,7 +1155,7 @@ def _create_table_as(
 
 
 def _move_dangling_data_to_new_table(
-    session, source_table: "Table", source_query: "Query", target_table_name: str
+    session, source_table: Table, source_query: Query, target_table_name: str
 ):
 
     bind = session.get_bind()
@@ -1156,7 +1260,7 @@ def _dangling_against_task_instance(session, source_table, dag_run, task_instanc
 
 
 def _move_duplicate_data_to_new_table(
-    session, source_table: "Table", subquery: "Query", uniqueness: List[str], target_table_name: str
+    session, source_table: Table, subquery: Query, uniqueness: list[str], target_table_name: str
 ):
     """
     When adding a uniqueness constraint we first should ensure that there are no duplicate rows.
@@ -1173,7 +1277,6 @@ def _move_duplicate_data_to_new_table(
         building the DELETE FROM join condition.
     :param target_table_name: name of the table in which to park the duplicate rows
     """
-
     bind = session.get_bind()
     dialect_name = bind.dialect.name
     query = (
@@ -1215,7 +1318,12 @@ def check_bad_references(session: Session) -> Iterable[str]:
     When we find such "dangling" rows we back them up in a special table and delete them
     from the main table.
     """
+    from airflow.models.dagrun import DagRun
     from airflow.models.renderedtifields import RenderedTaskInstanceFields
+    from airflow.models.taskfail import TaskFail
+    from airflow.models.taskinstance import TaskInstance
+    from airflow.models.taskreschedule import TaskReschedule
+    from airflow.models.xcom import XCom
 
     @dataclass
     class BadReferenceConfig:
@@ -1226,7 +1334,7 @@ def check_bad_references(session: Session) -> Iterable[str]:
         """
 
         bad_rows_func: Callable
-        join_tables: List[str]
+        join_tables: list[str]
         ref_table: str
 
     missing_dag_run_config = BadReferenceConfig(
@@ -1241,7 +1349,7 @@ def check_bad_references(session: Session) -> Iterable[str]:
         ref_table='task_instance',
     )
 
-    models_list: List[Tuple[Base, str, BadReferenceConfig]] = [
+    models_list: list[tuple[Base, str, BadReferenceConfig]] = [
         (TaskInstance, '2.2', missing_dag_run_config),
         (TaskReschedule, '2.2', missing_ti_config),
         (RenderedTaskInstanceFields, '2.3', missing_ti_config),
@@ -1311,12 +1419,12 @@ def _check_migration_errors(session: Session = NEW_SESSION) -> Iterable[str]:
     :session: session of the sqlalchemy
     :rtype: list[str]
     """
-    check_functions: Tuple[Callable[..., Iterable[str]], ...] = (
-        check_task_fail_for_duplicates,
+    check_functions: tuple[Callable[..., Iterable[str]], ...] = (
         check_conn_id_duplicates,
         check_conn_type_null,
         check_run_id_null,
         check_bad_references,
+        check_username_duplicates,
     )
     for check_fn in check_functions:
         log.debug("running check function %s", check_fn.__name__)
@@ -1386,8 +1494,8 @@ def _revisions_above_min_for_offline(config, revisions):
 @provide_session
 def upgradedb(
     *,
-    to_revision: Optional[str] = None,
-    from_revision: Optional[str] = None,
+    to_revision: str | None = None,
+    from_revision: str | None = None,
     show_sql_only: bool = False,
     session: Session = NEW_SESSION,
 ):
@@ -1409,6 +1517,8 @@ def upgradedb(
     if not settings.SQL_ALCHEMY_CONN:
         raise RuntimeError("The settings.SQL_ALCHEMY_CONN not set. This is a critical assertion.")
     from alembic import command
+
+    import_all_models()
 
     config = _get_alembic_config()
 
@@ -1444,11 +1554,32 @@ def upgradedb(
     if errors_seen:
         exit(1)
 
+    if not to_revision and not _get_current_revision(session=session):
+        # Don't load default connections
+        # New DB; initialize and exit
+        initdb(session=session, load_connections=False)
+        return
     with create_global_lock(session=session, lock=DBLocks.MIGRATIONS):
+        import sqlalchemy.pool
+
         log.info("Creating tables")
-        command.upgrade(config, revision=to_revision or 'heads')
-    add_default_pool_if_not_exists()
-    synchronize_log_template()
+        val = os.environ.get('AIRFLOW__DATABASE__SQL_ALCHEMY_MAX_SIZE')
+        try:
+            # Reconfigure the ORM ot use _EXACTLY_ one connection, otherwise some db engines hang forever
+            # trying to ALTER TABLEs
+            os.environ['AIRFLOW__DATABASE__SQL_ALCHEMY_MAX_SIZE'] = '1'
+            settings.reconfigure_orm(pool_class=sqlalchemy.pool.SingletonThreadPool)
+            command.upgrade(config, revision=to_revision or 'heads')
+        finally:
+            if val is None:
+                os.environ.pop('AIRFLOW__DATABASE__SQL_ALCHEMY_MAX_SIZE')
+            else:
+                os.environ['AIRFLOW__DATABASE__SQL_ALCHEMY_MAX_SIZE'] = val
+            settings.reconfigure_orm()
+
+    reserialize_dags(session=session)
+    add_default_pool_if_not_exists(session=session)
+    synchronize_log_template(session=session)
 
 
 @provide_session
@@ -1457,6 +1588,8 @@ def resetdb(session: Session = NEW_SESSION, skip_init: bool = False):
     if not settings.engine:
         raise RuntimeError("The settings.engine must be set. This is a critical assertion")
     log.info("Dropping tables that exist")
+
+    import_all_models()
 
     connection = settings.engine.connect()
 
@@ -1471,6 +1604,8 @@ def resetdb(session: Session = NEW_SESSION, skip_init: bool = False):
 
 @provide_session
 def bootstrap_dagbag(session: Session = NEW_SESSION):
+    from airflow.models.dag import DAG
+    from airflow.models.dagbag import DagBag
 
     dagbag = DagBag()
     # Save DAGs in the ORM
@@ -1554,7 +1689,7 @@ def drop_airflow_models(connection):
 
     migration_ctx = MigrationContext.configure(connection)
     version = migration_ctx._version
-    if has_table(connection, version):
+    if inspect(connection).has_table(version.name):
         version.drop(connection)
 
 
@@ -1565,7 +1700,8 @@ def drop_airflow_moved_tables(session):
     tables = set(inspect(session.get_bind()).get_table_names())
     to_delete = [Table(x, Base.metadata) for x in tables if x.startswith(AIRFLOW_MOVED_TABLE_PREFIX)]
     for tbl in to_delete:
-        tbl.drop(settings.engine, checkfirst=True)
+        tbl.drop(settings.engine, checkfirst=False)
+        Base.metadata.remove(tbl)
 
 
 def drop_flask_models(connection):
@@ -1575,7 +1711,7 @@ def drop_flask_models(connection):
     :param connection: SQLAlchemy Connection
     :return: None
     """
-    from flask_appbuilder.models.sqla import Base
+    from airflow.www.fab_security.sqla.models import Base
 
     Base.metadata.drop_all(connection)
 
@@ -1638,6 +1774,64 @@ def create_global_lock(
         elif dialect.name == 'mssql':
             # TODO: make locking work for MSSQL
             pass
+
+
+def compare_type(context, inspected_column, metadata_column, inspected_type, metadata_type):
+    """
+    Compare types between ORM and DB .
+
+    return False if the metadata_type is the same as the inspected_type
+    or None to allow the default implementation to compare these
+    types. a return value of True means the two types do not
+    match and should result in a type change operation.
+    """
+    if context.dialect.name == 'mysql':
+        from sqlalchemy import String
+        from sqlalchemy.dialects import mysql
+
+        if isinstance(inspected_type, mysql.VARCHAR) and isinstance(metadata_type, String):
+            # This is a hack to get around MySQL VARCHAR collation
+            # not being possible to change from utf8_bin to utf8mb3_bin.
+            # We only make sure lengths are the same
+            if inspected_type.length != metadata_type.length:
+                return True
+            return False
+    return None
+
+
+def compare_server_default(
+    context, inspected_column, metadata_column, inspected_default, metadata_default, rendered_metadata_default
+):
+    """
+    Compare server defaults between ORM and DB .
+
+    return True if the defaults are different, False if not, or None to allow the default implementation
+    to compare these defaults
+
+    Comparing server_default is not accurate in MSSQL because the
+    inspected_default above != metadata_default, while in Postgres/MySQL they are equal.
+    This is an issue with alembic
+    In SQLite: task_instance.map_index & task_reschedule.map_index
+    are not comparing accurately. Sometimes they are equal, sometimes they are not.
+    Alembic warned that this feature has varied accuracy depending on backends.
+    See: (https://alembic.sqlalchemy.org/en/latest/api/runtime.html#alembic.runtime.
+        environment.EnvironmentContext.configure.params.compare_server_default)
+    """
+    dialect_name = context.connection.dialect.name
+    if dialect_name in ['mssql', 'sqlite']:
+        return False
+    if (
+        dialect_name == 'mysql'
+        and metadata_column.name == 'pool_slots'
+        and metadata_column.table.name == 'task_instance'
+    ):
+        # We removed server_default value in ORM to avoid expensive migration
+        # (it was removed in postgres DB in migration head 7b2661a43ba3 ).
+        # As a side note, server default value here was only actually needed for the migration
+        # where we added the column in the first place -- now that it exists and all
+        # existing rows are populated with a value this server default is never used.
+        return False
+    return None
 
 
 def get_sqla_model_classes():

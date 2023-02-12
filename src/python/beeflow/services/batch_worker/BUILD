@@ -7,6 +7,7 @@ pex_binary(
     name = "bin",
     dependencies = [":package"],
     entry_point = "batch_worker.py",
+    layout = "loose",
 )
 
 docker_image(
