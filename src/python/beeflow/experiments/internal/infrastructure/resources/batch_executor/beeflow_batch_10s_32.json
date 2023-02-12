@@ -1,0 +1,38 @@
+{
+  "controllers": [
+    {
+      "controller_type": "beeflow",
+      "type_specific": {
+        "cli_lambda": {
+          "name": "beeflow-dev-api-to-cli-forwarder",
+          "region": "us-east-2"
+        }
+      },
+      "core": {
+        "controller_id": "beeflow",
+        "dags_deletion_time_seconds": 180,
+        "dags_deployment_wait_seconds": 180,
+        "dags_start_wait_time_seconds": 300,
+        "dags_bucket": {
+          "name": "beeflow-dev-dags-code-bucket",
+          "region": "us-east-2"
+        },
+        "export_dag_config": {
+          "dags_local_path": "src/python/beeflow/examples/dags/beeflow_exporter",
+          "dag_id": "db_export_dag",
+          "export_wait_time_seconds": 300
+        }
+      }
+    }
+  ],
+  "experiments": [
+    {
+      "dags_local_path": "src/python/beeflow/examples/dags/batch_executor/10s/32tasks",
+      "dag_ids": [
+        "10s_32t"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "parallel_32t_batch"
+    }
+  ]
+}

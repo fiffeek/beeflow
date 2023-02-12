@@ -29,7 +29,7 @@ def trigger_step_functions(event: TaskInstanceQueued) -> None:
     state_machine_arn = os.environ[ConfigConstants.BATCH_EXECUTOR_STATE_MACHINE_ENV_VAR]
     response = sfn_client.start_execution(
         stateMachineArn=state_machine_arn,
-        name=StepFunctionsNameCreator.from_ti_queued_event,
+        name=StepFunctionsNameCreator.from_ti_queued_event(event),
         input=prepare_input(event),
     )
     logger.info(f"Scheduled the worker for batch {response}")
