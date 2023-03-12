@@ -11,7 +11,7 @@
       "core": {
         "controller_id": "beeflow",
         "dags_deletion_time_seconds": 180,
-        "dags_deployment_wait_seconds": 180,
+        "dags_deployment_wait_seconds": 300,
         "dags_start_wait_time_seconds": 300,
         "dags_bucket": {
           "name": "beeflow-dev-dags-code-bucket",
