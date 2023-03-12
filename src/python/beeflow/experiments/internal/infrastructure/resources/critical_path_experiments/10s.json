@@ -52,6 +52,14 @@
   ],
   "experiments": [
     {
+      "dags_local_path": "src/python/beeflow/examples/dags/critical_path_experiments/10s/1task",
+      "dag_ids": [
+        "10s_1t_line"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "10s_1t_line"
+    },
+    {
       "dags_local_path": "src/python/beeflow/examples/dags/critical_path_experiments/10s/5tasks",
       "dag_ids": [
         "10s_5t_line"
@@ -66,14 +74,6 @@
       ],
       "metrics_collection_time_seconds": 3600,
       "experiment_id": "10s_10t_line"
-    },
-    {
-      "dags_local_path": "src/python/beeflow/examples/dags/critical_path_experiments/10s/15tasks",
-      "dag_ids": [
-        "10s_15t_line"
-      ],
-      "metrics_collection_time_seconds": 3600,
-      "experiment_id": "10s_15t_line"
     }
   ]
 }
