@@ -7,8 +7,8 @@ TASKS = 32
 BATCH_QUEUE = "batch"
 
 with DAG(
-    dag_id='10s_32t',
-    schedule_interval='*/5 * * * *',
+    dag_id='10s_32t_30cron',
+    schedule_interval='*/30 * * * *',
     start_date=pendulum.datetime(2021, 1, 1, tz="UTC"),
     catchup=False,
 ) as dag:

@@ -29,7 +29,7 @@
     {
       "dags_local_path": "src/python/beeflow/examples/dags/batch_executor/10s/32tasks",
       "dag_ids": [
-        "10s_32t"
+        "10s_32t_30cron"
       ],
       "metrics_collection_time_seconds": 3600,
       "experiment_id": "parallel_32t_batch"
