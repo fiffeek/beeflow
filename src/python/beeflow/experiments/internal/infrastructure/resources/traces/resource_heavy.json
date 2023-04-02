@@ -1,0 +1,103 @@
+{
+  "controllers": [
+    {
+      "controller_type": "beeflow",
+      "type_specific": {
+        "cli_lambda": {
+          "name": "beeflow-dev-api-to-cli-forwarder",
+          "region": "us-east-2"
+        }
+      },
+      "core": {
+        "controller_id": "beeflow",
+        "dags_deletion_time_seconds": 180,
+        "dags_deployment_wait_seconds": 180,
+        "dags_start_wait_time_seconds": 300,
+        "dags_bucket": {
+          "name": "beeflow-dev-dags-code-bucket",
+          "region": "us-east-2"
+        },
+        "export_dag_config": {
+          "dags_local_path": "src/python/beeflow/examples/dags/beeflow_exporter",
+          "dag_id": "db_export_dag",
+          "export_wait_time_seconds": 300
+        }
+      }
+    },
+    {
+      "controller_type": "mwaa",
+      "type_specific": {
+        "mwaa": {
+          "environment_name": "beeflow-dev-mwaa"
+        }
+      },
+      "core": {
+        "controller_id": "mwaa",
+        "dags_deletion_time_seconds": 60,
+        "dags_deployment_wait_seconds": 400,
+        "dags_start_wait_time_seconds": 300,
+        "dags_creation_cooldown_seconds": 480,
+        "dags_bucket": {
+          "name": "beeflow-dev-mwaa-s3",
+          "region": "us-east-2",
+          "dags_path_prefix": "dags"
+        },
+        "export_dag_config": {
+          "dags_local_path": "src/python/beeflow/examples/dags/beeflow_exporter",
+          "dag_id": "db_export_dag",
+          "export_wait_time_seconds": 300
+        }
+      }
+    }
+  ],
+  "experiments": [
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_3302772",
+      "dag_ids": [
+        "j_3302772"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_3302772"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_440175",
+      "dag_ids": [
+        "j_440175"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_440175"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_861714",
+      "dag_ids": [
+        "j_861714"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_861714"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_3441830",
+      "dag_ids": [
+        "j_3441830"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_3441830"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_1657836",
+      "dag_ids": [
+        "j_1657836"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_1657836"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_3672699",
+      "dag_ids": [
+        "j_3672699"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_3672699"
+    }
+  ]
+}
