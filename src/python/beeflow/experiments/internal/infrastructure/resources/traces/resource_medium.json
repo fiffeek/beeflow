@@ -1,0 +1,207 @@
+{
+  "controllers": [
+    {
+      "controller_type": "beeflow",
+      "type_specific": {
+        "cli_lambda": {
+          "name": "beeflow-dev-api-to-cli-forwarder",
+          "region": "us-east-2"
+        }
+      },
+      "core": {
+        "controller_id": "beeflow",
+        "dags_deletion_time_seconds": 180,
+        "dags_deployment_wait_seconds": 180,
+        "dags_start_wait_time_seconds": 300,
+        "dags_bucket": {
+          "name": "beeflow-dev-dags-code-bucket",
+          "region": "us-east-2"
+        },
+        "export_dag_config": {
+          "dags_local_path": "src/python/beeflow/examples/dags/beeflow_exporter",
+          "dag_id": "db_export_dag",
+          "export_wait_time_seconds": 300
+        }
+      }
+    },
+    {
+      "controller_type": "mwaa",
+      "type_specific": {
+        "mwaa": {
+          "environment_name": "beeflow-dev-mwaa"
+        }
+      },
+      "core": {
+        "controller_id": "mwaa",
+        "dags_deletion_time_seconds": 60,
+        "dags_deployment_wait_seconds": 400,
+        "dags_start_wait_time_seconds": 300,
+        "dags_creation_cooldown_seconds": 480,
+        "dags_bucket": {
+          "name": "beeflow-dev-mwaa-s3",
+          "region": "us-east-2",
+          "dags_path_prefix": "dags"
+        },
+        "export_dag_config": {
+          "dags_local_path": "src/python/beeflow/examples/dags/beeflow_exporter",
+          "dag_id": "db_export_dag",
+          "export_wait_time_seconds": 300
+        }
+      }
+    }
+  ],
+  "experiments": [
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_581851",
+      "dag_ids": [
+        "j_581851"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_581851"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_1393008",
+      "dag_ids": [
+        "j_1393008"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_1393008"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_2779966",
+      "dag_ids": [
+        "j_2779966"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_2779966"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_1507987",
+      "dag_ids": [
+        "j_1507987"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_1507987"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_2875170",
+      "dag_ids": [
+        "j_2875170"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_2875170"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_2208835",
+      "dag_ids": [
+        "j_2208835"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_2208835"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_3962513",
+      "dag_ids": [
+        "j_3962513"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_3962513"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_3197222",
+      "dag_ids": [
+        "j_3197222"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_3197222"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_125835",
+      "dag_ids": [
+        "j_125835"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_125835"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_3684272",
+      "dag_ids": [
+        "j_3684272"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_3684272"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_964836",
+      "dag_ids": [
+        "j_964836"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_964836"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_2749804",
+      "dag_ids": [
+        "j_2749804"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_2749804"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_3505701",
+      "dag_ids": [
+        "j_3505701"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_3505701"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_18436",
+      "dag_ids": [
+        "j_18436"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_18436"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_1526622",
+      "dag_ids": [
+        "j_1526622"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_1526622"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_1231082",
+      "dag_ids": [
+        "j_1231082"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_1231082"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_1518466",
+      "dag_ids": [
+        "j_1518466"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_1518466"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_189171",
+      "dag_ids": [
+        "j_189171"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_189171"
+    },
+    {
+      "dags_local_path": "notebooks/data/generated_dags/j_1903033",
+      "dag_ids": [
+        "j_1903033"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "j_1903033"
+    }
+  ]
+}
