@@ -10,6 +10,8 @@ jupyter_lab(
         "networkx==3.0.0",
         "matplotlib==3.7.1",
         "pygraphviz==1.10",
+        "statsmodels==0.13.5",
+        "seaborn==0.12.2",
     ],
     skip_mypy = True,
 )
