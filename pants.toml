@@ -2,7 +2,8 @@
 pants_version = "2.14.0"
 build_ignore = [
   "3rdparty/python/*",
-  "docs/*"
+  "docs/*",
+  "notebooks/data",
 ]
 backend_packages.add = [
   "pants.backend.awslambda.python",
