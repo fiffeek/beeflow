@@ -57,6 +57,20 @@ locals {
       policy              = null
       private_dns_enabled = true
     }
+    "ec2" = {
+      name                = "ec2"
+      security_group_ids  = [module.endpoint_security_groups[local.interfaces[0]].id, module.vpc[0].vpc_default_security_group_id]
+      subnet_ids          = module.subnets[0].private_subnet_ids
+      policy              = null
+      private_dns_enabled = true
+    }
+    "logs" = {
+      name                = "logs"
+      security_group_ids  = [module.endpoint_security_groups[local.interfaces[0]].id, module.vpc[0].vpc_default_security_group_id]
+      subnet_ids          = module.subnets[0].private_subnet_ids
+      policy              = null
+      private_dns_enabled = true
+    }
   } : {}
 }
 
