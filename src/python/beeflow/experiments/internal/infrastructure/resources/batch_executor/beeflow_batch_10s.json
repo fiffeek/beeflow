@@ -35,12 +35,20 @@
       "experiment_id": "10s_1t_batch"
     },
     {
-      "dags_local_path": "src/python/beeflow/examples/dags/batch_executor/10s/8t",
+      "dags_local_path": "src/python/beeflow/examples/dags/batch_executor/10s/16t",
       "dag_ids": [
-        "10s_8t_batch"
+        "10s_16t_batch"
       ],
       "metrics_collection_time_seconds": 3600,
-      "experiment_id": "10s_8t_batch"
+      "experiment_id": "10s_16t_batch"
+    },
+    {
+      "dags_local_path": "src/python/beeflow/examples/dags/batch_executor/10s/32tasks",
+      "dag_ids": [
+        "10s_32t_batch"
+      ],
+      "metrics_collection_time_seconds": 3600,
+      "experiment_id": "10s_32t_batch"
     }
   ]
 }
