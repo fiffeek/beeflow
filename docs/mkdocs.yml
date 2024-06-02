@@ -26,3 +26,8 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.pathconverter:
+      base_path: "beeflow"
+      relative_path: ""
+      absolute: false
+      tags: "a script img link object embed"
